@@ -4,7 +4,7 @@ from ast import arg
 from re import I
 from mininet.net import Mininet
 from mininet.cli import CLI
-from mininet.node import RemoteController
+from mininet.node import OVSController, RemoteController
 from mininet.link import TCLink
 
 import os
@@ -174,11 +174,17 @@ if __name__ == '__main__':
 	#Instantiate network
 	emulatedTopo = emuNetwork.CustomTopo(args.topo)
 
-	net = Mininet(topo = emulatedTopo,
-			# controller=RemoteController,
+	net = Mininet(topo = None,
+			controller=RemoteController,
 			link = TCLink,
 			autoSetMacs = True,
-			autoStaticArp = True)
+			autoStaticArp = True,
+			build=False)
+
+	net.topo = emulatedTopo
+	net.build()
+
+	print("passed here 1")
 
 	brokerPlace, zkPlace, topicPlace, prodDetailsList, consDetailsList, isDisconnect, \
 		dcDuration, dcLinks = emuKafka.placeKafkaBrokers(net, args.topo, args.onlySpark)
@@ -186,6 +192,8 @@ if __name__ == '__main__':
 	# if args.onlyKafka == 0:
 	#Add dependency to connect kafka & Spark
 	emuSpark.addSparkDependency()
+	
+	print("passed here 2")
 
 	#Get Spark configuration
 	sparkDetailsList, mysqlPath = emuSpark.getSparkDetails(net, args.topo)

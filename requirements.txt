@@ -1,0 +1,7 @@
+mininet
+networkx==2.5.1
+kafka-python==2.0.2
+matplotlib==3.3.4
+python-snappy==0.6.0
+lz4==3.1.10
+seaborn==0.11.2
