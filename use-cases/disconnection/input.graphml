@@ -26,7 +26,7 @@
    
   <graph id="simple-topo" edgedefault="undirected">
     <data key="topicCfg">use-cases/disconnection/topicConfiguration.txt</data>
-    <!-- <data key="dcCfg">use-cases/disconnection/disconnectionConfiguration.txt</data> -->
+    <data key="dcCfg">use-cases/disconnection/disconnectionConfiguration.txt</data>
 
     <node id="s1"/>
 

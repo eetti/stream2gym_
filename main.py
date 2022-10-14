@@ -184,8 +184,6 @@ if __name__ == '__main__':
 	net.topo = emulatedTopo
 	net.build()
 
-	print("passed here 1")
-
 	brokerPlace, zkPlace, topicPlace, prodDetailsList, consDetailsList, isDisconnect, \
 		dcDuration, dcLinks = emuKafka.placeKafkaBrokers(net, args.topo, args.onlySpark)
 
@@ -193,8 +191,6 @@ if __name__ == '__main__':
 	#Add dependency to connect kafka & Spark
 	emuSpark.addSparkDependency()
 	
-	print("passed here 2")
-
 	#Get Spark configuration
 	sparkDetailsList, mysqlPath = emuSpark.getSparkDetails(net, args.topo)
 	

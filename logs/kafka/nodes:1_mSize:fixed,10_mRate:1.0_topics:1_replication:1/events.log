@@ -1,0 +1,203 @@
+INFO:Network started
+Level 25:*** Ping: testing ping reachability
+
+Level 25:h1 -> 
+Level 25:
+
+Level 25:*** Warning: No packets sent
+
+INFO:Network stopped
+INFO:Network started
+Level 25:*** Ping: testing ping reachability
+
+Level 25:h1 -> 
+Level 25:h2 
+Level 25:h3 
+Level 25:
+
+Level 25:h2 -> 
+Level 25:h1 
+Level 25:h3 
+Level 25:
+
+Level 25:h3 -> 
+Level 25:h1 
+Level 25:h2 
+Level 25:
+
+Level 25:*** Results: 0% dropped (6/6 received)
+
+Level 25:*** Ping: testing ping reachability
+
+Level 25:h1 -> 
+Level 25:X 
+Level 25:h3 
+Level 25:
+
+Level 25:h2 -> 
+Level 25:X 
+Level 25:X 
+Level 25:
+
+Level 25:h3 -> 
+Level 25:h1 
+Level 25:X 
+Level 25:
+
+Level 25:*** Results: 66% dropped (2/6 received)
+
+Level 25:*** Ping: testing ping reachability
+
+Level 25:h1 -> 
+Level 25:X 
+Level 25:X 
+Level 25:
+
+Level 25:h2 -> 
+Level 25:X 
+Level 25:X 
+Level 25:
+
+Level 25:h3 -> 
+Level 25:X 
+Level 25:X 
+Level 25:
+
+Level 25:*** Results: 100% dropped (0/6 received)
+
+Level 25:*** Ping: testing ping reachability
+
+Level 25:h1 -> 
+Level 25:X 
+Level 25:X 
+Level 25:
+
+Level 25:h2 -> 
+Level 25:X 
+Level 25:X 
+Level 25:
+
+Level 25:h3 -> 
+Level 25:X 
+Level 25:X 
+Level 25:
+
+Level 25:*** Results: 100% dropped (0/6 received)
+
+Level 25:*** Ping: testing ping reachability
+
+Level 25:h1 -> 
+Level 25:X 
+Level 25:X 
+Level 25:
+
+Level 25:h2 -> 
+Level 25:X 
+Level 25:X 
+Level 25:
+
+Level 25:h3 -> 
+Level 25:X 
+Level 25:X 
+Level 25:
+
+Level 25:*** Results: 100% dropped (0/6 received)
+
+INFO:Network stopped
+INFO:Network started
+Level 25:*** Ping: testing ping reachability
+
+Level 25:h1 -> 
+Level 25:h2 
+Level 25:h3 
+Level 25:
+
+Level 25:h2 -> 
+Level 25:h1 
+Level 25:h3 
+Level 25:
+
+Level 25:h3 -> 
+Level 25:h1 
+Level 25:h2 
+Level 25:
+
+Level 25:*** Results: 0% dropped (6/6 received)
+
+Level 25:*** Ping: testing ping reachability
+
+Level 25:h1 -> 
+Level 25:X 
+Level 25:h3 
+Level 25:
+
+Level 25:h2 -> 
+Level 25:X 
+Level 25:X 
+Level 25:
+
+Level 25:h3 -> 
+Level 25:h1 
+Level 25:X 
+Level 25:
+
+Level 25:*** Results: 66% dropped (2/6 received)
+
+Level 25:*** Ping: testing ping reachability
+
+Level 25:h1 -> 
+Level 25:X 
+Level 25:X 
+Level 25:
+
+Level 25:h2 -> 
+Level 25:X 
+Level 25:X 
+Level 25:
+
+Level 25:h3 -> 
+Level 25:X 
+Level 25:X 
+Level 25:
+
+Level 25:*** Results: 100% dropped (0/6 received)
+
+Level 25:*** Ping: testing ping reachability
+
+Level 25:h1 -> 
+Level 25:X 
+Level 25:X 
+Level 25:
+
+Level 25:h2 -> 
+Level 25:X 
+Level 25:X 
+Level 25:
+
+Level 25:h3 -> 
+Level 25:X 
+Level 25:X 
+Level 25:
+
+Level 25:*** Results: 100% dropped (0/6 received)
+
+Level 25:*** Ping: testing ping reachability
+
+Level 25:h1 -> 
+Level 25:X 
+Level 25:X 
+Level 25:
+
+Level 25:h2 -> 
+Level 25:X 
+Level 25:X 
+Level 25:
+
+Level 25:h3 -> 
+Level 25:X 
+Level 25:X 
+Level 25:
+
+Level 25:*** Results: 100% dropped (0/6 received)
+
+INFO:Network stopped

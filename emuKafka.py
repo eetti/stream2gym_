@@ -153,12 +153,13 @@ def placeKafkaBrokers(net, inputTopoFile, onlySpark):
 		# print(*topicPlace)
 	
 	# reading disconnection config
-	dcPath = inputTopo.graph["disconnectionConfig"]
-	if dcPath != '':
+	try:
+		dcPath = inputTopo.graph["disconnectionConfig"] or "noDc"
 		isDisconnect = 1
 		print("Disconnection config directory: " + dcPath)
 		dcDuration, dcLinks = readDisconnectionConfig(dcPath)
-	else:
+	except KeyError:
+		print("No disconnection is set")
 		isDisconnect = 0
 		dcDuration = 0
 		dcLinks = []
