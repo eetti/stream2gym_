@@ -226,25 +226,7 @@ def runLoad(net, args, topicPlace, prodDetailsList, consDetailsList, sparkDetail
 	# time.sleep(10)
 	print("Consumers created")
 
-	# spawnProducers(net, mSizeString, mRate, tClassString, nTopics, args, prodDetailsList, topicPlace)
-	# # time.sleep(10)
-	# print("Producers created")
-
-	# spark start its processing once the production is done
-	# time.sleep(30)
-
-	# spawnSparkClients(net, sparkDetailsList)
-	# # time.sleep(10)
-	# print("Spark Clients created")
-
-	# time.sleep(150)
-
 	timer = 0
-
-	# hard-coded disconnection for testing
-	# isDisconnect = 1
-	# args.disconnectDuration = 10
-	# args.disconnectLink = ['s1-h2','s1-h3']
 
 	# Set up disconnect
 	if isDisconnect:
