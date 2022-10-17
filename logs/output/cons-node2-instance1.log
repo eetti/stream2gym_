@@ -1,0 +1,13 @@
+2022-10-17 16:20:44,910 INFO:node to initiate consumer: 2
+2022-10-17 16:20:44,910 INFO:topicName inputTopic
+2022-10-17 16:20:44,910 INFO:topicBroker 1
+2022-10-17 16:20:44,912 INFO:<BrokerConnection node_id=bootstrap-0 host=10.0.0.1:9092 <connecting> [IPv4 ('10.0.0.1', 9092)]>: connecting to 10.0.0.1:9092 [('10.0.0.1', 9092) IPv4]
+2022-10-17 16:20:44,913 INFO:Probing node bootstrap-0 broker version
+2022-10-17 16:20:44,917 INFO:<BrokerConnection node_id=bootstrap-0 host=10.0.0.1:9092 <connecting> [IPv4 ('10.0.0.1', 9092)]>: Connection complete.
+2022-10-17 16:20:45,079 INFO:Broker version identified as 2.5.0
+2022-10-17 16:20:45,079 INFO:Set configuration api_version=(2, 5, 0) to skip auto check_version requests on startup
+2022-10-17 16:20:45,080 INFO:Updating subscribed topics to: ('inputTopic',)
+2022-10-17 16:20:45,080 INFO:Connect to broker looking for topic inputTopic. 
+2022-10-17 16:20:48,400 INFO:<BrokerConnection node_id=1 host=10.0.0.1:9092 <connecting> [IPv4 ('10.0.0.1', 9092)]>: connecting to 10.0.0.1:9092 [('10.0.0.1', 9092) IPv4]
+2022-10-17 16:20:48,500 INFO:<BrokerConnection node_id=1 host=10.0.0.1:9092 <connecting> [IPv4 ('10.0.0.1', 9092)]>: Connection complete.
+2022-10-17 16:20:48,501 INFO:<BrokerConnection node_id=bootstrap-0 host=10.0.0.1:9092 <connected> [IPv4 ('10.0.0.1', 9092)]>: Closing connection. 

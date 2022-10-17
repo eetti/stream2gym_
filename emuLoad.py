@@ -61,9 +61,14 @@ def spawnProducers(net, mSizeString, mRate, tClassString, nTopics, args, prodDet
 
 			print("Producing messages to topic "+topicName+" at broker "+brokerId)
 
-			node.popen("python3 producer.py "+nodeId+" "+tClasses+" "+mSizeString+" "+str(mRate)+" "+str(nTopics)+" "+str(acks)+" "+str(compression)\
-			+" "+str(batchSize)+" "+str(linger)+" "+str(requestTimeout)+" "+brokerId+" "+str(replication)+" "+messageFilePath\
-			+" "+topicName+" "+producerType+" "+prodNumberOfFiles+" &", shell=True)
+			if producerType == 'INDIVIDUAL':
+				print("Individual producer")
+				node.popen("python3 use-cases/reproducibility/networkTrafficAnalysis/pkt-producer-pcap.py &", shell=True)
+			else:
+				print("Standard producer")
+				node.popen("python3 producer.py "+nodeId+" "+tClasses+" "+mSizeString+" "+str(mRate)+" "+str(nTopics)+" "+str(acks)+" "+str(compression)\
+				+" "+str(batchSize)+" "+str(linger)+" "+str(requestTimeout)+" "+brokerId+" "+str(replication)+" "+messageFilePath\
+				+" "+topicName+" "+producerType+" "+prodNumberOfFiles+" &", shell=True)
 
 		except IndexError:
 			print("Error: Production topic name not matched with the already created topics")

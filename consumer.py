@@ -20,9 +20,10 @@ try:
 
 	nodeID = nodeName[1:]
     
-	logging.basicConfig(filename="logs/output/"+"cons"+str(consInstance)+".log",
-							format='%(asctime)s %(levelname)s:%(message)s',
-							level=logging.INFO)    
+	logging.basicConfig(filename="logs/output/"+"cons-node"+nodeID+\
+		"-instance"+str(consInstance)+".log",
+		format='%(asctime)s %(levelname)s:%(message)s',
+		level=logging.INFO)    
 	logging.info("node to initiate consumer: "+nodeID)
 	logging.info("topicName "+topicName)
 	logging.info("topicBroker "+brokerId)

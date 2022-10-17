@@ -175,7 +175,7 @@ if __name__ == '__main__':
 	emulatedTopo = emuNetwork.CustomTopo(args.topo)
 
 	net = Mininet(topo = None,
-			controller=RemoteController,
+			# controller=RemoteController,
 			link = TCLink,
 			autoSetMacs = True,
 			autoStaticArp = True,
