@@ -51,18 +51,21 @@ try:
 
         pkt_df3 = pkt_df2.select("pkt.*", "timestamp")
 
-        # implementation of group by destination ip
-        specifiSrcIPDf = pkt_df3.filter( col("src_ip") == "131.202.240.87")\
-                .select("count", "src_ip", "dst_ip","proto")
-        # pkt_df3 = pkt_df3.select("pkt").where("src_ip > 192.168.1.11")
+        groupedDf = pkt_df.selectExpr("CAST(value AS STRING)")
 
-        groupedDf = specifiSrcIPDf.groupBy('dst_ip').count()
-        groupedDf = groupedDf.select( concat( lit('destination IP: '), 'dst_ip',\
-                lit(' IP Counts: '), 'count').alias('value') )
+        # implementation of group by destination ip
+        # specifiSrcIPDf = pkt_df3.filter( col("src_ip") == "131.202.240.87")\
+        #         .select("count", "src_ip", "dst_ip","proto")
+        # specifiSrcIPDf = pkt_df3.filter( col("src_ip") == "192.168.1.11")\
+        #         .select("count", "src_ip", "dst_ip","proto")
+
+        # groupedDf = specifiSrcIPDf.groupBy('dst_ip').count()
+        # groupedDf = groupedDf.select( concat( lit('destination IP: '), 'dst_ip',\
+        #         lit(' IP Counts: '), 'count').alias('value') )
 
         query = groupedDf.writeStream \
         .format("kafka") \
-        .outputMode("complete")\
+        .outputMode("update")\
         .option("kafka.bootstrap.servers", kafka_bootstrap_servers) \
         .option("topic", sparkOutputTo) \
         .option("checkpointLocation", "logs/output/wordcount_checkpoint_final") \

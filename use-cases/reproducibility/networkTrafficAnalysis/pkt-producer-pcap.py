@@ -5,7 +5,16 @@ from kafka import KafkaProducer
 import logging
 import sys
 
-import MyScapyExtract as myscap
+import scapyExtract as myscap
+
+import random as pythonrand
+import string
+from numpy import random
+
+def get_random_string(length):
+	letters = string.ascii_lowercase + string.ascii_uppercase + string.digits       
+	result_str = ''.join(pythonrand.choices(letters, k = length))
+	return result_str
 
 try:
 	logging.basicConfig(filename="logs/output/"+"prod-individual.log",
@@ -19,8 +28,8 @@ try:
 	producer = KafkaProducer(bootstrap_servers=bootstrapServers,
 							value_serializer=lambda x: x.encode('utf-8'))
 	                            
-	# file0 = 'use-cases/reproducibility/networkTrafficAnalysis/laptop-pcap.pcap'
-	file0 = 'use-cases/reproducibility/networkTrafficAnalysis/AIMchat1.pcap'
+	file0 = 'use-cases/reproducibility/networkTrafficAnalysis/laptop-pcap.pcap'
+	# file0 = 'use-cases/reproducibility/networkTrafficAnalysis/AIMchat1.pcap'
 	packets = myscap.scapy_read_packets(file0)
 
 
@@ -29,30 +38,43 @@ try:
 	logging.info(len(datalst))
 
 	count = 1 
+	noOfService = 4
+	j = 0
+	while j<noOfService:
+		for i in range(len(datalst)):
+			pkt = datalst[i]
 
-	for i in range(len(datalst)):
-		pkt = datalst[i]
+			if (pkt['etype'] == '2048'):
+				isrc = pkt['isrc']
+				idst = pkt['idst']
+				iproto = pkt['iproto']
+			
+				if (iproto == '17'):
+					sport = pkt['utsport']
+					dport = pkt['utdport']
+				else:
+					sport = pkt['tsport']
+					dport = pkt['tdport']
 
-		if (pkt['etype'] == '2048'):
-			isrc = pkt['isrc']
-			idst = pkt['idst']
-			iproto = pkt['iproto']
-		
-			if (iproto == '17'):
-				sport = pkt['utsport']
-				dport = pkt['utdport']
-			else:
-				sport = pkt['tsport']
-				dport = pkt['tdport']
-		
-			msg = str(count) + ',' + str(isrc) + ',' + str(idst) + \
-			',' + str(iproto) + ',' + str(sport) + \
-					',' + str(dport) 
-			logging.info(msg)
-			count+=1 
+				# attaching random payload and length of payload
+				payloadLength = pythonrand.randint(1, 100)
+				payload = get_random_string(payloadLength)
 
-			producer.send(inputTopic, msg)  
-			sleep(1)
+				msg = str(count) + ',' + str(isrc) + ',' + str(idst) + \
+				',' + str(iproto) + ',' + str(sport) + \
+				',' + str(dport) + ',' + str(payloadLength) + \
+				',' + str(payload) 
+
+				logging.info(msg)
+				count+=1 
+
+				producer.send(inputTopic, msg)  
+				# sleep(1)
+
+		x = random.poisson(lam=2, size=noOfService)
+		sleep(x[j])
+		j += 1
+
 
 
 except Exception as e:
