@@ -1,18 +1,18 @@
-[2022-10-19T11:48:02.335-0300][gc,heap] Heap region size: 1M
-[2022-10-19T11:48:02.340-0300][gc     ] Using G1
-[2022-10-19T11:48:02.340-0300][gc,heap,coops] Heap address: 0x00000000e0000000, size: 512 MB, Compressed Oops mode: 32-bit
-[2022-10-19T11:48:02.340-0300][gc,cds       ] Mark closed archive regions in map: [0x00000000fff00000, 0x00000000fff6aff8]
-[2022-10-19T11:48:02.340-0300][gc,cds       ] Mark open archive regions in map: [0x00000000ffe00000, 0x00000000ffe47ff8]
-[2022-10-19T11:48:04.384-0300][gc,start     ] GC(0) Pause Young (Normal) (G1 Evacuation Pause)
-[2022-10-19T11:48:04.385-0300][gc,task      ] GC(0) Using 8 workers of 8 for evacuation
-[2022-10-19T11:48:04.395-0300][gc,phases    ] GC(0)   Pre Evacuate Collection Set: 0.0ms
-[2022-10-19T11:48:04.395-0300][gc,phases    ] GC(0)   Evacuate Collection Set: 9.3ms
-[2022-10-19T11:48:04.395-0300][gc,phases    ] GC(0)   Post Evacuate Collection Set: 0.3ms
-[2022-10-19T11:48:04.395-0300][gc,phases    ] GC(0)   Other: 0.7ms
-[2022-10-19T11:48:04.395-0300][gc,heap      ] GC(0) Eden regions: 25->0(21)
-[2022-10-19T11:48:04.395-0300][gc,heap      ] GC(0) Survivor regions: 0->4(4)
-[2022-10-19T11:48:04.395-0300][gc,heap      ] GC(0) Old regions: 2->4
-[2022-10-19T11:48:04.395-0300][gc,heap      ] GC(0) Humongous regions: 0->0
-[2022-10-19T11:48:04.395-0300][gc,metaspace ] GC(0) Metaspace: 7803K->7803K(1056768K)
-[2022-10-19T11:48:04.395-0300][gc           ] GC(0) Pause Young (Normal) (G1 Evacuation Pause) 25M->6M(512M) 10.347ms
-[2022-10-19T11:48:04.395-0300][gc,cpu       ] GC(0) User=0.06s Sys=0.01s Real=0.01s
+[2022-10-24T12:10:39.839-0300][gc,heap] Heap region size: 1M
+[2022-10-24T12:10:39.844-0300][gc     ] Using G1
+[2022-10-24T12:10:39.844-0300][gc,heap,coops] Heap address: 0x00000000e0000000, size: 512 MB, Compressed Oops mode: 32-bit
+[2022-10-24T12:10:39.844-0300][gc,cds       ] Mark closed archive regions in map: [0x00000000fff00000, 0x00000000fff6aff8]
+[2022-10-24T12:10:39.844-0300][gc,cds       ] Mark open archive regions in map: [0x00000000ffe00000, 0x00000000ffe47ff8]
+[2022-10-24T12:10:41.809-0300][gc,start     ] GC(0) Pause Young (Normal) (G1 Evacuation Pause)
+[2022-10-24T12:10:41.809-0300][gc,task      ] GC(0) Using 8 workers of 8 for evacuation
+[2022-10-24T12:10:41.820-0300][gc,phases    ] GC(0)   Pre Evacuate Collection Set: 0.0ms
+[2022-10-24T12:10:41.820-0300][gc,phases    ] GC(0)   Evacuate Collection Set: 10.9ms
+[2022-10-24T12:10:41.820-0300][gc,phases    ] GC(0)   Post Evacuate Collection Set: 0.3ms
+[2022-10-24T12:10:41.820-0300][gc,phases    ] GC(0)   Other: 0.5ms
+[2022-10-24T12:10:41.820-0300][gc,heap      ] GC(0) Eden regions: 25->0(21)
+[2022-10-24T12:10:41.820-0300][gc,heap      ] GC(0) Survivor regions: 0->4(4)
+[2022-10-24T12:10:41.821-0300][gc,heap      ] GC(0) Old regions: 2->4
+[2022-10-24T12:10:41.821-0300][gc,heap      ] GC(0) Humongous regions: 0->0
+[2022-10-24T12:10:41.821-0300][gc,metaspace ] GC(0) Metaspace: 7806K->7806K(1056768K)
+[2022-10-24T12:10:41.821-0300][gc           ] GC(0) Pause Young (Normal) (G1 Evacuation Pause) 25M->5M(512M) 11.792ms
+[2022-10-24T12:10:41.821-0300][gc,cpu       ] GC(0) User=0.05s Sys=0.01s Real=0.01s

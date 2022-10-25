@@ -50,6 +50,7 @@ def spawnProducers(net, mSizeString, mRate, tClassString, nTopics, args, prodDet
 		nodeId = 'h' + i['nodeId']
 		
 		producerType = i["producerType"]
+		producerPath = i["producerPath"]
 		messageFilePath = i['produceFromFile']
 		tClasses = i['tClasses']
 		prodTopic = i['produceInTopic']
@@ -63,10 +64,10 @@ def spawnProducers(net, mSizeString, mRate, tClassString, nTopics, args, prodDet
 
 			if producerType == 'INDIVIDUAL':
 				print("Individual producer")
-				node.popen("python3 use-cases/reproducibility/networkTrafficAnalysis/pkt-producer-pcap.py &", shell=True)
+				node.popen("python3 "+ producerPath +" &", shell=True)
 			else:
 				print("Standard producer")
-				node.popen("python3 producer.py "+nodeId+" "+tClasses+" "+mSizeString+" "+str(mRate)+" "+str(nTopics)+" "+str(acks)+" "+str(compression)\
+				node.popen("python3 "+producerPath+" " +nodeId+" "+tClasses+" "+mSizeString+" "+str(mRate)+" "+str(nTopics)+" "+str(acks)+" "+str(compression)\
 				+" "+str(batchSize)+" "+str(linger)+" "+str(requestTimeout)+" "+brokerId+" "+str(replication)+" "+messageFilePath\
 				+" "+topicName+" "+producerType+" "+prodNumberOfFiles+" &", shell=True)
 

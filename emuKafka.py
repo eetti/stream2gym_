@@ -154,7 +154,7 @@ def placeKafkaBrokers(net, inputTopoFile, onlySpark):
 	
 	# reading disconnection config
 	try:
-		dcPath = inputTopo.graph["disconnectionConfig"] or "noDc"
+		dcPath = inputTopo.graph["disconnectionConfig"]
 		isDisconnect = 1
 		print("Disconnection config directory: " + dcPath)
 		dcDuration, dcLinks = readDisconnectionConfig(dcPath)
@@ -174,10 +174,19 @@ def placeKafkaBrokers(net, inputTopoFile, onlySpark):
 			if 'broker' in data: 
 				brokerPlace.append(node[1])
 			if 'producerType' in data: 
+				if data["producerType"] != "SFTT" or data["producerType"] != "MFST"\
+					or data["producerType"] != "ELTT":
+					producerType = data["producerType"].split(",")[0]
+					producerPath = data["producerType"].split(",")[1].strip()
+				else:
+					producerType = data["producerType"]
+					producerPath = "producer.py"
+
 				prodFile, prodTopic, prodNumberOfFiles = readProdConfig(data["producerConfig"])
-				prodDetails = {"nodeId": node[1], "producerType": data["producerType"],\
+				prodDetails = {"nodeId": node[1], "producerType": producerType,\
 					"produceFromFile":prodFile, "produceInTopic": prodTopic,\
-						"prodNumberOfFiles": prodNumberOfFiles}
+						"prodNumberOfFiles": prodNumberOfFiles,\
+							"producerPath": producerPath}
 				prodDetailsList.append(prodDetails)
 
 			if 'consumerConfig' in data: 
@@ -194,8 +203,8 @@ def placeKafkaBrokers(net, inputTopoFile, onlySpark):
 	# print("brokers: \n")
 	# print(*brokerPlace)
 
-	# print("producer details")
-	# print(*prodDetailsList)
+	print("producer details")
+	print(*prodDetailsList)
 
 	print("consumer details")
 	print(*consDetailsList)

@@ -42,8 +42,9 @@ try:
         logging.info("schema: ")
         logging.info(pkt_df1.printSchema())
 
-        pkt_schema_string = "count INT,src_ip STRING,dst_ip STRING, \
-                        proto INT, sport STRING, dport STRING" 
+        pkt_schema_string = "flowCount INT,pktCount INT,src_ip STRING,dst_ip STRING, \
+                        proto INT, sport STRING, dport STRING,payloadLength INT, \
+                        payload STRING" 
 
         pkt_df2 = pkt_df1 \
                 .select(from_csv(col("value"), pkt_schema_string) \
@@ -70,7 +71,16 @@ try:
         .option("topic", sparkOutputTo) \
         .option("checkpointLocation", "logs/output/wordcount_checkpoint_final") \
         .start()
-        query.awaitTermination()
+
+        while query.isActive:
+                logging.info("\n")
+                logging.info(query.status)
+                logging.info("\n")
+                logging.info(query.lastProgress)
+
+                time.sleep(10)
+        
+        # query.awaitTermination()
 
         # ==========================================
         #pkt_df3 = pkt_df2.select("pkt.*")
