@@ -55,21 +55,30 @@ def spawnProducers(net, mSizeString, mRate, tClassString, nTopics, args, prodDet
 		tClasses = i['tClasses']
 		prodTopic = i['produceInTopic']
 		prodNumberOfFiles = i['prodNumberOfFiles']
+		nProducerInstances = i['nProducerInstances']
 
 		try:
 			topicName = [x for x in topicPlace if x['topicName'] == prodTopic][0]["topicName"]
 			brokerId = [x for x in topicPlace if x['topicName'] == prodTopic][0]["topicBroker"] 
 
 			print("Producing messages to topic "+topicName+" at broker "+brokerId)
+			
+			prodInstance = 1
 
-			if producerType == 'INDIVIDUAL':
-				print("Individual producer")
-				node.popen("python3 "+ producerPath +" &", shell=True)
-			else:
-				print("Standard producer")
-				node.popen("python3 "+producerPath+" " +nodeId+" "+tClasses+" "+mSizeString+" "+str(mRate)+" "+str(nTopics)+" "+str(acks)+" "+str(compression)\
-				+" "+str(batchSize)+" "+str(linger)+" "+str(requestTimeout)+" "+brokerId+" "+str(replication)+" "+messageFilePath\
-				+" "+topicName+" "+producerType+" "+prodNumberOfFiles+" &", shell=True)
+			while prodInstance <= int(nProducerInstances):
+				if producerType == 'INDIVIDUAL':
+					print(nodeId)
+					print(prodInstance)
+					print(producerPath)
+					node.popen("python3 "+ producerPath +" " +nodeId+" "+str(prodInstance)+" &", shell=True)
+					# node.popen("python3 "+ producerPath +" &", shell=True)
+				else:
+					print("Standard producer")
+					node.popen("python3 "+producerPath+" " +nodeId+" "+tClasses+" "+mSizeString+" "+str(mRate)+" "+str(nTopics)+" "+str(acks)+" "+str(compression)\
+					+" "+str(batchSize)+" "+str(linger)+" "+str(requestTimeout)+" "+brokerId+" "+str(replication)+" "+messageFilePath\
+					+" "+topicName+" "+producerType+" "+prodNumberOfFiles+" &", shell=True)
+				
+				prodInstance += 1
 
 		except IndexError:
 			print("Error: Production topic name not matched with the already created topics")

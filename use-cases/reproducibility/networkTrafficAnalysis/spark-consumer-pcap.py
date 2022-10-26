@@ -42,8 +42,8 @@ try:
         logging.info("schema: ")
         logging.info(pkt_df1.printSchema())
 
-        pkt_schema_string = "flowCount INT,pktCount INT,src_ip STRING,dst_ip STRING, \
-                        proto INT, sport STRING, dport STRING,payloadLength INT, \
+        pkt_schema_string = "flowCount INT,pktCount INT,srcIP STRING,dstIP STRING, \
+                        proto INT, srcPort STRING, dstPort STRING,payloadLength INT, \
                         payload STRING" 
 
         pkt_df2 = pkt_df1 \
@@ -52,17 +52,18 @@ try:
 
         pkt_df3 = pkt_df2.select("pkt.*", "timestamp")
 
-        groupedDf = pkt_df.selectExpr("CAST(value AS STRING)")
+        # groupedDf = pkt_df.selectExpr("CAST(value AS STRING)")
 
         # implementation of group by destination ip
         # specifiSrcIPDf = pkt_df3.filter( col("src_ip") == "131.202.240.87")\
         #         .select("count", "src_ip", "dst_ip","proto")
-        # specifiSrcIPDf = pkt_df3.filter( col("src_ip") == "192.168.1.11")\
-        #         .select("count", "src_ip", "dst_ip","proto")
+        specifiSrcIPDf = pkt_df3.filter( col("srcIP") == "192.168.1.11")\
+                .select("flowCount", "pktCount", "srcIP", "dstIP","proto", "srcPort", "dstPort",\
+                        "payloadLength", "payload")
 
-        # groupedDf = specifiSrcIPDf.groupBy('dst_ip').count()
-        # groupedDf = groupedDf.select( concat( lit('destination IP: '), 'dst_ip',\
-        #         lit(' IP Counts: '), 'count').alias('value') )
+        groupedDf = specifiSrcIPDf.groupBy('dstIP').count()
+        groupedDf = groupedDf.select( concat( lit('destination IP: '), 'dstIP',\
+                lit(' IP Counts: '), 'count').alias('value') )
 
         query = groupedDf.writeStream \
         .format("kafka") \

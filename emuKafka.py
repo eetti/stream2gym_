@@ -53,15 +53,17 @@ def readDisconnectionConfig(dcConfigPath):
 
 
 def readProdConfig(prodConfig):
-	if len(prodConfig.split(",")) != 3:
-		print("ERROR: Producer config parameter should contain production file path, topic name to produce, number of producer files")
+	if len(prodConfig.split(",")) != 4:
+		print("ERROR: Producer config parameter should contain production file path, \
+			topic name to produce, number of producer files and number of producer intances in a node")
 		sys.exit(1)
 	
 	prodFile = prodConfig.split(",")[0]     #prodFile will hold the file path/directory path based on producer type SFST or MFST respectively
 	prodTopic = prodConfig.split(",")[1]
 	prodNumberOfFiles = prodConfig.split(",")[2]
+	nProducerInstances = prodConfig.split(",")[3]
 
-	return prodFile, prodTopic, prodNumberOfFiles
+	return prodFile, prodTopic, prodNumberOfFiles, nProducerInstances
 
 def readConsConfig(consConfig):
 	#topic list contains the topics from where the consumer will consume
@@ -182,10 +184,11 @@ def placeKafkaBrokers(net, inputTopoFile, onlySpark):
 					producerType = data["producerType"]
 					producerPath = "producer.py"
 
-				prodFile, prodTopic, prodNumberOfFiles = readProdConfig(data["producerConfig"])
+				prodFile, prodTopic, prodNumberOfFiles, nProducerInstances = readProdConfig(data["producerConfig"])
 				prodDetails = {"nodeId": node[1], "producerType": producerType,\
 					"produceFromFile":prodFile, "produceInTopic": prodTopic,\
-						"prodNumberOfFiles": prodNumberOfFiles,\
+						"prodNumberOfFiles": prodNumberOfFiles, \
+						"nProducerInstances": nProducerInstances, \
 							"producerPath": producerPath}
 				prodDetailsList.append(prodDetails)
 
