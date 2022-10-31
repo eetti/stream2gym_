@@ -31,8 +31,8 @@
     <node id="h1">
       <data key="zk">1</data>
       <data key="bk">1</data>
-      <data key="prodType">INDIVIDUAL,use-cases/reproducibility/networkTrafficAnalysis/flow-producer-synthetic.py</data>
-      <data key="prodCfg">use-cases/reproducibility/networkTrafficAnalysis/AIMchat1.pcap,inputTopic,1,1</data>
+      <data key="prodType">INDIVIDUAL,use-cases/reproducibility/networkTrafficAnalysis/flowProducerSynthetic.py</data>
+      <data key="prodCfg">use-cases/reproducibility/networkTrafficAnalysis/AIMchat1.pcap,inputTopic,1,100</data>
 	  </node>   
 
     <node id="h2">

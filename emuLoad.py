@@ -1,22 +1,114 @@
-#!/usr/bin/python3
+#!/usr/bin/python3randint
 
 from mininet.net import Mininet
 from mininet.cli import CLI
 
-from random import seed, randint, choice
+from random import seed, randint, choice, choices
 
 import time
 import os
 import sys
 import itertools
 
+
 import subprocess
 from subprocess import Popen, PIPE, STDOUT
 from datetime import datetime
 
+from threading import Thread
+
+# class pThread(Thread):
+# 	def __init__(self, producerPath, nodeId, prodInstance,node):
+# 		self.nodeId = nodeId
+# 		self.producerPath = producerPath
+# 		self.prodInstance = prodInstance
+# 		self.node = node
+# 		Thread.__init__(self)
+	
+# 	def run(self):
+# 		hostNode = self.node
+# 		hostNode.cmd("python3 "+ self.producerPath +" " +self.nodeId+" "+str(self.prodInstance)+" &")
+		
+def prodT(producerPath, nodeId, prodInstance,node):
+	prodThread  = node.cmd("python3 "+ producerPath +" " +nodeId+" "+str(prodInstance)+" &")
+
+# Using threads for producer instances
+def producerThread(net, mSizeString, mRate, tClassString, nTopics, args, prodDetailsList, topicPlace):
+	acks = args.acks
+	compression = args.compression
+	batchSize = args.batchSize
+	linger = args.linger
+	requestTimeout = args.requestTimeout
+	brokers = args.nBroker
+	replication = args.replication 
+	messageFilePath = args.messageFilePath   
+
+	tClasses = tClassString.split(',')
+	#print("Traffic classes: " + str(tClasses))
+
+	nodeClassification = {}
+	netNodes = {}    
+
+	classID = 1
+
+	for tClass in tClasses:
+		nodeClassification[classID] = []
+		classID += 1
+	
+	#Distribute nodes among classes
+	for node in net.hosts:
+		netNodes[node.name] = node
+
+	j =0
+	for j in prodDetailsList:
+		j['tClasses'] = str(randint(1,len(tClasses)))
+	
+	for prod in prodDetailsList:
+		nodeID = 'h' + prod['nodeId']
+		
+		producerType = prod["producerType"]
+		producerPath = prod["producerPath"]
+		messageFilePath = prod['produceFromFile']
+		tClasses = prod['tClasses']
+		prodTopic = prod['produceInTopic']
+		prodNumberOfFiles = prod['prodNumberOfFiles']
+		nProducerInstances = prod['nProducerInstances']
+		
+		node = netNodes[nodeID]
+
+		try:
+			topicName = [x for x in topicPlace if x['topicName'] == prodTopic][0]["topicName"]
+			brokerId = [x for x in topicPlace if x['topicName'] == prodTopic][0]["topicBroker"] 
+
+			print("Producing messages to topic "+topicName+" at broker "+brokerId)
+			
+			prodInstance = 1
+
+			while prodInstance <= int(nProducerInstances):
+				if producerType == 'INDIVIDUAL':
+					print(nodeID)
+					print("Producer instance in Thread: "+str(prodInstance))
+					print(producerPath)
+
+					# t = pThread(target=producerPath,args=(nodeID,str(prodInstance),node,))
+					t = Thread(target=prodT,args=(producerPath, nodeID,str(prodInstance),node,))
+					t.setDaemon(True)
+					t.start()
+					
+				else:
+					print("Standard producer")
+					# node.popen("python3 "+producerPath+" " +nodeID+" "+tClasses+" "+mSizeString+" "+str(mRate)+" "+str(nTopics)+" "+str(acks)+" "+str(compression)\
+					# +" "+str(batchSize)+" "+str(linger)+" "+str(requestTimeout)+" "+brokerId+" "+str(replication)+" "+messageFilePath\
+					# +" "+topicName+" "+producerType+" "+prodNumberOfFiles+" &", shell=True)
+				
+				prodInstance += 1
+
+		except IndexError:
+			print("Error: Production topic name not matched with the already created topics")
+			sys.exit(1)
+		
 
 def spawnProducers(net, mSizeString, mRate, tClassString, nTopics, args, prodDetailsList, topicPlace):
-
 	acks = args.acks
 	compression = args.compression
 	batchSize = args.batchSize
@@ -47,7 +139,7 @@ def spawnProducers(net, mSizeString, mRate, tClassString, nTopics, args, prodDet
 		j['tClasses'] = str(randint(1,len(tClasses)))
 	
 	for i in prodDetailsList:
-		nodeId = 'h' + i['nodeId']
+		nodeID = 'h' + i['nodeId']
 		
 		producerType = i["producerType"]
 		producerPath = i["producerPath"]
@@ -56,6 +148,8 @@ def spawnProducers(net, mSizeString, mRate, tClassString, nTopics, args, prodDet
 		prodTopic = i['produceInTopic']
 		prodNumberOfFiles = i['prodNumberOfFiles']
 		nProducerInstances = i['nProducerInstances']
+
+		node = netNodes[nodeID]
 
 		try:
 			topicName = [x for x in topicPlace if x['topicName'] == prodTopic][0]["topicName"]
@@ -67,14 +161,14 @@ def spawnProducers(net, mSizeString, mRate, tClassString, nTopics, args, prodDet
 
 			while prodInstance <= int(nProducerInstances):
 				if producerType == 'INDIVIDUAL':
-					print(nodeId)
+					print(nodeID)
 					print(prodInstance)
 					print(producerPath)
-					node.popen("python3 "+ producerPath +" " +nodeId+" "+str(prodInstance)+" &", shell=True)
-					# node.popen("python3 "+ producerPath +" &", shell=True)
+					node.popen("python3 "+ producerPath +" " +nodeID+" "+str(prodInstance)+" &", shell=True)
+					
 				else:
 					print("Standard producer")
-					node.popen("python3 "+producerPath+" " +nodeId+" "+tClasses+" "+mSizeString+" "+str(mRate)+" "+str(nTopics)+" "+str(acks)+" "+str(compression)\
+					node.popen("python3 "+producerPath+" " +nodeID+" "+tClasses+" "+mSizeString+" "+str(mRate)+" "+str(nTopics)+" "+str(acks)+" "+str(compression)\
 					+" "+str(batchSize)+" "+str(linger)+" "+str(requestTimeout)+" "+brokerId+" "+str(replication)+" "+messageFilePath\
 					+" "+topicName+" "+producerType+" "+prodNumberOfFiles+" &", shell=True)
 				
@@ -84,9 +178,6 @@ def spawnProducers(net, mSizeString, mRate, tClassString, nTopics, args, prodDet
 			print("Error: Production topic name not matched with the already created topics")
 			sys.exit(1)
 			
-
-
-
 def spawnConsumers(net, consDetailsList, topicPlace):
 
 	netNodes = {}
@@ -233,7 +324,8 @@ def runLoad(net, args, topicPlace, prodDetailsList, consDetailsList, sparkDetail
 		time.sleep(30)
 		print("Spark Clients created")
 
-	spawnProducers(net, mSizeString, mRate, tClassString, nTopics, args, prodDetailsList, topicPlace)
+	# spawnProducers(net, mSizeString, mRate, tClassString, nTopics, args, prodDetailsList, topicPlace)
+	producerThread(net, mSizeString, mRate, tClassString, nTopics, args, prodDetailsList, topicPlace)
 	# time.sleep(120)
 	print("Producers created")
 	
@@ -279,7 +371,6 @@ def runLoad(net, args, topicPlace, prodDetailsList, consDetailsList, sparkDetail
 		timer += 10
 
 	print(f"Workload finished at {str(datetime.now())}")	
-
 
 def disconnectLink(net, n1, n2):
 	print(f"***********Setting link down from {n1.name} <-> {n2.name} at {str(datetime.now())}")

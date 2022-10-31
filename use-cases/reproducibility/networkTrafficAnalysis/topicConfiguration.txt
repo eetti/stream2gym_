@@ -1,2 +1,2 @@
-inputTopic broker 1 partition 1
+inputTopic broker 1 partition 4
 outputTopic broker 1 partition 1

@@ -15,6 +15,7 @@ def get_random_string(length):
 	result_str = ''.join(pythonRand.choices(letters, k = length))
 	return result_str
 
+
 try:
 	nodeName = sys.argv[1]
 	prodInstanceID = sys.argv[2]
@@ -31,7 +32,7 @@ try:
 
 	producer = KafkaProducer(bootstrap_servers=bootstrapServers,
 							value_serializer=lambda x: x.encode('utf-8'))
-	                            
+								
 	srcIP = "192.168.1.11"
 	dstIP = "20.198.162.76" 
 	dstPort = ["20", "443", "25", "53"] #"443" for https
@@ -40,7 +41,7 @@ try:
 	# nFlows = 1
 	# nPacketsPerflow = []
 	# for i in range(nFlows):
-    # 	nPacketsPerflow.append(pythonRand.randint(0,200))
+	# 	nPacketsPerflow.append(pythonRand.randint(0,200))
 	
 	flowCount = 1
 	while True:
@@ -53,8 +54,9 @@ try:
 			payloadLength = pythonRand.randint(1, 1500)
 			payload = get_random_string(payloadLength)
 
-			msg = str(flowCount) + ',' + str(pktCount) + ',' + srcIP + ',' \
-			 + dstIP + ',' + proto + ',' + srcPort + \
+			msg = str(nodeID) + ',' + str(prodInstanceID)+','+ str(flowCount) +\
+			',' + str(pktCount) +',' + srcIP + ',' +\
+			dstIP + ',' + proto + ',' + srcPort + \
 			',' + dstPort + ',' + str(payloadLength) + \
 			',' + payload
 

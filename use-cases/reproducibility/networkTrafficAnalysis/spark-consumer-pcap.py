@@ -42,9 +42,10 @@ try:
         logging.info("schema: ")
         logging.info(pkt_df1.printSchema())
 
-        pkt_schema_string = "flowCount INT,pktCount INT,srcIP STRING,dstIP STRING, \
-                        proto INT, srcPort STRING, dstPort STRING,payloadLength INT, \
-                        payload STRING" 
+        pkt_schema_string = "nodeID INT, prodInstanceID INT, flowCount INT,\
+                pktCount INT,srcIP STRING,dstIP STRING, \
+                proto INT, srcPort STRING, dstPort STRING,payloadLength INT, \
+                payload STRING" 
 
         pkt_df2 = pkt_df1 \
                 .select(from_csv(col("value"), pkt_schema_string) \
@@ -58,16 +59,19 @@ try:
         # specifiSrcIPDf = pkt_df3.filter( col("src_ip") == "131.202.240.87")\
         #         .select("count", "src_ip", "dst_ip","proto")
         specifiSrcIPDf = pkt_df3.filter( col("srcIP") == "192.168.1.11")\
-                .select("flowCount", "pktCount", "srcIP", "dstIP","proto", "srcPort", "dstPort",\
+                .select("nodeID", "prodInstanceID", "flowCount", "pktCount", "srcIP", "dstIP","proto", "srcPort", "dstPort",\
                         "payloadLength", "payload")
 
-        groupedDf = specifiSrcIPDf.groupBy('dstIP').count()
-        groupedDf = groupedDf.select( concat( lit('destination IP: '), 'dstIP',\
+        groupedDf = specifiSrcIPDf.groupBy('dstIP', 'nodeID', "prodInstanceID").count()
+        groupedDf = groupedDf.select( concat( lit(' Producer Node: '), 'nodeID',\
+                lit(' user: '), 'prodInstanceID',\
+                lit(' destination IP: '), 'dstIP',\
                 lit(' IP Counts: '), 'count').alias('value') )
 
         query = groupedDf.writeStream \
+        .trigger(processingTime='1 seconds')\
         .format("kafka") \
-        .outputMode("update")\
+        .outputMode("complete")\
         .option("kafka.bootstrap.servers", kafka_bootstrap_servers) \
         .option("topic", sparkOutputTo) \
         .option("checkpointLocation", "logs/output/wordcount_checkpoint_final") \
