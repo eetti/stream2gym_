@@ -3,37 +3,22 @@
 from mininet.net import Mininet
 from mininet.cli import CLI
 
-from random import seed, randint, choice, choices
+from random import seed, randint, choice
 
 import time
 import os
 import sys
 import itertools
 
-
 import subprocess
 from subprocess import Popen, PIPE, STDOUT
 from datetime import datetime
 
-from threading import Thread
-
-# class pThread(Thread):
-# 	def __init__(self, producerPath, nodeId, prodInstance,node):
-# 		self.nodeId = nodeId
-# 		self.producerPath = producerPath
-# 		self.prodInstance = prodInstance
-# 		self.node = node
-# 		Thread.__init__(self)
-	
-# 	def run(self):
-# 		hostNode = self.node
-# 		hostNode.cmd("python3 "+ self.producerPath +" " +self.nodeId+" "+str(self.prodInstance)+" &")
-		
 def prodT(producerPath, nodeId, prodInstance,node):
 	prodThread  = node.cmd("python3 "+ producerPath +" " +nodeId+" "+str(prodInstance)+" &")
 
 # Using threads for producer instances
-def producerThread(net, mSizeString, mRate, tClassString, nTopics, args, prodDetailsList, topicPlace):
+def spawnThreadedProducers(net, mSizeString, mRate, tClassString, nTopics, args, prodDetailsList, topicPlace):
 	acks = args.acks
 	compression = args.compression
 	batchSize = args.batchSize
@@ -84,24 +69,18 @@ def producerThread(net, mSizeString, mRate, tClassString, nTopics, args, prodDet
 			
 			prodInstance = 1
 
-			while prodInstance <= int(nProducerInstances):
-				if producerType == 'INDIVIDUAL':
-					print(nodeID)
-					print("Producer instance in Thread: "+str(prodInstance))
-					print(producerPath)
+			if producerType == 'INDIVIDUAL':
+				print(nodeID)
+				print("Producer instance in Thread: "+str(nProducerInstances))
+				print(producerPath)
 
-					# t = pThread(target=producerPath,args=(nodeID,str(prodInstance),node,))
-					t = Thread(target=prodT,args=(producerPath, nodeID,str(prodInstance),node,))
-					t.setDaemon(True)
-					t.start()
-					
-				else:
-					print("Standard producer")
-					# node.popen("python3 "+producerPath+" " +nodeID+" "+tClasses+" "+mSizeString+" "+str(mRate)+" "+str(nTopics)+" "+str(acks)+" "+str(compression)\
-					# +" "+str(batchSize)+" "+str(linger)+" "+str(requestTimeout)+" "+brokerId+" "+str(replication)+" "+messageFilePath\
-					# +" "+topicName+" "+producerType+" "+prodNumberOfFiles+" &", shell=True)
+				node.popen("python3 "+ producerPath +" " +nodeID+" "+str(nProducerInstances)+" &", shell=True)
 				
-				prodInstance += 1
+			else:
+				print("Standard producer")
+				# node.popen("python3 "+producerPath+" " +nodeID+" "+tClasses+" "+mSizeString+" "+str(mRate)+" "+str(nTopics)+" "+str(acks)+" "+str(compression)\
+				# +" "+str(batchSize)+" "+str(linger)+" "+str(requestTimeout)+" "+brokerId+" "+str(replication)+" "+messageFilePath\
+				# +" "+topicName+" "+producerType+" "+prodNumberOfFiles+" &", shell=True)
 
 		except IndexError:
 			print("Error: Production topic name not matched with the already created topics")
@@ -214,7 +193,6 @@ def spawnConsumers(net, consDetailsList, topicPlace):
 			print("Error: Consume topic name not matched with the already created topics")
 			sys.exit(1)
 
-
 def spawnSparkClients(net, sparkDetailsList):
 	netNodes = {}
 
@@ -237,20 +215,9 @@ def spawnSparkClients(net, sparkDetailsList):
 		sprkID = "h"+sparkNode
 		node = netNodes[sprkID]
 
-		# out= node.cmd("sudo ~/.local/bin/spark-submit --packages org.apache.spark:spark-sql-kafka-0-10_2.12:3.2.1 "+sparkApp\
-		# 			+" "+str(node.name)+" "+sparkOutputTo, shell=True) 
-
-		# out= node.cmd("sudo /home/monzurul/.local/lib/python3.8/site-packages/pyspark/bin/spark-submit --packages org.apache.spark:spark-sql-kafka-0-10_2.12:3.2.1 "+sparkApp\
-		# 			+" "+str(node.name)+" "+sparkOutputTo, shell=True) 
-
 		node.popen("sudo spark/pyspark/bin/spark-submit --packages org.apache.spark:spark-sql-kafka-0-10_2.12:3.2.1 "+sparkApp\
 					+" "+str(node.name)+" "+sparkOutputTo+" &", shell=True)
-
-		# node.popen("sudo spark/pyspark/bin/spark-submit --packages org.apache.spark:spark-sql-kafka-0-10_2.12:3.2.1 "+sparkApp\
-		# 			+" &", shell=True) 
-		# print(out)
-
-		
+	
 def spawnKafkaMySQLConnector(net, prodDetailsList, mysqlPath):
 	netNodes = {}
 
@@ -325,7 +292,7 @@ def runLoad(net, args, topicPlace, prodDetailsList, consDetailsList, sparkDetail
 		print("Spark Clients created")
 
 	# spawnProducers(net, mSizeString, mRate, tClassString, nTopics, args, prodDetailsList, topicPlace)
-	producerThread(net, mSizeString, mRate, tClassString, nTopics, args, prodDetailsList, topicPlace)
+	spawnThreadedProducers(net, mSizeString, mRate, tClassString, nTopics, args, prodDetailsList, topicPlace)
 	# time.sleep(120)
 	print("Producers created")
 	

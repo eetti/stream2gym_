@@ -83,7 +83,7 @@ try:
                 logging.info("\n")
                 logging.info(query.lastProgress)
 
-                time.sleep(10)
+                time.sleep(1)
         
         # query.awaitTermination()
 

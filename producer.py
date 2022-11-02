@@ -68,42 +68,11 @@ def messageProductionSFST(messageFilePath, fileID):
 		message = generateMessage(mSizeParams)
 		logging.info("Generated Message")
 	
-	# bMsg = bytearray(message)
-
-	# producer.send(topicName, bMsg)
-	# logging.info('Topic: %s; Message ID: %s; Message: %s', topicName, str(msgID), message)       
-	# msgID += 1
-
 	# sending a single file till the duration of the simulation
 	separator = 'rrrr '
-	sentMessage = message + bytes(separator,'utf-8') + bytes(str(fileID), 'utf-8')
-
-	# sentMessage = message           
+	sentMessage = message + bytes(separator,'utf-8') + bytes(str(fileID), 'utf-8')       
 
 	return sentMessage
-
-# def messageProductionSFST(bootstrapServers, messageFilePath,topicName):
-# 	global msgID
-# 	if(messageFilePath != 'None'):
-# 			message = readMessageFromFile(messageFilePath)
-# 			logging.info("Message Generated From File "+messageFilePath)
-
-# 	else:
-# 		message = generateMessage(mSizeParams)
-# 		logging.info("Generated Message")
-	
-# 	separator = 'rrrr'
-# 	sentMessage = message + bytes(separator,'utf-8') + bytes(str(msgID), 'utf-8')
-
-# 	producer = KafkaProducer(bootstrap_servers = bootstrapServers)
-# 	producer.send(topicName, sentMessage)
-
-# 	fileID = "File: " +str(msgID)
-# 	logging.info('      File has been sent ->  Topic: %s; File ID: %s', \
-#                         topicName, str(fileID))
-
-# 	msgID += 1
-
 
 def messageProductionMFST(messageFilePath,fileNumber, topicName):
 	if(messageFilePath != 'None'):

@@ -6,6 +6,7 @@ import sys
 
 logDir = sys.argv[1]
 
+execTimes = []
 with open(logDir, 'r') as fp:
         lines = fp.readlines()
         searchWord = '\'durationMs\': '
@@ -26,4 +27,16 @@ with open(logDir, 'r') as fp:
                     walCommitTime = int(durationString.split('\'walCommit\': ')[1].split(',')[0])
 
                     totalTime = addBatchTime+getBatchTime+latestOffsetTime+queryPlanningTime+triggerExecutionTime+walCommitTime
-                    print(str(totalTime)+'ms')
+                    execTime = triggerExecutionTime - walCommitTime
+                    execTimes.append(execTime)
+
+print('Execution times in ms: ')
+print(*execTimes)
+
+totalExecTime = 0
+for index,eTime in enumerate(execTimes):
+    if index != 0:
+        totalExecTime += eTime
+
+avgExexTime = totalExecTime/(len(execTimes)-1)
+print('average time after reaching steady state(in ms):  '+str(avgExexTime))
