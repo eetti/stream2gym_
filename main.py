@@ -32,10 +32,22 @@ GROUP_MAX_SESSION_TIMEOUT_MS = 1800000
 REPLICA_LAG_TIME_MAX_MS = 30000
 
 # Kill all subprocesses
-def killSubprocs(brokerPlace, zkPlace):	
+def killSubprocs(brokerPlace, zkPlace, prodDetailsList, sparkDetailsList):	
 	os.system("sudo pkill -9 -f bandwidth-monitor.py")
-	os.system("sudo pkill -9 -f producer.py")
+	# os.system("sudo pkill -9 -f producer.py")
 	os.system("sudo pkill -9 -f consumer.py")
+
+	# killing producer processes
+	for prod in prodDetailsList:
+		producerScript = prod["producerPath"]
+		prodKillStatus = os.system("sudo pkill -9 -f "+producerScript)
+		print("producer Script: "+str(prodKillStatus))
+	
+	# killing spark processes
+	for sprk in sparkDetailsList:
+		sprkScript = sprk["applicationPath"]
+		sprkKillStatus = os.system("sudo pkill -9 -f "+sprkScript)
+		print("Spark Script: "+str(sprkKillStatus))
 
 	for bID in brokerPlace:
 		os.system("sudo pkill -9 -f server"+str(bID)+".properties") 
@@ -195,7 +207,7 @@ if __name__ == '__main__':
 	sparkDetailsList, mysqlPath = emuSpark.getSparkDetails(net, args.topo)
 	
 	#TODO: remove debug code
-	killSubprocs(brokerPlace, zkPlace)
+	killSubprocs(brokerPlace, zkPlace, prodDetailsList, sparkDetailsList)
 	emuLogs.cleanLogs()
 	emuMySQL.cleanMysqlState()
 	emuKafka.cleanKafkaState(brokerPlace)
@@ -235,8 +247,16 @@ if __name__ == '__main__':
 	# CLI(net)
 	print("Simulation complete")
 
+	print("running processes before killing : ")
+	print(os.system("sudo ps aux | grep python3"))
+	print(os.system("sudo ps aux | grep spark"))
+
 	# to kill all the running subprocesses
-	killSubprocs(brokerPlace, zkPlace)
+	killSubprocs(brokerPlace, zkPlace, prodDetailsList, sparkDetailsList)
+
+	print("running processes after killing : ")
+	print(os.system("sudo ps aux | grep python3"))
+	print(os.system("sudo ps aux | grep spark"))
 
 	net.stop()
 	logging.info('Network stopped')

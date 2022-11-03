@@ -32,7 +32,7 @@
       <data key="zk">1</data>
       <data key="bk">1</data>
       <data key="prodType">INDIVIDUAL,use-cases/reproducibility/networkTrafficAnalysis/flowProducerThread.py</data>
-      <data key="prodCfg">use-cases/reproducibility/networkTrafficAnalysis/AIMchat1.pcap,inputTopic,1,5</data>
+      <data key="prodCfg">use-cases/reproducibility/networkTrafficAnalysis/AIMchat1.pcap,inputTopic,1,100</data>
 	  </node>   
 
     <node id="h2">
