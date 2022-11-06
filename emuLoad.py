@@ -14,9 +14,6 @@ import subprocess
 from subprocess import Popen, PIPE, STDOUT
 from datetime import datetime
 
-def prodT(producerPath, nodeId, prodInstance,node):
-	prodThread  = node.cmd("python3 "+ producerPath +" " +nodeId+" "+str(prodInstance)+" &")
-
 # Using threads for producer instances
 def spawnThreadedProducers(net, mSizeString, mRate, tClassString, nTopics, args, prodDetailsList, topicPlace):
 	acks = args.acks
@@ -215,10 +212,10 @@ def spawnSparkClients(net, sparkDetailsList):
 		sprkID = "h"+sparkNode
 		node = netNodes[sprkID]
 
-		node.popen("sudo spark/pyspark/bin/spark-submit --packages org.apache.spark:spark-sql-kafka-0-10_2.12:3.2.1 "+sparkApp\
-					+" "+str(node.name)+" "+sparkOutputTo+" &", shell=True)
+		# node.popen("sudo spark/pyspark/bin/spark-submit --packages org.apache.spark:spark-sql-kafka-0-10_2.12:3.2.1 "+sparkApp\
+		# 			+" "+str(node.name)+" "+sparkOutputTo+" &", shell=True)
 
-		# node.popen("sudo python3 use-cases/reproducibility/networkTrafficAnalysis/topicDuplicate.py &", shell=True)
+		node.popen("sudo python3 use-cases/reproducibility/networkTrafficAnalysis/topicDuplicate.py &", shell=True)
 	
 def spawnKafkaMySQLConnector(net, prodDetailsList, mysqlPath):
 	netNodes = {}
@@ -293,8 +290,8 @@ def runLoad(net, args, topicPlace, prodDetailsList, consDetailsList, sparkDetail
 		time.sleep(30)
 		print("Spark Clients created")
 
-	# spawnProducers(net, mSizeString, mRate, tClassString, nTopics, args, prodDetailsList, topicPlace)
-	spawnThreadedProducers(net, mSizeString, mRate, tClassString, nTopics, args, prodDetailsList, topicPlace)
+	spawnProducers(net, mSizeString, mRate, tClassString, nTopics, args, prodDetailsList, topicPlace)
+	# spawnThreadedProducers(net, mSizeString, mRate, tClassString, nTopics, args, prodDetailsList, topicPlace)
 	# time.sleep(120)
 	print("Producers created")
 	

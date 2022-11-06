@@ -41,13 +41,11 @@ def killSubprocs(brokerPlace, zkPlace, prodDetailsList, sparkDetailsList):
 	for prod in prodDetailsList:
 		producerScript = prod["producerPath"]
 		prodKillStatus = os.system("sudo pkill -9 -f "+producerScript)
-		print("producer Script: "+str(prodKillStatus))
 	
 	# killing spark processes
 	for sprk in sparkDetailsList:
 		sprkScript = sprk["applicationPath"]
 		sprkKillStatus = os.system("sudo pkill -9 -f "+sprkScript)
-		print("Spark Script: "+str(sprkKillStatus))
 
 	for bID in brokerPlace:
 		os.system("sudo pkill -9 -f server"+str(bID)+".properties") 

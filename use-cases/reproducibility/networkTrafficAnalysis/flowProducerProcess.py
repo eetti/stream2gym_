@@ -15,6 +15,26 @@ def get_random_string(length):
 	result_str = ''.join(pythonRand.choices(letters, k = length))
 	return result_str
 
+def generatePktData():
+	pkt ={}
+
+	# generating one packet with 5 flow-tuples and payload
+	srcIP = "192.168.1.11"
+	dstIP = "20.198.162.76" 
+	dstPort = ["20", "443", "25", "53"] #"443" for https
+	proto = "6" # for TCP
+
+	srcPort = str(pythonRand.randint(49152,65535))
+	dstPort = pythonRand.choice(dstPort)
+
+	# attaching random payload and length of payload
+	payloadLength = pythonRand.randint(1, 1500)
+	payload = get_random_string(payloadLength)
+
+	pkt = {"srcIP": srcIP, "dstIP":dstIP, "srcPort":srcPort, "dstPort": dstPort,\
+		"proto":proto, "payloadLength":payloadLength, "payload":payload}
+
+	return pkt
 
 try:
 	nodeName = sys.argv[1]
@@ -33,37 +53,21 @@ try:
 	producer = KafkaProducer(bootstrap_servers=bootstrapServers,
 							value_serializer=lambda x: x.encode('utf-8'))
 								
-	srcIP = "192.168.1.11"
-	dstIP = "20.198.162.76" 
-	dstPort = ["20", "443", "25", "53"] #"443" for https
-	proto = "6" # for TCP
-
-	# nFlows = 1
-	# nPacketsPerflow = []
-	# for i in range(nFlows):
-	# 	nPacketsPerflow.append(pythonRand.randint(0,200))
-	
 	flowCount = 1
 	while True:
-		srcPort = str(pythonRand.randint(49152,65535))
-		dstPort = pythonRand.choice(dstPort)
 		pktCount = 1 
 		nPkts = pythonRand.randint(0,200) #nPacketsPerflow[flowCount]
 		while pktCount <= nPkts:
-			# attaching random payload and length of payload
-			payloadLength = pythonRand.randint(1, 1500)
-			payload = get_random_string(payloadLength)
-
+			pkt = generatePktData()
 			msg = str(nodeID) + ',' + str(prodInstanceID)+','+ str(flowCount) +\
-			',' + str(pktCount) +',' + srcIP + ',' +\
-			dstIP + ',' + proto + ',' + srcPort + \
-			',' + dstPort + ',' + str(payloadLength) + \
-			',' + payload
+				',' + str(pktCount) +',' + pkt["srcIP"] + ',' +\
+				pkt["dstIP"] + ',' + pkt["proto"] + ',' + pkt["srcPort"] + \
+				',' + pkt["dstPort"] + ',' + str(pkt["payloadLength"]) + \
+				',' + pkt["payload"]
 
-			logging.info(msg)
+			producer.send(inputTopic, msg)
+			logging.info('Message: '+msg)
 			pktCount += 1 
-
-			producer.send(inputTopic, msg)  
 
 		# sleep with a poisson distribution mean of 2mins
 		sleepTime = random.poisson(120)

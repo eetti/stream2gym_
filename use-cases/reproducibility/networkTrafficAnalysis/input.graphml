@@ -31,12 +31,12 @@
     <node id="h1">
       <data key="zk">1</data>
       <data key="bk">1</data>
-      <data key="prodType">INDIVIDUAL,use-cases/reproducibility/networkTrafficAnalysis/flowProducerThread.py</data>
+      <data key="prodType">INDIVIDUAL,use-cases/reproducibility/networkTrafficAnalysis/flowProducerProcess.py</data>
       <data key="prodCfg">use-cases/reproducibility/networkTrafficAnalysis/AIMchat1.pcap,inputTopic,1,5</data>
 	  </node>   
 
     <node id="h2">
-      <data key="sparkCfg">use-cases/reproducibility/networkTrafficAnalysis/spark-consumer-pcap.py,outputTopic</data>
+      <data key="sparkCfg">use-cases/reproducibility/networkTrafficAnalysis/spark-port-statistics.py,outputTopic</data>
       <data key="consCfg">inputTopic,1</data>
 	  </node> 
 

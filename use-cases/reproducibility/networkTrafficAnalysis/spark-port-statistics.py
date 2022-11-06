@@ -49,11 +49,13 @@ try:
         pkt_df3 = pkt_df2.select("pkt.*", "timestamp")
 
         groupedDf = pkt_df3.groupBy('nodeID', 'prodInstanceID', 'flowCount', 'dstPort')\
-                .agg(approx_count_distinct("pktCount").alias("totalPkts"),\
-                collect_set("pktCount").alias("pktIDs"))
+                .agg(count("pktCount").alias("totalPkts"),\
+                collect_set("pktCount").alias("pktIDList"))
+
+        groupedDf2 = groupedDf.withColumn("pktIDs", concat_ws(",", col("pktIDList")))
 
         # to produce the message in Kafka topic
-        groupedDf = groupedDf.select( concat( \
+        groupedDf = groupedDf2.select( concat( \
                 lit(' Producer Node: '), 'nodeID',\
                 lit(' user: '), 'prodInstanceID',\
                 lit(' flow ID: '), 'flowCount',\
@@ -65,7 +67,7 @@ try:
         query = groupedDf.writeStream \
         .trigger(processingTime='1 seconds')\
         .format("kafka") \
-        .outputMode("append")\
+        .outputMode("complete")\
         .option("kafka.bootstrap.servers", kafka_bootstrap_servers) \
         .option("topic", sparkOutputTo) \
         .option("checkpointLocation", "logs/output/wordcount_checkpoint_final") \

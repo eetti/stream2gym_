@@ -56,10 +56,6 @@ def prodInstanceThread(kProd, nodeID, prodInstanceID, inputTopic):
 		logFile = "logs/output/"+"prod-node"+nodeID+\
 									"-instance"+str(prodInstanceID)+".log"
 		threadLogger = setup_logger('threadLogger', logFile)
-		# logging.basicConfig(filename="logs/output/"+"prod-node"+nodeID+\
-		# 							"-instance"+str(prodInstanceID)+".log",
-		# 							format='%(asctime)s %(levelname)s:%(message)s',
-		# 							level=logging.INFO) 
 		threadLogger.info("Thread: "+str(prodInstanceID))
 									
 		flowCount = 1
