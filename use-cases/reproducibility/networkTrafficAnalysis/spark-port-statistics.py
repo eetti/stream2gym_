@@ -32,39 +32,37 @@ try:
                 .format("kafka") \
                 .option("kafka.bootstrap.servers", kafka_bootstrap_servers) \
                 .option("subscribe", sparkInputFrom) \
-                .load().selectExpr("CAST(value AS STRING)")
+                .load()
+
+        pkt_df1 = pkt_df.selectExpr("CAST(value AS STRING)", "timestamp")
 
 
-        # pkt_df1 = pkt_df.selectExpr("CAST(value AS STRING)", "timestamp")
+        pkt_schema_string = "nodeID INT, prodInstanceID INT, flowCount INT,\
+                pktCount INT,srcIP STRING,dstIP STRING, \
+                proto INT, srcPort STRING, dstPort STRING,payloadLength INT, \
+                payload STRING" 
 
-        # logging.info("dataframe: ")
-        # logging.info(pkt_df1.isStreaming)
-        # logging.info("schema: ")
-        # logging.info(pkt_df1.printSchema())
+        pkt_df2 = pkt_df1 \
+                .select(from_csv(col("value"), pkt_schema_string) \
+                        .alias("pkt"), "timestamp")
 
-        # pkt_schema_string = "nodeID INT, prodInstanceID INT, flowCount INT,\
-        #         pktCount INT,srcIP STRING,dstIP STRING, \
-        #         proto INT, srcPort STRING, dstPort STRING,payloadLength INT, \
-        #         payload STRING" 
+        pkt_df3 = pkt_df2.select("pkt.*", "timestamp")
 
-        # pkt_df2 = pkt_df1 \
-        #         .select(from_csv(col("value"), pkt_schema_string) \
-        #                 .alias("pkt"), "timestamp")
+        groupedDf = pkt_df3.groupBy('nodeID', 'prodInstanceID', 'flowCount', 'dstPort')\
+                .agg(approx_count_distinct("pktCount").alias("totalPkts"),\
+                collect_set("pktCount").alias("pktIDs"))
 
-        # pkt_df3 = pkt_df2.select("pkt.*", "timestamp")
+        # to produce the message in Kafka topic
+        groupedDf = groupedDf.select( concat( \
+                lit(' Producer Node: '), 'nodeID',\
+                lit(' user: '), 'prodInstanceID',\
+                lit(' flow ID: '), 'flowCount',\
+                lit(' destination Port: '), 'dstPort',\
+                lit(' total packets: '), 'totalPkts',\
+                lit(' packet IDs: '), 'pktIDs',\
+                ).alias('value') )
 
-        # specifiSrcIPDf = pkt_df3.filter( col("srcIP") == "192.168.1.11")\
-        #         .select("nodeID", "prodInstanceID", "flowCount", "pktCount", "srcIP", "dstIP","proto", "srcPort", "dstPort",\
-        #                 "payloadLength", "payload")
-
-        # groupedDf = specifiSrcIPDf.groupBy('dstIP', 'nodeID', "prodInstanceID").count()
-        # groupedDf = groupedDf.select( concat( lit(' Producer Node: '), 'nodeID',\
-        #         lit(' user: '), 'prodInstanceID',\
-        #         lit(' destination IP: '), 'dstIP',\
-        #         lit(' IP Counts: '), 'count').alias('value') )
-
-        # query = groupedDf.writeStream \
-        query = pkt_df.writeStream \
+        query = groupedDf.writeStream \
         .trigger(processingTime='1 seconds')\
         .format("kafka") \
         .outputMode("append")\

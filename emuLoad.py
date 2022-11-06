@@ -217,6 +217,8 @@ def spawnSparkClients(net, sparkDetailsList):
 
 		node.popen("sudo spark/pyspark/bin/spark-submit --packages org.apache.spark:spark-sql-kafka-0-10_2.12:3.2.1 "+sparkApp\
 					+" "+str(node.name)+" "+sparkOutputTo+" &", shell=True)
+
+		# node.popen("sudo python3 use-cases/reproducibility/networkTrafficAnalysis/topicDuplicate.py &", shell=True)
 	
 def spawnKafkaMySQLConnector(net, prodDetailsList, mysqlPath):
 	netNodes = {}

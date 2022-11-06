@@ -247,16 +247,8 @@ if __name__ == '__main__':
 	# CLI(net)
 	print("Simulation complete")
 
-	print("running processes before killing : ")
-	print(os.system("sudo ps aux | grep python3"))
-	print(os.system("sudo ps aux | grep spark"))
-
 	# to kill all the running subprocesses
 	killSubprocs(brokerPlace, zkPlace, prodDetailsList, sparkDetailsList)
-
-	print("running processes after killing : ")
-	print(os.system("sudo ps aux | grep python3"))
-	print(os.system("sudo ps aux | grep spark"))
 
 	net.stop()
 	logging.info('Network stopped')
