@@ -67,7 +67,7 @@ try:
         query = groupedDf.writeStream \
         .trigger(processingTime='1 seconds')\
         .format("kafka") \
-        .outputMode("complete")\
+        .outputMode("update")\
         .option("kafka.bootstrap.servers", kafka_bootstrap_servers) \
         .option("topic", sparkOutputTo) \
         .option("checkpointLocation", "logs/output/wordcount_checkpoint_final") \

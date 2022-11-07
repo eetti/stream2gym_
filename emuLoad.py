@@ -132,18 +132,15 @@ def spawnProducers(net, mSizeString, mRate, tClassString, nTopics, args, prodDet
 			brokerId = [x for x in topicPlace if x['topicName'] == prodTopic][0]["topicBroker"] 
 
 			print("Producing messages to topic "+topicName+" at broker "+brokerId)
-			
+			print("Producer type: "+producerType)
+
 			prodInstance = 1
 
 			while prodInstance <= int(nProducerInstances):
 				if producerType == 'INDIVIDUAL':
-					print(nodeID)
-					print(prodInstance)
-					print(producerPath)
 					node.popen("python3 "+ producerPath +" " +nodeID+" "+str(prodInstance)+" &", shell=True)
 					
 				else:
-					print("Standard producer")
 					node.popen("python3 "+producerPath+" " +nodeID+" "+tClasses+" "+mSizeString+" "+str(mRate)+" "+str(nTopics)+" "+str(acks)+" "+str(compression)\
 					+" "+str(batchSize)+" "+str(linger)+" "+str(requestTimeout)+" "+brokerId+" "+str(replication)+" "+messageFilePath\
 					+" "+topicName+" "+producerType+" "+prodNumberOfFiles+" &", shell=True)
@@ -212,10 +209,10 @@ def spawnSparkClients(net, sparkDetailsList):
 		sprkID = "h"+sparkNode
 		node = netNodes[sprkID]
 
-		# node.popen("sudo spark/pyspark/bin/spark-submit --packages org.apache.spark:spark-sql-kafka-0-10_2.12:3.2.1 "+sparkApp\
-		# 			+" "+str(node.name)+" "+sparkOutputTo+" &", shell=True)
+		node.popen("sudo spark/pyspark/bin/spark-submit --packages org.apache.spark:spark-sql-kafka-0-10_2.12:3.2.1 "+sparkApp\
+					+" "+str(node.name)+" "+sparkOutputTo+" &", shell=True)
 
-		node.popen("sudo python3 use-cases/reproducibility/networkTrafficAnalysis/topicDuplicate.py &", shell=True)
+		# node.popen("sudo python3 use-cases/reproducibility/networkTrafficAnalysis/topicDuplicate.py &", shell=True)
 	
 def spawnKafkaMySQLConnector(net, prodDetailsList, mysqlPath):
 	netNodes = {}
@@ -231,7 +228,31 @@ def spawnKafkaMySQLConnector(net, prodDetailsList, mysqlPath):
 	print("connector starts on node: "+connID)
 	
 	node.popen("sudo kafka/bin/connect-standalone.sh kafka/config/connect-standalone-new.properties "+ mysqlPath +" > logs/connectorOutput.txt &", shell=True)
-	
+
+def spawnTopicDuplicate(net, sparkDetailsList):
+	netNodes = {}
+
+	for node in net.hosts:
+		netNodes[node.name] = node
+
+	for sprk in sparkDetailsList:
+		time.sleep(30)
+		
+		sparkNode = sprk["nodeId"]
+		# sparkInputFrom = sprk["topicsToConsume"]
+		sparkApp = sprk["applicationPath"]
+		sparkOutputTo = sprk["produceTo"]
+		print("spark node: "+sparkNode)
+		print("spark App: "+sparkApp)
+		# print("spark input from: "+sparkInputFrom)
+		print("spark output to: "+sparkOutputTo)
+		print("*************************")
+
+		sprkID = "h"+sparkNode
+		node = netNodes[sprkID]
+
+		node.popen("sudo python3 use-cases/reproducibility/networkTrafficAnalysis/topicDuplicate.py &", shell=True)
+
 
 def runLoad(net, args, topicPlace, prodDetailsList, consDetailsList, sparkDetailsList, \
 	mysqlPath, brokerPlace, isDisconnect, dcDuration, dcLinks, topicWaitTime=100):
@@ -287,6 +308,7 @@ def runLoad(net, args, topicPlace, prodDetailsList, consDetailsList, sparkDetail
 
 	if args.onlyKafka == 0:
 		spawnSparkClients(net, sparkDetailsList)
+		# spawnTopicDuplicate(net, sparkDetailsList)
 		time.sleep(30)
 		print("Spark Clients created")
 

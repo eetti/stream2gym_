@@ -52,6 +52,9 @@ def killSubprocs(brokerPlace, zkPlace, prodDetailsList, sparkDetailsList):
 
 	os.system("sudo pkill -9 -f zookeeper") 
 
+	# killing the topic duplicate python script
+	os.system("sudo pkill -9 -f topicDuplicate.py") 
+
 
 def validateInput(args):
 

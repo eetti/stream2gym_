@@ -51,9 +51,8 @@ try:
 				i += 1
 
 			else:
-				logging.info("Message ID: %s",str(i))
-				logging.info("Message received:")
-				logging.info(msgContent)
+				# logging.info("Message ID: %s",str(i))
+				logging.info("Message received: " + msgContent)
 				i += 1
 
 

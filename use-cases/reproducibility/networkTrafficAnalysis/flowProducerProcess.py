@@ -66,7 +66,7 @@ try:
 				',' + pkt["payload"]
 
 			producer.send(inputTopic, msg)
-			logging.info('Message: '+msg)
+			logging.info('Message produced: '+msg)
 			pktCount += 1 
 
 		# sleep with a poisson distribution mean of 2mins
