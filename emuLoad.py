@@ -307,8 +307,8 @@ def runLoad(net, args, topicPlace, prodDetailsList, consDetailsList, sparkDetail
 		print("Kafka-MySQL connector instance created")
 
 	if args.onlyKafka == 0:
-		spawnSparkClients(net, sparkDetailsList)
-		# spawnTopicDuplicate(net, sparkDetailsList)
+		# spawnSparkClients(net, sparkDetailsList)
+		spawnTopicDuplicate(net, sparkDetailsList)
 		time.sleep(30)
 		print("Spark Clients created")
 

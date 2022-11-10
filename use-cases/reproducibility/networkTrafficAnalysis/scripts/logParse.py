@@ -15,7 +15,6 @@ choice = sys.argv[4]
 def producerLogParse(prodLogDir, prodInstances):
     pktList = []
     i = 1
-    # prodInstances = 100
     while i <= prodInstances:
         with open(prodLogDir+'/prod-node1-instance'+str(i)+'.log','r') as prodFp:
             lines = prodFp.readlines()
@@ -92,10 +91,14 @@ def sparkConsumerLogParse(consLogFile):
                         pkt['pktID'] == int(pktID) \
                         for pkt in pktList):
                             pktList.append(pktDetails)
+                    # else:
+                    #     print("Producer Node: "+str(nodeID)+" "+"user: "+str(prodInstanceID)+\
+                    #         " "+"flow ID: "+str(flowID)+" "+"destination Port: "+\
+                    #         str(portID)+" "+"packet ID: "+str(pktID))
                     
             lineIndex += 1
     print("Total consumed packets: "+str(len(pktList)))
-    # print("Pkt count:  "+str(pktCount))
+    print("Pkt count:  "+str(pktCount))
     return pktList
 
 def comparePkt(prodPktList, consPktList):
@@ -122,7 +125,7 @@ def comparePkt(prodPktList, consPktList):
     diff =  sum(msgLatencyList,timedelta()) / consumedMsg
     # Convert timedelta object to Milliseconds
     avgProcessingTime = diff.total_seconds() * 1000
-    print("No of processed packets: "+str(consumedMsg))
+    # print("No of processed packets: "+str(consumedMsg))
     print("Avg. end-to-end latency per packet(in ms): "+str(avgProcessingTime))
 
 # processing Spark log

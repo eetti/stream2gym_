@@ -4,14 +4,10 @@
 
 from kafka import KafkaConsumer
 from kafka import KafkaProducer
-from threading import Thread
-from queue import Queue
 import logging
 
-topic1  = "inputTopic"
-topic2 = "outputTopic"
-
-data = Queue()
+from multiprocessing import Process
+from multiprocessing import Queue
 
 formatter = logging.Formatter('%(asctime)s %(levelname)s %(message)s')
 def setup_logger(name, log_file, level=logging.INFO):
@@ -26,33 +22,39 @@ def setup_logger(name, log_file, level=logging.INFO):
 
     return logger
 
-kafka_bootstrap_servers = "10.0.0.1:9092"
-consumer = KafkaConsumer(
-     topic1,
-     bootstrap_servers=[kafka_bootstrap_servers]
-    )
-
-producer1 = KafkaProducer(bootstrap_servers=[kafka_bootstrap_servers])
-
-def readTopicData(threadLogger):
-    # print("received")    
+def readTopicData(threadLogger, data):  
+    topic1  = "inputTopic"
+    kafka_bootstrap_servers = "10.0.0.1:9092"
+    consumer = KafkaConsumer(
+        topic1,
+        bootstrap_servers=[kafka_bootstrap_servers]
+        )   
     for message in consumer:
-        msgValue = str(message.value, 'utf-8')
-        threadLogger.info("Consumed: "+msgValue)
+        msgValue = str(message.value, 'utf-8')     
         data.put(msgValue)
+        threadLogger.info("Consumed: "+msgValue)
+    data.put(None)
 
-def sendDataToTopic(threadLogger):
+def sendDataToTopic(threadLogger,threadID, data):
+    topic2 = "outputTopic"
+    kafka_bootstrap_servers = "10.0.0.1:9092"
+    producer1 = KafkaProducer(bootstrap_servers=kafka_bootstrap_servers)
     while True:
-        msgToSend = bytes(data.get(),'utf-8')
-        producer1.send(topic2, value=msgToSend)
-        threadLogger.info("Produced: "+data.get())
-        # producer1.flush()
+        # get a unit of work
+        item = data.get()
+        # check for stop
+        if item is None:
+            break
+        # send
+        producer1.send(topic2, item.encode())
+        threadLogger.info("Produced in Process "+str(threadID)+": "+item)
 
 if __name__ == "__main__":
+    queue = Queue()
     logFile = "logs/output/"+"topicDuplicateLogger.log"
     threadLogger = setup_logger('threadLogger', logFile)
 
-    read_thread = Thread(target=readTopicData, args=(threadLogger,))
+    read_thread = Process(target=readTopicData, args=(threadLogger,queue,))
     read_thread.start()
-    write_thread = Thread(target=sendDataToTopic, args=(threadLogger,))
+    write_thread = Process(target=sendDataToTopic, args=(threadLogger,1, queue))
     write_thread.start()

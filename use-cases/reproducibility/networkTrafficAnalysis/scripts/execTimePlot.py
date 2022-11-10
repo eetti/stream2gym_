@@ -13,8 +13,8 @@ fig = plt.figure()
 # plt.plot(nConcurrentUsers,avgExecTimeRound2,color='red',linestyle='dashed', label='Round2')
 # plt.plot(nConcurrentUsers,avgExecTimeRound3,color='green',linestyle='dashed', label='Round3')
 
-nConcurrentUsers = [1, 20, 40, 60,80,100]
-avgExecTimeRound1 = [47.996, 1342.71, 2077.465, 2359.824, 2592.634, 2540.529]
+nConcurrentUsers = [20, 40, 60, 80, 100]
+avgExecTimeRound1 = [1585.595, 2074.278, 2420.265, 2587.151, 2432.62]
 plt.plot(nConcurrentUsers,avgExecTimeRound1,color='blue',linestyle='dotted')
 
 
