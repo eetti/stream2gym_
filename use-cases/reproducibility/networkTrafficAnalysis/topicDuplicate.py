@@ -1,3 +1,5 @@
+## multi-producer, multi-consumer with multi-thread
+
 #!/usr/bin/python3
 # this script will duplicate data from one topic to another
 # command to run this script: sudo python3 topicDuplicate.py
@@ -6,8 +8,12 @@ from kafka import KafkaConsumer
 from kafka import KafkaProducer
 import logging
 
-from multiprocessing import Process
-from multiprocessing import Queue
+from threading import Thread
+from queue import Queue
+
+from time import sleep
+from random import random
+from threading import Barrier
 
 formatter = logging.Formatter('%(asctime)s %(levelname)s %(message)s')
 def setup_logger(name, log_file, level=logging.INFO):
@@ -22,20 +28,20 @@ def setup_logger(name, log_file, level=logging.INFO):
 
     return logger
 
-def readTopicData(threadLogger, data):  
-    topic1  = "inputTopic"
-    kafka_bootstrap_servers = "10.0.0.1:9092"
-    consumer = KafkaConsumer(
-        topic1,
-        bootstrap_servers=[kafka_bootstrap_servers]
-        )   
-    for message in consumer:
+def producerToQueue(consumer1, threadLogger, threadID, data, barrier):   #producer
+    for message in consumer1:
+        # block, to simulate effort
+        sleep(0)
         msgValue = str(message.value, 'utf-8')     
         data.put(msgValue)
-        threadLogger.info("Consumed: "+msgValue)
-    data.put(None)
+        threadLogger.info("Consumed in thread "+str(threadID)+" : "+msgValue)
+    # wait for all producers to finish
+    barrier.wait()
+    # signal that there are no further items
+    if threadID == 0:
+        data.put(None)
 
-def sendDataToTopic(threadLogger,threadID, data):
+def consumeFromQueue(threadLogger,threadID, data): # consumer
     topic2 = "outputTopic"
     kafka_bootstrap_servers = "10.0.0.1:9092"
     producer1 = KafkaProducer(bootstrap_servers=kafka_bootstrap_servers)
@@ -44,17 +50,42 @@ def sendDataToTopic(threadLogger,threadID, data):
         item = data.get()
         # check for stop
         if item is None:
+            # add the signal back for other consumers
+            queue.put(item)
+            # stop running
             break
+        # block, to simulate effort
+        sleep(0)
         # send
         producer1.send(topic2, item.encode())
-        threadLogger.info("Produced in Process "+str(threadID)+": "+item)
+        threadLogger.info("Produced in thread "+str(threadID)+": "+item)
 
 if __name__ == "__main__":
     queue = Queue()
     logFile = "logs/output/"+"topicDuplicateLogger.log"
     threadLogger = setup_logger('threadLogger', logFile)
 
-    read_thread = Process(target=readTopicData, args=(threadLogger,queue,))
-    read_thread.start()
-    write_thread = Process(target=sendDataToTopic, args=(threadLogger,1, queue))
-    write_thread.start()
+    topic1  = "inputTopic"
+    kafka_bootstrap_servers = "10.0.0.1:9092"
+    consumer1 = KafkaConsumer(
+        topic1,
+        bootstrap_servers=[kafka_bootstrap_servers],
+        auto_offset_reset='earliest'
+        )
+
+    # create the shared barrier
+    nConsumers = 1
+    nProducers = 1
+    barrier = Barrier(nProducers)
+    # start the consumers
+    consumers = [Thread(target=consumeFromQueue, args=(threadLogger,i, queue, ))\
+         for i in range(nConsumers)]
+    for consumer in consumers:
+        consumer.start()
+    # start the producers
+    producers = [Thread(target=producerToQueue, args=(consumer1, threadLogger, i, \
+        queue, barrier))\
+         for i in range(nProducers)]
+    # start the producers
+    for producer in producers:
+        producer.start()

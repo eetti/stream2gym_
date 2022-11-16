@@ -7,11 +7,6 @@ from datetime import datetime, timedelta
 # prodLogDir = "/home/monzurul/Desktop/stream2gym/logs/output/" #sys.argv[1]
 # consLogFile = "/home/monzurul/Desktop/stream2gym/logs/output/cons-node3-instance1.log" #sys.argv[2]
 
-prodLogDir = sys.argv[1]
-consLogFile = sys.argv[2]
-prodInstances = int(sys.argv[3])
-choice = sys.argv[4]
-
 def producerLogParse(prodLogDir, prodInstances):
     pktList = []
     i = 1
@@ -98,7 +93,7 @@ def sparkConsumerLogParse(consLogFile):
                     
             lineIndex += 1
     print("Total consumed packets: "+str(len(pktList)))
-    print("Pkt count:  "+str(pktCount))
+    # print("Pkt count:  "+str(pktCount))
     return pktList
 
 def comparePkt(prodPktList, consPktList):
@@ -127,6 +122,11 @@ def comparePkt(prodPktList, consPktList):
     avgProcessingTime = diff.total_seconds() * 1000
     # print("No of processed packets: "+str(consumedMsg))
     print("Avg. end-to-end latency per packet(in ms): "+str(avgProcessingTime))
+
+prodLogDir = sys.argv[1]
+consLogFile = sys.argv[2]
+prodInstances = int(sys.argv[3])
+choice = sys.argv[4]
 
 # processing Spark log
 if choice == 'spark':

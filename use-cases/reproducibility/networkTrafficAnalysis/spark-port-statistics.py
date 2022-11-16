@@ -32,6 +32,7 @@ try:
                 .format("kafka") \
                 .option("kafka.bootstrap.servers", kafka_bootstrap_servers) \
                 .option("subscribe", sparkInputFrom) \
+                .option("startingOffsets","earliest") \
                 .load()
 
         pkt_df1 = pkt_df.selectExpr("CAST(value AS STRING)", "timestamp")
