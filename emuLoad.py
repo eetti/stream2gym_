@@ -283,12 +283,13 @@ def runLoad(net, args, topicPlace, prodDetailsList, consDetailsList, sparkDetail
 		topicName = topic["topicName"]
 		issuingID = (int) (topic["topicBroker"])-1
 		topicPartition = topic["topicPartition"]
+		topicReplica = topic["topicReplica"]
 		issuingNode = net.hosts[issuingID]
 
 		print("Creating topic "+topicName+" at broker "+str(issuingID+1)+" partition "+str(topicPartition))
 
 		out = issuingNode.cmd("kafka/bin/kafka-topics.sh --create --bootstrap-server 10.0.0."+str(issuingID+1)+":9092\
-			 --replication-factor "+str(replication)+" --partitions " + topicPartition + \
+			 --replication-factor "+topicReplica+" --partitions " + topicPartition + \
 				" --topic "+topicName, shell=True)         
 		
 		print(out)
@@ -307,8 +308,9 @@ def runLoad(net, args, topicPlace, prodDetailsList, consDetailsList, sparkDetail
 		print("Kafka-MySQL connector instance created")
 
 	if args.onlyKafka == 0:
-		# spawnSparkClients(net, sparkDetailsList)
-		spawnTopicDuplicate(net, sparkDetailsList)
+		spawnSparkClients(net, sparkDetailsList)
+		# if we want to create duplicate of a topic, use this python script
+		# spawnTopicDuplicate(net, sparkDetailsList)
 		time.sleep(30)
 		print("Spark Clients created")
 

@@ -200,15 +200,19 @@ if __name__ == '__main__':
 	brokerPlace, zkPlace, topicPlace, prodDetailsList, consDetailsList, isDisconnect, \
 		dcDuration, dcLinks = emuKafka.placeKafkaBrokers(net, args.topo, args.onlySpark)
 
-	# if args.onlyKafka == 0:
-	#Add dependency to connect kafka & Spark
-	emuSpark.addSparkDependency()
+	# ensuring only Kafka can be used in the pipeline
+	if args.onlyKafka == 0:
+		#Add dependency to connect kafka & Spark
+		emuSpark.addSparkDependency()
 	
-	#Get Spark configuration
-	sparkDetailsList, mysqlPath = emuSpark.getSparkDetails(net, args.topo)
+		#Get Spark configuration
+		sparkDetailsList, mysqlPath = emuSpark.getSparkDetails(net, args.topo)
+	else:
+		sparkDetailsList = []
+		mysqlPath = ""
 	
-	#TODO: remove debug code
 	killSubprocs(brokerPlace, zkPlace, prodDetailsList, sparkDetailsList)
+	
 	emuLogs.cleanLogs()
 	emuMySQL.cleanMysqlState()
 	emuKafka.cleanKafkaState(brokerPlace)

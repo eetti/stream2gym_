@@ -6,15 +6,14 @@
 
   <!-- graph attributes -->
   <key id="topicCfg" for="graph" attr.name="topicConfig" attr.type="string"/>
-
+  
   <!-- node attributes -->
   <key id="zk" for="node" attr.name="zookeeper" attr.type="int"/>
   <key id="bk" for="node" attr.name="broker" attr.type="int"/>
-  <key id="prodType" for="node" attr.name="producerType" attr.type="string"/>   <!-- producer type can be SFST/MFST/ELTT/INDIVIDUAL -->
-  <key id="prodCfg" for="node" attr.name="producerConfig" attr.type="string"/>  <!-- for SFST/ELTT: one pair of filePath, topicName, number of files to produce; for MFMT: multiple pair of filePaths, topicNames; -->
-  <key id="consCfg" for="node" attr.name="consumerConfig" attr.type="string"/>  <!-- consConfig will contain the topic name(s) from where the consumer will consumer and number of consumer instances in this node--> 
+  <key id="prodType" for="node" attr.name="producerType" attr.type="string"/>   <!-- producer type can be SFST/MFST -->
+  <key id="prodCfg" for="node" attr.name="producerConfig" attr.type="string"/>  <!-- for SFST: one pair of filePath, topicName; for MFMT: multiple pair of filePaths, topicNames; -->
+  <key id="consCfg" for="node" attr.name="consumerConfig" attr.type="string"/>  <!-- consConfig will contain the topic name(s) from where the consumer will consumer --> 
   <key id="sparkCfg" for="node" attr.name="sparkConfig" attr.type="string"/>    <!-- sparkConfig will contain the spark application path and topic name(s)/output directory from where the spark ingest its processed output --> 
-  
 
   <!-- edge attributes -->
   <key id="bw" for="edge" attr.name="bandwidth" attr.type="int"/>  <!-- unit in Mbps -->
@@ -24,26 +23,28 @@
   
    
   <graph id="simple-topo" edgedefault="undirected">
-    <data key="topicCfg">use-cases/reproducibility/networkTrafficAnalysis/topicConfiguration.txt</data>
-    <!-- <data key="topicCfg">use-cases/reproducibility/networkTrafficAnalysis/topicConfiguration.yaml</data> -->
+    <data key="topicCfg">use-cases/app-testing/millitary-coordination/topicConfiguration.txt</data>
 
     <node id="s1"/>
 
     <node id="h1">
       <data key="zk">1</data>
       <data key="bk">1</data>
-      <data key="prodType">INDIVIDUAL,use-cases/reproducibility/networkTrafficAnalysis/flowProducerProcess.py</data>
-      <data key="prodCfg">use-cases/reproducibility/networkTrafficAnalysis/AIMchat1.pcap,inputTopic,1,100</data>
+      <data key="prodType">SFST</data>
+      <data key="prodCfg">use-cases/app-testing/millitary-coordination/file1.txt,inputTopic,1,1</data>
+	  </node>            
+    
+    <node id="h2">
+      <data key="bk">1</data>
+      <data key="prodType">SFST</data>
+      <data key="prodCfg">use-cases/app-testing/millitary-coordination/file2.txt,inputTopic,1,1</data>
 	  </node>   
 
-    <node id="h2">
-      <data key="sparkCfg">use-cases/reproducibility/networkTrafficAnalysis/spark-port-statistics.py,outputTopic</data>
-      <data key="consCfg">inputTopic,1</data>
-	  </node> 
-
-    <node id="h3">
-      <data key="consCfg">outputTopic,1</data>
-	  </node>         
+    <node id="h3">   
+      <data key="bk">1</data>
+      <data key="consCfg">inputTopic,1</data>        
+	  </node>
+  
 
     <edge source="s1" target="h1">
       <data key="bw">1000</data>

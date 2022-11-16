@@ -8,6 +8,23 @@ import subprocess
 import time
 import networkx as nx
 
+# import pyyaml module to read the yaml files
+import yaml
+from yaml.loader import SafeLoader
+
+def readYAMLTopicConfig(topicConfigPath):
+	data = []
+	try:
+		# Open the file and load all topic details from the yaml file
+		with open(topicConfigPath, 'r') as f:
+			data = list(yaml.load_all(f, Loader=SafeLoader))
+			print(data)
+	except yaml.YAMLError:
+		print("Error in configuration file:")
+
+	return data
+
+	
 def readTopicConfig(topicConfigPath):
 	allTopics = []
 	topicDetails = {}
@@ -17,19 +34,19 @@ def readTopicConfig(topicConfigPath):
 		data = line.split()
 		topicName = data[0]
 		topicBroker = data[2]
-		if len(data) == 5:
+		if 'partition' in line:  #len(data) == 5:
 			topicPartition = data[4]
 		else:
-			topicPartition = 1
+			topicPartition = "1"
+
+		if 'replica' in line:  
+			topicReplica = data[6]
+		else:
+			topicReplica = "1"
 
 		topicDetails = {"topicName": topicName, "topicBroker": topicBroker,\
-			"topicPartition": topicPartition}
+			"topicPartition": topicPartition, "topicReplica": topicReplica}
 		allTopics.append(topicDetails)
-		
-		# topicName = line.split(' broker:')[0].strip()
-		# topicBroker = line.split(' broker:')[1].strip()
-		# topicDetails = {"topicName": topicName, "topicBroker": topicBroker}
-		# allTopics.append(topicDetails)
 	
 	f.close()
 	# print(*allTopics)
@@ -150,9 +167,7 @@ def placeKafkaBrokers(net, inputTopoFile, onlySpark):
 	if onlySpark == 0: 
 		topicConfigPath = inputTopo.graph["topicConfig"]
 		print("topic config directory: " + topicConfigPath)
-		topicPlace = readTopicConfig(topicConfigPath)
-		# print("Topic(s): ")
-		# print(*topicPlace)
+		topicPlace = readTopicConfig(topicConfigPath) #readYAMLTopicConfig(topicConfigPath)
 	
 	# reading disconnection config
 	try:
@@ -176,8 +191,8 @@ def placeKafkaBrokers(net, inputTopoFile, onlySpark):
 			if 'broker' in data: 
 				brokerPlace.append(node[1])
 			if 'producerType' in data: 
-				if data["producerType"] != "SFTT" or data["producerType"] != "MFST"\
-					or data["producerType"] != "ELTT":
+				if data["producerType"] != "SFST" and data["producerType"] != "MFST"\
+					and data["producerType"] != "ELTT":
 					producerType = data["producerType"].split(",")[0]
 					producerPath = data["producerType"].split(",")[1].strip()
 				else:
@@ -196,10 +211,6 @@ def placeKafkaBrokers(net, inputTopoFile, onlySpark):
 				consTopics = readConsConfig(data["consumerConfig"])
 				consDetails = {"nodeId": node[1], "consumeFromTopic": consTopics}
 				consDetailsList.append(consDetails)
-				
-				# # Hard-code to work with two consumers on same host node
-				# consDetails = {"nodeId": node[1], "consumeFromTopic": consTopics}
-				# consDetailsList.append(consDetails)
             
 	print("zookeepers:")
 	print(*zkPlace)
