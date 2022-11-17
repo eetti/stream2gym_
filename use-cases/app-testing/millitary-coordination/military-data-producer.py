@@ -81,12 +81,11 @@ try:
 	node = sys.argv[1]
 	prodInstanceID = sys.argv[2]
 	nodeID = node[1:]
-	logging.basicConfig(filename="logs/output/"+"prod-node"+nodeID+\
+	logging.basicConfig(filename="logs/output/prod/"+"prod-node"+nodeID+\
 								"-instance"+str(prodInstanceID)+".log",
 								format='%(asctime)s %(levelname)s:%(message)s',
 								level=logging.INFO) 
-
-
+ 
 	tClass = 1.0
 	mSizeString = 'fixed,10'
 	mRate = 1.0
@@ -156,10 +155,11 @@ try:
 		bNodeID = bytes(newNodeID, 'utf-8')
 		bMsg = bNodeID + bMsgID + bytearray(message)
 		topicID = randint(0, nTopics-1)
-		topicName = 'inputTopic' #'topic-'+str(topicID)
+		topicName = 'topic-0' #'topic-'+str(topicID)
 
 		prodStatus = producer.send(topicName, bMsg)
-		logging.info('Topic: %s; Message ID: %s; Message: %s', topicName, newMsgID, message)
+		logging.info('Topic-name: %s; Message ID: %s; Message: %s',\
+					topicName, newMsgID, message)
 
 		msgInfo = {}
 		msgInfo[newMsgID] = prodStatus

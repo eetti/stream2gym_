@@ -40,10 +40,11 @@ try:
 	nodeName = sys.argv[1]
 	prodInstanceID = sys.argv[2]
 	nodeID = nodeName[1:]
-	logging.basicConfig(filename="logs/output/"+"prod-node"+nodeID+\
+	logging.basicConfig(filename="logs/output/prod/"+"prod-node"+nodeID+\
 								"-instance"+str(prodInstanceID)+".log",
 								format='%(asctime)s %(levelname)s:%(message)s',
 								level=logging.INFO) 
+ 
 	logging.info("Inside producer")
 
 	
@@ -54,6 +55,7 @@ try:
 							value_serializer=lambda x: x.encode('utf-8'))
 								
 	flowCount = 1
+	msgID = 1
 	while True:
 		pktCount = 1 
 		nPkts = pythonRand.randint(0,200) #nPacketsPerflow[flowCount]
@@ -67,7 +69,9 @@ try:
 
 			producer.send(inputTopic, msg)
 			logging.info('Message produced: '+msg)
+			logging.info('Topic-name: %s; Message ID: %s; Message: %s', inputTopic, msgID, msg)
 			pktCount += 1 
+			msgID += 1
 
 		# sleep with a poisson distribution mean of 2mins
 		sleepTime = random.poisson(120)

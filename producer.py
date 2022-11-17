@@ -95,15 +95,6 @@ def messageProductionELTT(messageFilePath, fileID):
 	file = open(messageFilePath, 'r')
 	return 
 
-def on_send_success(record_metadata):
-	fileID = "File: " +str(record_metadata.offset) 
-	logging.info('      File has been sent ->  Topic: %s; File ID: %s', \
-				   record_metadata.topic, fileID)
-
-
-def on_send_error(excp):
-	logging.info('I am an errback',exc_info=excp)
-
 try:
 	node = sys.argv[1]
 	tClass = float(sys.argv[2])
@@ -117,23 +108,22 @@ try:
 	linger = int(sys.argv[9])
 	requestTimeout = int(sys.argv[10])
 	brokerId = sys.argv[11]
-	replication = int(sys.argv[12]) 
-	# messageFilePath = sys.argv[13] 
-	directoryPath = sys.argv[13]  #it will hold the file path/directory path based on producer type SFST or MFST respectively
-	prodTopic = sys.argv[14] 
-	prodType = sys.argv[15] 
-	prodNumberOfFiles = int(sys.argv[16])
+	directoryPath = sys.argv[12]  #it will hold the file path/directory path based on producer type SFST or MFST respectively
+	prodTopic = sys.argv[13] 
+	prodType = sys.argv[14] 
+	prodNumberOfFiles = int(sys.argv[15])
+	prodInstanceID = sys.argv[16]
 
 	seed(1)
 
 	mSizeParams = mSizeString.split(',')
 	nodeID = node[1:]
-	# msgID = 0
     
-	logging.basicConfig(filename="logs/output/"+"prod-"+str(nodeID)+".log",
+	logging.basicConfig(filename="logs/output/prod/"+"prod-"+str(nodeID)+".log",
 							format='%(asctime)s %(levelname)s:%(message)s',
-							level=logging.INFO)                             
-       
+							level=logging.INFO)   
+                         
+
 	logging.info("node to initiate producer: "+nodeID)
 	logging.info("topic name: "+prodTopic)
 	logging.info("topic broker: "+brokerId)
@@ -164,6 +154,7 @@ try:
 					#log before producing to topic
 					logging.info('      File has been sent ->  Topic: %s; File ID: %s', \
 										prodTopic, str(fileID))
+					logging.info('Topic-name: %s; Message ID: %s; Message: %s', prodTopic, i, sentMessage.decode())
 					
 					producer.send(prodTopic, sentMessage)
 					
@@ -179,11 +170,12 @@ try:
 				sentMessage = messageProductionSFST(directoryPath, i)
 				fileID = "File: " +str(i)
 
+				producer.send(prodTopic, sentMessage)
 				# log after producing to topic
 				logging.info('      File has been sent ->  Topic: %s; File ID: %s', \
 				   prodTopic, fileID)
+				logging.info('Topic-name: %s; Message ID: %s; Message: %s', prodTopic, i, sentMessage.decode())
 
-				producer.send(prodTopic, sentMessage)
 				i += 1
 	
 	elif prodType == "ELTT":
@@ -193,11 +185,13 @@ try:
 			with open(directoryPath,'r') as file:
 				for count, line in enumerate(file):
 					sentMessage = line.encode()
+					producer.send(prodTopic, sentMessage)
+					
 					# log after producing to topic
 					logging.info('      Message has been sent ->  Topic: %s; Message ID: %s', \
 					prodTopic, str(msgNo))
+					logging.info('Topic-name: %s; Message ID: %s; Message: %s', prodTopic, i, sentMessage.decode())
 
-					producer.send(prodTopic, sentMessage)
 					msgNo += 1
 
 			i += 1

@@ -19,7 +19,9 @@ def configureLogDir(nSwitches, mSizeString, mRate, nTopics):
 		+"/cons/"+"; sudo mkdir -p logs/kafka/"+"switches:" +str(nSwitches)+ "_mSize:"\
 		+ mSizeString+ "_mRate:"+ str(mRate)+ "_topics:"+str(nTopics) +"/cons/")
 
-	os.system("sudo rm -rf logs/output/; sudo mkdir -p logs/output/")
+	# os.system("sudo rm -rf logs/output/; sudo mkdir -p logs/output/")
+	os.system("sudo rm -rf logs/output/prod/; sudo mkdir -p logs/output/prod/")
+	os.system("sudo rm -rf logs/output/cons/; sudo mkdir -p logs/output/cons/")
 
 	logging.basicConfig(filename="logs/kafka/"+"switches:" +str(nSwitches)+ "_mSize:"\
 							+ mSizeString+ "_mRate:"+ str(mRate)+ "_topics:"+str(nTopics) \

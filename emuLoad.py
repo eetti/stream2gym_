@@ -22,7 +22,6 @@ def spawnThreadedProducers(net, mSizeString, mRate, tClassString, nTopics, args,
 	linger = args.linger
 	requestTimeout = args.requestTimeout
 	brokers = args.nBroker
-	replication = args.replication 
 	messageFilePath = args.messageFilePath   
 
 	tClasses = tClassString.split(',')
@@ -76,8 +75,8 @@ def spawnThreadedProducers(net, mSizeString, mRate, tClassString, nTopics, args,
 			else:
 				print("Standard producer")
 				# node.popen("python3 "+producerPath+" " +nodeID+" "+tClasses+" "+mSizeString+" "+str(mRate)+" "+str(nTopics)+" "+str(acks)+" "+str(compression)\
-				# +" "+str(batchSize)+" "+str(linger)+" "+str(requestTimeout)+" "+brokerId+" "+str(replication)+" "+messageFilePath\
-				# +" "+topicName+" "+producerType+" "+prodNumberOfFiles+" &", shell=True)
+				# +" "+str(batchSize)+" "+str(linger)+" "+str(requestTimeout)+" "+brokerId+" "+messageFilePath\
+				# +" "+topicName+" "+producerType+" "+prodNumberOfFiles+" "+str(prodInstance)+" &", shell=True)
 
 		except IndexError:
 			print("Error: Production topic name not matched with the already created topics")
@@ -91,7 +90,6 @@ def spawnProducers(net, mSizeString, mRate, tClassString, nTopics, args, prodDet
 	linger = args.linger
 	requestTimeout = args.requestTimeout
 	brokers = args.nBroker
-	replication = args.replication 
 	messageFilePath = args.messageFilePath   
 
 	tClasses = tClassString.split(',')
@@ -142,8 +140,8 @@ def spawnProducers(net, mSizeString, mRate, tClassString, nTopics, args, prodDet
 					
 				else:
 					node.popen("python3 "+producerPath+" " +nodeID+" "+tClasses+" "+mSizeString+" "+str(mRate)+" "+str(nTopics)+" "+str(acks)+" "+str(compression)\
-					+" "+str(batchSize)+" "+str(linger)+" "+str(requestTimeout)+" "+brokerId+" "+str(replication)+" "+messageFilePath\
-					+" "+topicName+" "+producerType+" "+prodNumberOfFiles+" &", shell=True)
+					+" "+str(batchSize)+" "+str(linger)+" "+str(requestTimeout)+" "+brokerId+" "+messageFilePath\
+					+" "+topicName+" "+producerType+" "+prodNumberOfFiles+" "+str(prodInstance)+" &", shell=True)
 				
 				prodInstance += 1
 
@@ -180,7 +178,10 @@ def spawnConsumers(net, consDetailsList, topicPlace):
 			print("Consuming messages from topic "+topicName+" at broker "+brokerId)
 
 			while consInstance <= int(numberOfConsumers):
-				node.popen("python3 consumer.py "+str(node.name)+" "+topicName+" "+brokerId+" "+str(consInstance)+" &", shell=True)
+				# node.popen("python3 consumer.py "+str(node.name)+" "+topicName+" "+brokerId+" "+str(consInstance)+" &", shell=True)
+				consumerPath = 'use-cases/app-testing/millitary-coordination/military-data-consumer.py'
+				node.popen("python3 "+consumerPath+" "+str(node.name)+" "+topicName+" "+brokerId+" "+str(consInstance)+" &", shell=True)
+				
 				consInstance += 1
 
 		except IndexError:
@@ -257,8 +258,7 @@ def spawnTopicDuplicate(net, sparkDetailsList):
 def runLoad(net, args, topicPlace, prodDetailsList, consDetailsList, sparkDetailsList, \
 	mysqlPath, brokerPlace, isDisconnect, dcDuration, dcLinks, topicWaitTime=100):
 
-	nTopics = args.nTopics
-	replication = args.replication
+	nTopics = len(topicPlace)
 	mSizeString = args.mSizeString
 	mRate = args.mRate
 	tClassString = args.tClassString
