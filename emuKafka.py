@@ -25,7 +25,7 @@ def readYAMLTopicConfig(topicConfigPath):
 	return data
 
 	
-def readTopicConfig(topicConfigPath):
+def readTopicConfig(topicConfigPath, nBroker):
 	allTopics = []
 	topicDetails = {}
 	
@@ -34,13 +34,16 @@ def readTopicConfig(topicConfigPath):
 		data = line.split()
 		topicName = data[0]
 		topicBroker = data[2]
-		if 'partition' in line:  #len(data) == 5:
+		if 'partition' in line:  
 			topicPartition = data[4]
 		else:
 			topicPartition = "1"
 
 		if 'replica' in line:  
 			topicReplica = data[6]
+			if int(topicReplica) > nBroker:
+				print("ERROR: topic replication can't be greater than the number of brokers. Exiting...")
+				sys.exit(1)
 		else:
 			topicReplica = "1"
 
@@ -113,10 +116,6 @@ def configureKafkaCluster(brokerPlace, zkPlace, args):
 		zkAddresses = ""
 		zkPort = 2181
 
-# 		for i in range(len(zkPlace)-1):
-# 			zkAddresses += "localhost:"+str(zkPort)+","
-# 			zkPort += 1
-    
 		for i in range(len(zkPlace)-1):
 			zkAddresses += "10.0.0." + str(zkPlace[i]) + ":" +str(zkPort)+","
 			zkPort += 1
@@ -140,8 +139,11 @@ def configureKafkaCluster(brokerPlace, zkPlace, args):
 	propertyFile.close()
 
 
-def placeKafkaBrokers(net, inputTopoFile, onlySpark):
-	
+def placeKafkaBrokers(net, args):
+	inputTopoFile = args.topo
+	onlySpark =  args.onlySpark
+	nBroker = int(args.nBroker)
+
 	brokerPlace = []
 	zkPlace = []
 
@@ -167,7 +169,7 @@ def placeKafkaBrokers(net, inputTopoFile, onlySpark):
 	if onlySpark == 0: 
 		topicConfigPath = inputTopo.graph["topicConfig"]
 		print("topic config directory: " + topicConfigPath)
-		topicPlace = readTopicConfig(topicConfigPath) #readYAMLTopicConfig(topicConfigPath)
+		topicPlace = readTopicConfig(topicConfigPath, nBroker) #readYAMLTopicConfig(topicConfigPath)
 	
 	# reading disconnection config
 	try:
@@ -181,11 +183,12 @@ def placeKafkaBrokers(net, inputTopoFile, onlySpark):
 		dcDuration = 0
 		dcLinks = []
 
-	#Read nodewise broker, zookeeper, producer, consumer information
+	#Read nodewise switch, host, broker, zookeeper, producer, consumer information
+	nSwitches = 0
+	nHosts = 0
 	for node, data in inputTopo.nodes(data=True):  
 		if node[0] == 'h':
-			# print("node id: "+node[1])
-			#print("zk : "+str(data["zookeeper"]))
+			nHosts += 1 
 			if 'zookeeper' in data: 
 				zkPlace.append(node[1]) 
 			if 'broker' in data: 
@@ -211,7 +214,8 @@ def placeKafkaBrokers(net, inputTopoFile, onlySpark):
 				consTopics = readConsConfig(data["consumerConfig"])
 				consDetails = {"nodeId": node[1], "consumeFromTopic": consTopics}
 				consDetailsList.append(consDetails)
-            
+		elif node[0] == 's':
+			nSwitches += 1
 	print("zookeepers:")
 	print(*zkPlace)
 	# print("brokers: \n")
@@ -224,7 +228,7 @@ def placeKafkaBrokers(net, inputTopoFile, onlySpark):
 	print(*consDetailsList)
 
 	return brokerPlace, zkPlace, topicPlace, prodDetailsList, consDetailsList, \
-		isDisconnect, dcDuration, dcLinks
+		isDisconnect, dcDuration, dcLinks, nSwitches, nHosts
 
 
 
@@ -247,26 +251,6 @@ def runKafka(net, brokerPlace, brokerWaitTime=200):
 		startingHost.popen("kafka/bin/kafka-server-start.sh kafka/config/server"+str(bNode)+".properties &", shell=True)
 		
 		time.sleep(1)
-
-# 	brokerWait = True
-# 	totalTime = 0
-# 	for bNode in brokerPlace:
-# 	    while brokerWait:
-# 	        print("Testing Connection to Broker " + str(bNode) + "...")
-# 	        out, err, exitCode = startingHost.pexec("nc -z -v 10.0.0." + str(bNode) + " 9092")
-# 	        stopTime = time.time()
-# 	        totalTime = stopTime - startTime
-# 	        if(exitCode == 0):
-# 	            brokerWait = False
-# 	        #elif(totalTime > brokerWaitTime):
-# 	        #    print("ERROR: Timed out waiting for Kafka brokers to start")
-# 	        #    sys.exit(1)
-# 	        else:
-# 	            print("Waiting for Broker " + str(bNode) + " to Start...")
-# 	            time.sleep(10)
-# 	    brokerWait = True
-# 	print("Successfully Created Kafka Brokers in " + str(totalTime) + " seconds")
-
 
 def cleanKafkaState(brokerPlace):
 	for bID in brokerPlace:

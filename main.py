@@ -135,9 +135,6 @@ def validateInput(args):
 	if args.replicaMaxWait >= REPLICA_LAG_TIME_MAX_MS:
 		print("ERROR: replica.fetch.wait.max.ms must be less than the replica.lag.time.max.ms value of " +  str(REPLICA_LAG_TIME_MAX_MS) + " at all times")
 		sys.exit(1)
-	
-	if(args.topicCheckInterval * args.nTopics) > args.duration:
-		print("WARNING: Not all topics will be checked within the given duration of the simulation. Simulation Time:" +  str(args.duration) + " seconds. Time Required to Check All Topics at Least Once: "+  str(args.topicCheckInterval * args.nTopics) + " seconds.")
 
 if __name__ == '__main__': 
 
@@ -198,7 +195,11 @@ if __name__ == '__main__':
 	net.build()
 
 	brokerPlace, zkPlace, topicPlace, prodDetailsList, consDetailsList, isDisconnect, \
-		dcDuration, dcLinks = emuKafka.placeKafkaBrokers(net, args.topo, args.onlySpark)
+		dcDuration, dcLinks, nSwitches, nHosts = emuKafka.placeKafkaBrokers(net, args)
+	nTopics = len(topicPlace)
+	print("Number of switches in the topology: "+str(nSwitches))
+	print("Number of hostnodes in the topology: "+str(nHosts))
+	print("Number of topics: "+str(nTopics))
 
 	# ensuring only Kafka can be used in the pipeline
 	if args.onlyKafka == 0:
@@ -224,7 +225,7 @@ if __name__ == '__main__':
 		# Add NAT connectivity
 		net.addNAT().configDefault()  
 
-	emuLogs.configureLogDir(args.nBroker, args.mSizeString, args.mRate, args.nTopics, args.replication)
+	emuLogs.configureLogDir(nSwitches, args.mSizeString, args.mRate, nTopics)
 	emuZk.configureZkCluster(zkPlace)
 	emuKafka.configureKafkaCluster(brokerPlace, zkPlace, args)
 
@@ -240,7 +241,9 @@ if __name__ == '__main__':
 	print("Finished network connectivity test")
     		
 	#Start monitoring tasks
-	popens[pID] = subprocess.Popen("sudo python3 bandwidth-monitor.py "+str(args.nBroker)+" " +args.mSizeString+" "+str(args.mRate) +" " +str(args.nTopics) +" "+ str(args.replication) + " "+ str(args.nZk) +" &", shell=True)
+	popens[pID] = subprocess.Popen("sudo python3 bandwidth-monitor.py "+str(nSwitches)\
+					+" " +args.mSizeString+" "+str(args.mRate) +" " +str(nTopics) \
+					+" "+ str(args.nZk) +" &", shell=True)
 	pID += 1
 
 	emuZk.runZk(net, zkPlace)

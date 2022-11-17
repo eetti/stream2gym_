@@ -3,24 +3,32 @@
 import os
 import logging
 
-# import matplotlib.pyplot as plt
-
-
-def configureLogDir(brokers, mSizeString, mRate, nTopics, replication):  
-	os.system("sudo rm -rf logs/kafka/"+"nodes:" +str(brokers)+ "_mSize:"+ mSizeString+ "_mRate:"+ str(mRate)+ "_topics:"+str(nTopics) +"_replication:"+str(replication)+"/bandwidth/"+"; sudo mkdir -p logs/kafka/"+"nodes:" +str(brokers)+ "_mSize:"+ mSizeString+ "_mRate:"+ str(mRate)+ "_topics:"+str(nTopics) +"_replication:"+str(replication)+"/bandwidth/")
+def configureLogDir(nSwitches, mSizeString, mRate, nTopics):  
+	os.system("sudo rm -rf logs/kafka/"+"switches:" +str(nSwitches)+ "_mSize:"+ mSizeString\
+		+ "_mRate:"+ str(mRate)+ "_topics:"+str(nTopics)\
+		+"/bandwidth/"+"; sudo mkdir -p logs/kafka/"+"switches:" +str(nSwitches)+ "_mSize:"\
+		+ mSizeString+ "_mRate:"+ str(mRate)+ "_topics:"+str(nTopics)+"/bandwidth/")
     
-	os.system("sudo rm -rf logs/kafka/"+"nodes:" +str(brokers)+ "_mSize:"+ mSizeString+ "_mRate:"+ str(mRate)+ "_topics:"+str(nTopics) +"_replication:"+str(replication)+"/prod/"+"; sudo mkdir -p logs/kafka/"+"nodes:" +str(brokers)+ "_mSize:"+ mSizeString+ "_mRate:"+ str(mRate)+ "_topics:"+str(nTopics) +"_replication:"+str(replication)+"/prod/")    
+	os.system("sudo rm -rf logs/kafka/"+"switches:" +str(nSwitches)+ "_mSize:"+ mSizeString\
+		+ "_mRate:"+ str(mRate)+ "_topics:"+str(nTopics)\
+		+"/prod/"+"; sudo mkdir -p logs/kafka/"+"switches:" +str(nSwitches)+ "_mSize:"\
+		+ mSizeString+ "_mRate:"+ str(mRate)+ "_topics:"+str(nTopics)+"/prod/")    
 
-	os.system("sudo rm -rf logs/kafka/"+"nodes:" +str(brokers)+ "_mSize:"+ mSizeString+ "_mRate:"+ str(mRate)+ "_topics:"+str(nTopics) +"_replication:"+str(replication)+"/cons/"+"; sudo mkdir -p logs/kafka/"+"nodes:" +str(brokers)+ "_mSize:"+ mSizeString+ "_mRate:"+ str(mRate)+ "_topics:"+str(nTopics) +"_replication:"+str(replication)+"/cons/")
+	os.system("sudo rm -rf logs/kafka/"+"switches:" +str(nSwitches)+ "_mSize:"+ mSizeString\
+		+ "_mRate:"+ str(mRate)+ "_topics:"+str(nTopics)\
+		+"/cons/"+"; sudo mkdir -p logs/kafka/"+"switches:" +str(nSwitches)+ "_mSize:"\
+		+ mSizeString+ "_mRate:"+ str(mRate)+ "_topics:"+str(nTopics) +"/cons/")
 
 	os.system("sudo rm -rf logs/output/; sudo mkdir -p logs/output/")
 
-	logging.basicConfig(filename="logs/kafka/"+"nodes:" +str(brokers)+ "_mSize:"+ mSizeString+ "_mRate:"+ str(mRate)+ "_topics:"+str(nTopics) +"_replication:"+str(replication)+"/events.log",
-						format='%(levelname)s:%(message)s',
+	logging.basicConfig(filename="logs/kafka/"+"switches:" +str(nSwitches)+ "_mSize:"\
+							+ mSizeString+ "_mRate:"+ str(mRate)+ "_topics:"+str(nTopics) \
+							+"/events.log",\
+						format='%(levelname)s:%(message)s',\
  						level=logging.INFO)
 
 
 def cleanLogs():
-# 	os.system("sudo rm -rf logs/kafka/")
+	os.system("sudo rm -rf logs/kafka/")
 	os.system("sudo rm -rf logs/output/")
 	os.system("sudo rm -rf kafka/logs/")    

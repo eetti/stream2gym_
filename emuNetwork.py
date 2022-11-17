@@ -66,6 +66,7 @@ def configureNetwork(inputTopoFile):
 			for dstNode in inputTopo.nodes:
 				if dstNode[0] == 'h':
 					configMap[srcNode][dstNode] = False
+		
 
 	#Select only paths among end hosts
 	for source in shortestPaths.keys():
@@ -97,9 +98,6 @@ def configureNetwork(inputTopoFile):
 
 							#TODO: add error handler
 							subprocess.Popen("sudo ovs-ofctl add-flow "+srcSwitch+" ip,nw_dst=10.0.0."+targetIP+",actions=output:"+str(outPort), shell=True)
-
-	#print(configMap)
-
 
 
 
