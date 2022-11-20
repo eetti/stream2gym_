@@ -161,6 +161,9 @@ def spawnConsumers(net, consDetailsList, topicPlace):
 		
 		consNode = cons["nodeId"]
 		topicName = cons["consumeFromTopic"][0]
+		consumerType = cons["consumerType"]
+		consumerPath = cons["consumerPath"]
+
 		consID = "h"+consNode      
 		node = netNodes[consID]
 
@@ -179,7 +182,7 @@ def spawnConsumers(net, consDetailsList, topicPlace):
 
 			while consInstance <= int(numberOfConsumers):
 				# node.popen("python3 consumer.py "+str(node.name)+" "+topicName+" "+brokerId+" "+str(consInstance)+" &", shell=True)
-				consumerPath = 'use-cases/app-testing/millitary-coordination/military-data-consumer.py'
+				# consumerPath = 'use-cases/app-testing/millitary-coordination/military-data-consumer.py'
 				node.popen("python3 "+consumerPath+" "+str(node.name)+" "+topicName+" "+brokerId+" "+str(consInstance)+" &", shell=True)
 				
 				consInstance += 1
@@ -256,7 +259,7 @@ def spawnTopicDuplicate(net, sparkDetailsList):
 
 
 def runLoad(net, args, topicPlace, prodDetailsList, consDetailsList, sparkDetailsList, \
-	mysqlPath, brokerPlace, isDisconnect, dcDuration, dcLinks, topicWaitTime=100):
+	mysqlPath, brokerPlace, isDisconnect, dcDuration, dcLinks, logDir, topicWaitTime=100):
 
 	nTopics = len(topicPlace)
 	mSizeString = args.mSizeString

@@ -73,15 +73,22 @@ def readDisconnectionConfig(dcConfigPath):
 
 
 def readProdConfig(prodConfig):
-	if len(prodConfig.split(",")) != 4:
-		print("ERROR: Producer config parameter should contain production file path, \
-			topic name to produce, number of producer files and number of producer intances in a node")
+	lenProdCfg = len(prodConfig.split(","))
+	if lenProdCfg != 2 and lenProdCfg != 4:
+		print("ERROR: Producer config parameter should contain production file path(optional), \
+			topic name to produce, number of producer files(optional) and number of producer intances in a node")
 		sys.exit(1)
 	
-	prodFile = prodConfig.split(",")[0]     #prodFile will hold the file path/directory path based on producer type SFST or MFST respectively
-	prodTopic = prodConfig.split(",")[1]
-	prodNumberOfFiles = prodConfig.split(",")[2]
-	nProducerInstances = prodConfig.split(",")[3]
+	if lenProdCfg == 4:
+		prodFile = prodConfig.split(",")[0]     #prodFile will hold the file path/directory path based on producer type SFST or MFST respectively
+		prodTopic = prodConfig.split(",")[1]
+		prodNumberOfFiles = prodConfig.split(",")[2]
+		nProducerInstances = prodConfig.split(",")[3]
+	else:
+		prodFile = ""
+		prodTopic = prodConfig.split(",")[0]
+		prodNumberOfFiles = 1
+		nProducerInstances = prodConfig.split(",")[1]
 
 	return prodFile, prodTopic, prodNumberOfFiles, nProducerInstances
 
@@ -210,10 +217,23 @@ def placeKafkaBrokers(net, args):
 							"producerPath": producerPath}
 				prodDetailsList.append(prodDetails)
 
-			if 'consumerConfig' in data: 
-				consTopics = readConsConfig(data["consumerConfig"])
-				consDetails = {"nodeId": node[1], "consumeFromTopic": consTopics}
-				consDetailsList.append(consDetails)
+			if 'consumerType' in data and 'consumerConfig' in data: 
+				if data["consumerType"] != "STANDARD":
+					consumerType = data["consumerType"].split(",")[0]
+					consumerPath = data["consumerType"].split(",")[1].strip()
+				else:
+					consumerType = "STANDARD"
+					consumerPath = "consumer.py"
+ 
+			elif 'consumerType' not in data and 'consumerConfig' in data:
+				consumerType = "STANDARD"
+				consumerPath = "consumer.py"
+
+			consTopics = readConsConfig(data["consumerConfig"])
+			consDetails = {"nodeId": node[1], "consumeFromTopic": consTopics,\
+							"consumerType": consumerType, "consumerPath": consumerPath}
+			consDetailsList.append(consDetails)
+
 		elif node[0] == 's':
 			nSwitches += 1
 	print("zookeepers:")

@@ -15,10 +15,8 @@ nTopics = int(sys.argv[4])
 while True:
 
 	for i in range(nSwitches):
-        
-		bandwidthLog = open("logs/kafka/"+"switches:" +str(nSwitches)+ "_mSize:"\
-			+ mSizeString+ "_mRate:"+ str(mRate)+ "_topics:"+str(nTopics) \
-			+"/bandwidth/bandwidth-log" + str(i+1) + ".txt", "a")
+		logDir = "logs/output/"
+		bandwidthLog = open(logDir+"/bandwidth/bandwidth-log" + str(i+1) + ".txt", "a")
 
 		statsProcess = subprocess.Popen("sudo ovs-ofctl dump-ports s"+str(i+1), shell=True, stdout=subprocess.PIPE)
 		stdout = statsProcess.communicate()[0]

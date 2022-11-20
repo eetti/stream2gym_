@@ -1,2 +1,2 @@
-duration: 10
+duration: 60
 links: s1-h1

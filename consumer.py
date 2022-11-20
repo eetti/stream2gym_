@@ -23,7 +23,8 @@ try:
 	logging.basicConfig(filename="logs/output/cons/"+"cons-node"+nodeID+\
 		"-instance"+str(consInstance)+".log",
 		format='%(asctime)s %(levelname)s:%(message)s',
-		level=logging.INFO)    
+		level=logging.INFO)  
+	logging.info("Standard consumer")
 	logging.info("node to initiate consumer: "+nodeID)
 	logging.info("topicName "+topicName)
 	logging.info("topicBroker "+brokerId)

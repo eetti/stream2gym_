@@ -81,11 +81,7 @@ try:
 	node = sys.argv[1]
 	prodInstanceID = sys.argv[2]
 	nodeID = node[1:]
-	logging.basicConfig(filename="logs/output/prod/"+"prod-node"+nodeID+\
-								"-instance"+str(prodInstanceID)+".log",
-								format='%(asctime)s %(levelname)s:%(message)s',
-								level=logging.INFO) 
- 
+	
 	tClass = 1.0
 	mSizeString = 'fixed,10'
 	mRate = 1.0
@@ -97,8 +93,17 @@ try:
 	linger = 0
 	requestTimeout = 30000
 	brokers = 3
-	replication = 3
 	messageFilePath = 'None'
+	nSwitches = 1
+
+	logDir = "logs/output"
+
+	logging.basicConfig(filename=logDir+"/prod/"+"prod-node"+nodeID+\
+								"-instance"+str(prodInstanceID)+".log",
+								format='%(asctime)s %(levelname)s:%(message)s',
+								level=logging.INFO) 
+ 
+	
 
 	seed(1)
 
@@ -172,18 +177,3 @@ try:
 except Exception as e:
 	logging.error(e)
 	sys.exit(1)
-
-#def on_send_success(record_metadata):
-    #print(record_metadata.topic)
-    #print(record_metadata.partition)
-    #print(record_metadata.offset)
-
-#def on_send_error(excp):
-    #log.error('I am an errback', exc_info=excp)
-    # handle exception
-
-#producer.send('topic-0', b'raw_bytes1').add_callback(on_send_success).add_errback(on_send_error)
-
-#Sleep is important to give time for producer
-#to send the message before process ends
-#time.sleep(0.01)

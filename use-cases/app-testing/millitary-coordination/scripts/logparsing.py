@@ -7,7 +7,7 @@ class ProducerLog():
 	
 	"""Return all entries from a producer log as a
 	(message time, topic id, msg id) list"""
-	def getProdData(self, filePath, prodID):
+	def getProdData(self, filePath):
 
 		prodData = []
     
@@ -29,13 +29,13 @@ class ProducerLog():
 		return prodData
 
 
-	def getAllProdData(self, prodDir, numProducers):
+	def getAllProdData(self, prodDir, prodDetails):
 		
 		allProducerData = []
 
-		for prodID in range(numProducers):
-			prodData = self.getProdData(prodDir+'prod-node'+str(prodID+1)\
-										+'-instance1.log', prodID+1)
+		for prod in prodDetails:
+			prodData = self.getProdData(prodDir+'prod-node'+str(prod['prodNodeID'])\
+										+'-instance'+str(prod['prodInstID'])+'.log')
 			allProducerData.append(prodData)
 
 		return allProducerData
@@ -64,7 +64,7 @@ class ConsumerLog():
 
 	"""Return all entries from a consumer log as a
 	(message time, producer id, message id, topic id, offset) list"""
-	def getConsData(self, filePath, consID):
+	def getConsData(self, filePath):
     
 		consData = []
 
@@ -94,13 +94,14 @@ class ConsumerLog():
 
 
 
-	def getAllConsData(self, consDir, numConsumers):
+	def getAllConsData(self, consDir, consDetails):
 		
 		allConsumerData = []
 
-		for consID in range(numConsumers):
+		for cons in consDetails:
 			# consData = self.getConsData(consDir+'cons-'+str(consID+1)+'.log', consID+1)
-			consData = self.getConsData(consDir+'cons-node3-instance1.log', consID+1)
+			consData = self.getConsData(consDir+'cons-node'+str(cons['consNodeID'])\
+				+'-instance'+str(cons['consInstID'])+'.log')
 			allConsumerData.append(consData)
 
 		return allConsumerData

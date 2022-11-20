@@ -225,7 +225,7 @@ if __name__ == '__main__':
 		# Add NAT connectivity
 		net.addNAT().configDefault()  
 
-	emuLogs.configureLogDir(nSwitches, args.mSizeString, args.mRate, nTopics)
+	logDir = emuLogs.configureLogDir(nSwitches, args.mSizeString, args.mRate, nTopics)
 	emuZk.configureZkCluster(zkPlace)
 	emuKafka.configureKafkaCluster(brokerPlace, zkPlace, args)
 
@@ -250,7 +250,7 @@ if __name__ == '__main__':
 	emuKafka.runKafka(net, brokerPlace)
     
 	emuLoad.runLoad(net, args, topicPlace, prodDetailsList, consDetailsList, sparkDetailsList,\
-		 mysqlPath, brokerPlace, isDisconnect, dcDuration, dcLinks)
+		 mysqlPath, brokerPlace, isDisconnect, dcDuration, dcLinks, logDir)
 
 	# CLI(net)
 	print("Simulation complete")

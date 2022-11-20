@@ -30,10 +30,10 @@
      - topicConfig: path to the topic configuration file
      - zookeeper: 1 = hostnode contains a zookeeper instance
      - broker: 1 = hostnode contains a zookeeper instance
-     - producerType: producer type can be SFST/MFMT/RND; SFST denotes from Single File to Single Topic. MFMT,RND not supported right now.
-     - producerConfig: for SFST, one pair of filePath, topicName
-     - sparkConfig: sparkConfig will contain the input source, spark application path and output sink. Input source is a kafka topic, output sink can be kafka topic/a file directory.
+     - producerType: producer type is a pair of producer type and producer script path. Here, INDIVIDUAL refers to the producer served by the user.
+     - producerConfig: it is a tuple of topic name, number of producer instances on this node.
+
  
 ## Running
    
- ```sudo python3 main.py use-cases/app-testing/millitary-coordination/input.graphml --nzk 1 --nbroker 3 --only-kafka 1```
+ ```sudo python3 main.py use-cases/app-testing/millitary-coordination/input.graphml --nzk 2 --nbroker 2 --only-kafka 1 --time 300``
