@@ -224,15 +224,20 @@ def placeKafkaBrokers(net, args):
 				else:
 					consumerType = "STANDARD"
 					consumerPath = "consumer.py"
+
+				consTopics = readConsConfig(data["consumerConfig"])
+				consDetails = {"nodeId": node[1], "consumeFromTopic": consTopics,\
+								"consumerType": consumerType, "consumerPath": consumerPath}
+				consDetailsList.append(consDetails)
  
 			elif 'consumerType' not in data and 'consumerConfig' in data:
 				consumerType = "STANDARD"
 				consumerPath = "consumer.py"
 
-			consTopics = readConsConfig(data["consumerConfig"])
-			consDetails = {"nodeId": node[1], "consumeFromTopic": consTopics,\
-							"consumerType": consumerType, "consumerPath": consumerPath}
-			consDetailsList.append(consDetails)
+				consTopics = readConsConfig(data["consumerConfig"])
+				consDetails = {"nodeId": node[1], "consumeFromTopic": consTopics,\
+								"consumerType": consumerType, "consumerPath": consumerPath}
+				consDetailsList.append(consDetails)
 
 		elif node[0] == 's':
 			nSwitches += 1

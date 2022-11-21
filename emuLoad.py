@@ -299,8 +299,10 @@ def runLoad(net, args, topicPlace, prodDetailsList, consDetailsList, sparkDetail
 		topicNodes.append(issuingNode)
 
 		topicDetails = issuingNode.cmd("kafka/bin/kafka-topics.sh --describe --bootstrap-server 10.0.0."+str(issuingID+1)+":9092", shell=True)
+		print("Topic description at the beginning of the simulation:")
 		print(topicDetails)
 
+	print(topicNodes)
 	stopTime = time.time()
 	totalTime = stopTime - startTime
 	print("Successfully Created " + str(len(topicPlace)) + " Topics in " + str(totalTime) + " seconds")
@@ -347,6 +349,12 @@ def runLoad(net, args, topicPlace, prodDetailsList, consDetailsList, sparkDetail
 					n1 = net.getNodeByName(linkSplit[0])
 					n2 = net.getNodeByName(linkSplit[1])
 					disconnectLink(net, n1, n2)
+					
+					# checking topic leader after disconnection
+					# topicDetails = topicNodes[0].cmd("kafka/bin/kafka-topics.sh --describe --bootstrap-server 10.0.0.2:9092", shell=True)
+					# print("Topic leader after disconnection")
+					# print(topicDetails)
+
 				isDisconnected = True
 
 			elif isDisconnected and disconnectTimer <= 0: 	
@@ -355,6 +363,12 @@ def runLoad(net, args, topicPlace, prodDetailsList, consDetailsList, sparkDetail
 					n1 = net.getNodeByName(linkSplit[0])
 					n2 = net.getNodeByName(linkSplit[1])				
 					reconnectLink(net, n1, n2)
+
+					# checking topic leader after reconnection
+					topicDetails = topicNodes[0].cmd("kafka/bin/kafka-topics.sh --describe --bootstrap-server 10.0.0.1:9092", shell=True)
+					print("Topic leader after reconnection")
+					print(topicDetails)
+
 				isDisconnected = False
 				isDisconnect = False
 				

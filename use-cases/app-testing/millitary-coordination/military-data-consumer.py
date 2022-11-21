@@ -55,6 +55,7 @@ try:
 
 	while True:
 		bootstrapServers="10.0.0."+brokerId+":9092"
+		# bootstrapServers="10.0.0."+nodeID+":9092"
 		
 		if consumptionLag == True:
 				consumer = KafkaConsumer(topicName,

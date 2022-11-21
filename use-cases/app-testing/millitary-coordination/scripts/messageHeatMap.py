@@ -20,8 +20,8 @@ parser = argparse.ArgumentParser(description='Script for visualizing message del
 
 args = parser.parse_args()
 
-prodDetails = [{'prodNodeID':1, 'prodInstID':1}, {'prodNodeID':2, 'prodInstID':1}]
-consDetails = [{'consNodeID':1, 'consInstID':1}, {'consNodeID':2, 'consInstID':1}]
+prodDetails = [{'prodNodeID':1, 'prodInstID':1}, {'prodNodeID':2, 'prodInstID':1}, {'prodNodeID':3, 'prodInstID':1}]
+consDetails = [{'consNodeID':1, 'consInstID':1}, {'consNodeID':2, 'consInstID':1}, {'consNodeID':3, 'consInstID':1}]
 nProducer = len(prodDetails)
 nConsumer = len(consDetails)
 logDir = '/home/monzurul/Desktop/stream2gym/logs/output/'
