@@ -185,7 +185,7 @@ if __name__ == '__main__':
 	emulatedTopo = emuNetwork.CustomTopo(args.topo)
 
 	net = Mininet(topo = None,
-			# controller=RemoteController,
+			controller=RemoteController,
 			link = TCLink,
 			autoSetMacs = True,
 			autoStaticArp = True,
@@ -229,9 +229,12 @@ if __name__ == '__main__':
 
 	#Start network
 	net.start()
+	for switch in net.switches:
+		net.get(switch.name).start([])
+
 	logging.info('Network started')
 
-	emuNetwork.configureNetwork(args.topo)
+	#emuNetwork.configureNetwork(args.topo)
 	time.sleep(1)
 
 	print("Testing network connectivity")
