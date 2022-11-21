@@ -33,7 +33,7 @@
     <node id="h1">
       <data key="zk">1</data>
       <data key="bk">1</data>
-      <data key="prodType">INDIVIDUAL,use-cases/disconnection/millitary-coordination/military-data-producer.pyy</data>
+      <data key="prodType">INDIVIDUAL,use-cases/disconnection/millitary-coordination/military-data-producer.py</data>
       <data key="prodCfg">topic-0,1</data>
       <data key="consType">INDIVIDUAL,use-cases/disconnection/millitary-coordination/military-data-consumer.py</data>
       <data key="consCfg">topic-0,1</data>
