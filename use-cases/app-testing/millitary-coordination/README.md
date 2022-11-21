@@ -36,4 +36,4 @@
  
 ## Running
    
- ```sudo python3 main.py use-cases/app-testing/millitary-coordination/input.graphml --nzk 3 --nbroker 3 --only-kafka 1 --time 300``
+ ```sudo python3 main.py use-cases/app-testing/millitary-coordination/input.graphml --nzk 3 --nbroker 3 --time 300``

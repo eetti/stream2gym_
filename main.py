@@ -169,7 +169,7 @@ if __name__ == '__main__':
 	parser.add_argument('--message-file', dest='messageFilePath', type=str, default='None', help='Path to a file containing the message to be sent by producers')
 	parser.add_argument('--topic-check', dest='topicCheckInterval', type=float, default=1.0, help='Minimum amount of time (in seconds) the consumer will wait between checking topics')
 
-	parser.add_argument('--only-kafka', dest='onlyKafka', type=int, default=0, help='To run Kafka only')
+	# parser.add_argument('--only-kafka', dest='onlyKafka', type=int, default=0, help='To run Kafka only')
 	parser.add_argument('--only-spark', dest='onlySpark', type=int, default=0, help='To run Spark application only')
 	  
 	args = parser.parse_args()
@@ -201,17 +201,15 @@ if __name__ == '__main__':
 	print("Number of hostnodes in the topology: "+str(nHosts))
 	print("Number of topics: "+str(nTopics))
 
-	# ensuring only Kafka can be used in the pipeline
-	if args.onlyKafka == 0:
+	# checking whether the application is only kafka or kafka-spark
+	sparkDetailsList, mysqlPath = emuSpark.getSparkDetails(net, args.topo)
+	if not sparkDetailsList:   # if there is no configuration for spark
+		args.onlyKafka = 1
+	else:
+		args.onlyKafka = 0
 		#Add dependency to connect kafka & Spark
 		emuSpark.addSparkDependency()
-	
-		#Get Spark configuration
-		sparkDetailsList, mysqlPath = emuSpark.getSparkDetails(net, args.topo)
-	else:
-		sparkDetailsList = []
-		mysqlPath = ""
-	
+
 	killSubprocs(brokerPlace, zkPlace, prodDetailsList, sparkDetailsList)
 	
 	emuLogs.cleanLogs()
