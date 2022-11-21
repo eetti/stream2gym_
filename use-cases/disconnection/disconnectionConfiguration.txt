@@ -1,2 +1,0 @@
-duration: 10
-links: s1-h2,s1-h3

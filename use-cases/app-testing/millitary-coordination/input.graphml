@@ -5,8 +5,7 @@
      http://graphml.graphdrawing.org/xmlns/1.0/graphml.xsd">
 
   <!-- graph attributes -->
-  <key id="topicCfg" for="graph" attr.name="topicConfig" attr.type="string"/>
-  <key id="dcCfg" for="graph" attr.name="disconnectionConfig" attr.type="string"/> 
+  <key id="topicCfg" for="graph" attr.name="topicConfig" attr.type="string"/> 
   
   <!-- node attributes -->
   <key id="zk" for="node" attr.name="zookeeper" attr.type="int"/>
@@ -26,7 +25,6 @@
    
   <graph id="simple-topo" edgedefault="undirected">
     <data key="topicCfg">use-cases/app-testing/millitary-coordination/topicConfiguration.txt</data>
-    <data key="dcCfg">use-cases/app-testing/millitary-coordination/disconnectionConfiguration.txt</data>
 
     <node id="s1"/>
 
