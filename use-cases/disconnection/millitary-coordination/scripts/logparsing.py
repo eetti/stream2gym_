@@ -27,8 +27,46 @@ class ProducerLog():
 					prodData.append(msgData)
 
 		return prodData
+		
+	
+	def getBrokerConfirmations(self, filePath):
+	
+		brokerConfirmations = []
+		
+		with open(filePath) as f:
+			for line in f:
+			
+				if "INFO:Message not produced." in line:
+					msgIDSplit = line.split("ID: ")
+					msgID = msgIDSplit[1].split(";")[0]
+					
+					confirmation = [msgID, "0"]
+					brokerConfirmations.append(confirmation)
 
+				elif "INFO:Produced message ID:" in line:
+					msgIDSplit = line.split("Produced message ID: ")
+					msgID = msgIDSplit[1].split(";")[0]
+					
+					confirmation = [msgID, "1"]
+					brokerConfirmations.append(confirmation)
+					
+		return brokerConfirmations	
+		
+		
+	def getAllBrokerConfirmations(self, prodDir, prodDetails):
+	
+		allBrokerConfirmations = []
+		
+		for prod in prodDetails:
+			brokerConfirmations = self.getBrokerConfirmations(prodDir+'prod-node'+str(prod['prodNodeID'])\
+										+'-instance'+str(prod['prodInstID'])+'.log')
+			allBrokerConfirmations.append(brokerConfirmations)
 
+		return allBrokerConfirmations
+	
+
+	"""Return a matrix where each line contains all entries 
+	(i.e., produced messages) for a given producer"""
 	def getAllProdData(self, prodDir, prodDetails):
 		
 		allProducerData = []
@@ -41,7 +79,7 @@ class ProducerLog():
 		return allProducerData
 
 
-	
+	"""Return data from a particular message"""
 	def getMsgData(self, prodData, msgID):
 
 		reqMsg = []
@@ -99,7 +137,6 @@ class ConsumerLog():
 		allConsumerData = []
 
 		for cons in consDetails:
-			# consData = self.getConsData(consDir+'cons-'+str(consID+1)+'.log', consID+1)
 			consData = self.getConsData(consDir+'cons-node'+str(cons['consNodeID'])\
 				+'-instance'+str(cons['consInstID'])+'.log')
 			allConsumerData.append(consData)
@@ -120,7 +157,7 @@ class ConsumerLog():
 		
 		
 	
-	def getGroupCoordinator(self, filePath, consID):
+	def getGroupCoordinator(self, filePath):
 
 		with open(filePath) as f:
 
@@ -134,12 +171,14 @@ class ConsumerLog():
 		return coordinatorID
 		
 		
-	def getAllGroupCoordinators(self, consDir, numConsumers):
+	def getAllGroupCoordinators(self, consDir, consDetails):
 
 		allCoordinators = []
 
-		for consID in range(numConsumers):
-			groupCoordinator = self.getGroupCoordinator(consDir+'cons-'+str(consID+1)+'.log', consID+1)
+		for cons in consDetails:
+			groupCoordinator = self.getGroupCoordinator(consDir+'cons-node'+str(cons['consNodeID'])\
+				+'-instance'+str(cons['consInstID'])+'.log')
+
 			allCoordinators.append(groupCoordinator)
 
 		return allCoordinators

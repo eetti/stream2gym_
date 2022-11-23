@@ -1,7 +1,5 @@
-# command to run this script: sudo python3 <script_name> --log-dir <logDirectory>
-# --prod <numberOfProducerNodes> --prodInstance <number of producer instances for each node>
-# --cons <numberOfConsumerNodes> --prodInstance <number of consumer instances for each node>
-# --topic <numberOfTopics>
+#!/usr/bin/env python3
+
 import sys
 import os
 import argparse
@@ -11,14 +9,13 @@ import matplotlib.pyplot as plt
 import pandas as pd
 import seaborn as sns
 
-parser = argparse.ArgumentParser(description='Script for visualizing message delivery.')
+# parser = argparse.ArgumentParser(description='Script for visualizing message delivery.')
 # parser.add_argument('--log-dir', dest='logDir', type=str, help='Log directory')
 # parser.add_argument('--prod', dest='nProd', type=int, default=0, help='Number of producers')
-# parser.add_argument('--prodInstance', dest='nProdInstance', type=int, default=0, help='Number of producer instances for each node')
 # parser.add_argument('--cons', dest='nCons', type=int, default=0, help='Number of consumers')
 # parser.add_argument('--topic', dest='nTopic', type=int, default=0, help='Number of topics')
 
-args = parser.parse_args()
+# args = parser.parse_args()
 
 prodDetails = [{'prodNodeID':1, 'prodInstID':1}, {'prodNodeID':2, 'prodInstID':1}, {'prodNodeID':3, 'prodInstID':1}]
 consDetails = [{'consNodeID':1, 'consInstID':1}, {'consNodeID':2, 'consInstID':1}, {'consNodeID':3, 'consInstID':1}]
@@ -28,6 +25,14 @@ logDir = '/home/monzurul/Desktop/stream2gym/logs/output/'
 nTopic = 1
 print(nProducer)
 
+#Create heat maps for all producers
+heatMapDir = 'logs/output/msg-delivery/'
+failedMsgDir = 'logs/output/failed-messages/'
+bkConfirmationDir = 'logs/output/broker-confirmation/'
+os.system("sudo rm -rf "+heatMapDir+"; sudo mkdir -p "+heatMapDir)
+os.system("sudo rm -rf "+failedMsgDir+"; sudo mkdir -p "+failedMsgDir)
+os.system("sudo rm -rf "+bkConfirmationDir+"; sudo mkdir -p "+bkConfirmationDir)
+
 params = {  
 			'num_consumers' : nConsumer,
 			'cons_dir' : logDir+'cons/',
@@ -35,6 +40,35 @@ params = {
 			'prod_dir' : logDir+'prod/',
 			'num_topics' : nTopic
 		}
+		
+prodLog = logparsing.ProducerLog()
+consLog = logparsing.ConsumerLog()
+		
+#Plot broker confirmations
+brokerConfirmations = prodLog.getAllBrokerConfirmations(params['prod_dir'], prodDetails)
+
+for producer in range(nProducer):
+
+	confirmationHeatData = []
+
+	for confirmation in brokerConfirmations[producer]:
+		confirmationHeatData.append(int(confirmation[1]))
+
+	dfConf = pd.DataFrame(confirmationHeatData, columns=["Prod"])
+
+	sns.heatmap(dfConf.T, vmin=0, vmax=255)
+
+	plt.xlabel('Message ID')
+	plt.title("Producer " + str(producer+1) + "- Broker confirmations")
+
+	# os.makedirs("broker-confirmation", exist_ok=True)
+
+	plt.savefig(bkConfirmationDir+"producer-"+str(producer+1)+".png",format='png', bbox_inches="tight")
+
+	#plt.close()
+	plt.cla()
+	plt.clf()  
+	
 
 #Initialize topic colors
 topicColors = {}
@@ -43,35 +77,33 @@ colorInc = round(255 / params['num_topics'])
 for i in range(params['num_topics']):
 	topicColors[i] = colorInc*i
 
-
 #Read producer data
-prodLog = logparsing.ProducerLog()
-# prodData = prodLog.getAllProdData(params['prod_dir'], params['num_producers'])
 prodData = prodLog.getAllProdData(params['prod_dir'], prodDetails)
-
+print(prodData)
 #Read consumer data
-consLog = logparsing.ConsumerLog()
 consData = consLog.getAllConsData(params['cons_dir'], consDetails)
 
 #Create heat maps for all producers
-heatMapDir = '/home/monzurul/Desktop/stream2gym/logs/output/msg-delivery/'
-os.system("sudo rm -rf "+heatMapDir+"; sudo mkdir -p "+heatMapDir)
-
 iterCount = 1
 
 for producer in range(nProducer):
 
 	#Create heat map
 	rawHeatData = []
+	
+	#Retrieve message confirmation info
+	confirmations = brokerConfirmations[producer]
 
 	#Initialize heat matrix: [consumer, prod msg]
 	for i in range(nConsumer):
 		recvMsg = []
 		prodMsg = [0]*len(prodData[producer])
+		# print(prodMsg)
 		recvMsg.append(prodMsg)
 
 		rawHeatData.append(prodMsg)
-
+	# print(rawHeatData)
+	
 	#Fill heat matrix with message delivery information
 	for consumer in range(nConsumer):
 	
@@ -105,24 +137,53 @@ for producer in range(nProducer):
 			missTopic = missMsg[1]
 
 			rawHeatData[consID][miss] = topicColors[int(missTopic)]
+			
+		#Mark unconfirmed messages as sent
+		for conf in confirmations:
+			if conf[1] == "0":
+				if rawHeatData[consID][int(conf[0])] == 255:
+					print("ERROR: inconsistency found. Check message ", conf[0], ", producer ", str(producer), ", consumer ", str(consID))
+				else:
+					#Message not confirmed. Mark as sent.
+					rawHeatData[consID][int(conf[0])] = 255
+
+	# os.makedirs("failed-messages", exist_ok=True)
+	
+	f = open(failedMsgDir+"fail-log-prod-"+str(producer+1)+".txt", "w")
+
+	f.write("Producer "+str(producer)+"\n")
+	f.write("=============================\n")
+	
+	for consumer in range(nConsumer): 
+
+		f.write("Consumer "+str(consumer)+"\n")
+
+		for msgIdx in range(len(rawHeatData[consumer])):
+			if rawHeatData[consumer][msgIdx] != 255 and msgIdx < 9000:
+				f.write("Index: "+str(msgIdx)+"\n")
+
+	f.close()
 
 	#Plot heatmap
 	df = pd.DataFrame(rawHeatData, columns=[i for i in range(len(prodData[producer]))])
 
-	sns.heatmap(df)
+	sns.heatmap(df, vmin=0, vmax=255)
 
 	plt.xlabel('Message ID')
 	plt.ylabel('Consumer')
 	plt.title("Producer " + str(producer+1) + "- Message delivery")
 
+	# os.makedirs("msg-delivery", exist_ok=True)
+
+	# plt.savefig("msg-delivery/producer-"+str(producer+1)+".png",format='png', bbox_inches="tight")
 	plt.savefig(heatMapDir+"producer-"+str(producer+1)+".png",format='png', bbox_inches="tight")
 
-	plt.close()
+	#plt.close()
 	plt.cla()
 	plt.clf()  
 	
 	#Show processing status
-	print('Processing: '+str((iterCount/nProducer)*100.0)+'% complete')
+	print('Processing: '+str((iterCount/params['num_producers'])*100.0)+'% complete')
 	iterCount += 1
 
 #	plt.show()

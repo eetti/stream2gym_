@@ -11,3 +11,4 @@ use-cases/app-testing/word-count/input-chain.graphml
 use-cases/reproducibility/networkTrafficAnalysis/__pycache__/
 use-cases/reproducibility/networkTrafficAnalysis/logs/
 use-cases/disconnection/millitary-coordination/logs
+use-cases/disconnection/millitary-coordination/scripts/
