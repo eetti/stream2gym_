@@ -98,11 +98,9 @@ for producer in range(nProducer):
 	for i in range(nConsumer):
 		recvMsg = []
 		prodMsg = [0]*len(prodData[producer])
-		# print(prodMsg)
 		recvMsg.append(prodMsg)
 
 		rawHeatData.append(prodMsg)
-	# print(rawHeatData)
 	
 	#Fill heat matrix with message delivery information
 	for consumer in range(nConsumer):
@@ -111,7 +109,6 @@ for producer in range(nProducer):
 		consID = consumer
 
 		rawRecvMsgs = consLog.getAllMsgFromProd( consData[consumer], str(producer+1).zfill(2) )
-		#print(len(rawRecvMsgs))
 
 		#Fill heat matrix with received messages
 		for msg in rawRecvMsgs:
@@ -157,11 +154,12 @@ for producer in range(nProducer):
 	for consumer in range(nConsumer): 
 
 		f.write("Consumer "+str(consumer)+"\n")
+		f.write("-------------\n")
 
 		for msgIdx in range(len(rawHeatData[consumer])):
 			if rawHeatData[consumer][msgIdx] != 255 and msgIdx < 9000:
 				f.write("Index: "+str(msgIdx)+"\n")
-
+		f.write("**************\n")
 	f.close()
 
 	#Plot heatmap
