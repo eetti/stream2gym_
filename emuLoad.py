@@ -366,7 +366,7 @@ def runLoad(net, args, topicPlace, prodDetailsList, consDetailsList, sparkDetail
 
 					# checking topic leader after reconnection
 					topicDetails = topicNodes[0].cmd("kafka/bin/kafka-topics.sh --describe --bootstrap-server 10.0.0.1:9092", shell=True)
-					print("Topic leader after reconnection")
+					print("Topic description after reconnection")
 					print(topicDetails)
 
 				isDisconnected = False

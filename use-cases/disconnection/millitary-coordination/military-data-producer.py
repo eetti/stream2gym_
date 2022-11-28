@@ -84,14 +84,14 @@ try:
 	
 	tClass = 1.0
 	mSizeString = 'fixed,10'
-	mRate = 1.0
+	mRate = 30   #1.0
 	nTopics = 1
 
 	acks = 1
-	compression = 'None'
+	compression = 'gzip'   #'None'
 	batchSize = 16384
-	linger = 0
-	requestTimeout = 30000
+	linger = 5000    #0
+	requestTimeout = 100000  #30000
 	brokers = 3
 	messageFilePath = 'None'
 	nSwitches = 1

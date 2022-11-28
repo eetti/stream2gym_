@@ -79,7 +79,6 @@ for i in range(params['num_topics']):
 
 #Read producer data
 prodData = prodLog.getAllProdData(params['prod_dir'], prodDetails)
-print(prodData)
 #Read consumer data
 consData = consLog.getAllConsData(params['cons_dir'], consDetails)
 
