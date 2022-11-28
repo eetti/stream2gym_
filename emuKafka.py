@@ -9,22 +9,9 @@ import time
 import networkx as nx
 
 # import pyyaml module to read the yaml files
-import yaml
-from yaml.loader import SafeLoader
+from configParser import readYAMLConfig
 
-def readYAMLTopicConfig(topicConfigPath):
-	data = []
-	try:
-		# Open the file and load all topic details from the yaml file
-		with open(topicConfigPath, 'r') as f:
-			data = list(yaml.load_all(f, Loader=SafeLoader))
-			print(data)
-	except yaml.YAMLError:
-		print("Error in configuration file:")
 
-	return data
-
-	
 def readTopicConfig(topicConfigPath, nBroker):
 	allTopics = []
 	topicDetails = {}
@@ -119,16 +106,20 @@ def configureKafkaCluster(brokerPlace, zkPlace, args):
 		bProperties = bProperties.replace("#replica.fetch.wait.max.ms=500", "replica.fetch.wait.max.ms="+str(args.replicaMaxWait))
 		bProperties = bProperties.replace("#replica.fetch.min.bytes=1", "replica.fetch.min.bytes="+str(args.replicaMinBytes))
 
+		bProperties = bProperties.replace(
+            "offsets.topic.replication.factor=1", "offsets.topic.replication.factor=2")
+
 		#Specify zookeeper addresses to connect
 		zkAddresses = ""
 		zkPort = 2181
 
 		for i in range(len(zkPlace)-1):
-			zkAddresses += "10.0.0." + str(zkPlace[i]) + ":" +str(zkPort)+","
+			#zkAddresses += "10.0.0." + str(zkPlace[i]) + ":" +str(zkPort)+","
+			zkAddresses += "localhost:"+str(zkPort)+","
 			zkPort += 1
 
-# 		zkAddresses += "localhost:"+str(zkPort)
-		zkAddresses += "10.0.0."+str(zkPlace[-1])+ ":" +str(zkPort)
+		zkAddresses += "localhost:"+str(zkPort)
+		#zkAddresses += "10.0.0."+str(zkPlace[-1])+ ":" +str(zkPort)
 		print("zk connect: " + zkAddresses)
 
 		bProperties = bProperties.replace(
@@ -176,7 +167,8 @@ def placeKafkaBrokers(net, args):
 	if onlySpark == 0: 
 		topicConfigPath = inputTopo.graph["topicConfig"]
 		print("topic config directory: " + topicConfigPath)
-		topicPlace = readTopicConfig(topicConfigPath, nBroker) #readYAMLTopicConfig(topicConfigPath)
+		#topicPlace = readTopicConfig(topicConfigPath, nBroker) 
+		topicPlace = readYAMLConfig(topicConfigPath)
 	
 	# reading disconnection config
 	try:

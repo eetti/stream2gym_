@@ -129,7 +129,7 @@ def spawnProducers(net, mSizeString, mRate, tClassString, nTopics, args, prodDet
 			topicName = [x for x in topicPlace if x['topicName'] == prodTopic][0]["topicName"]
 			brokerId = [x for x in topicPlace if x['topicName'] == prodTopic][0]["topicBroker"] 
 
-			print("Producing messages to topic "+topicName+" at broker "+brokerId)
+			print("Producing messages to topic "+topicName+" at broker "+str(brokerId))
 			print("Producer type: "+producerType)
 
 			prodInstance = 1
@@ -140,7 +140,7 @@ def spawnProducers(net, mSizeString, mRate, tClassString, nTopics, args, prodDet
 					
 				else:
 					node.popen("python3 "+producerPath+" " +nodeID+" "+tClasses+" "+mSizeString+" "+str(mRate)+" "+str(nTopics)+" "+str(acks)+" "+str(compression)\
-					+" "+str(batchSize)+" "+str(linger)+" "+str(requestTimeout)+" "+brokerId+" "+messageFilePath\
+					+" "+str(batchSize)+" "+str(linger)+" "+str(requestTimeout)+" "+str(brokerId)+" "+messageFilePath\
 					+" "+topicName+" "+producerType+" "+prodNumberOfFiles+" "+str(prodInstance)+" &", shell=True)
 				
 				prodInstance += 1
@@ -178,12 +178,12 @@ def spawnConsumers(net, consDetailsList, topicPlace):
 			topicName = [x for x in topicPlace if x['topicName'] == topicName][0]["topicName"]
 			brokerId = [x for x in topicPlace if x['topicName'] == topicName][0]["topicBroker"] 
 
-			print("Consuming messages from topic "+topicName+" at broker "+brokerId)
+			print("Consuming messages from topic "+topicName+" at broker "+str(brokerId))
 
 			while consInstance <= int(numberOfConsumers):
 				# node.popen("python3 consumer.py "+str(node.name)+" "+topicName+" "+brokerId+" "+str(consInstance)+" &", shell=True)
 				# consumerPath = 'use-cases/app-testing/millitary-coordination/military-data-consumer.py'
-				node.popen("python3 "+consumerPath+" "+str(node.name)+" "+topicName+" "+brokerId+" "+str(consInstance)+" &", shell=True)
+				node.popen("python3 "+consumerPath+" "+str(node.name)+" "+topicName+" "+str(brokerId)+" "+str(consInstance)+" &", shell=True)
 				
 				consInstance += 1
 
@@ -284,21 +284,25 @@ def runLoad(net, args, topicPlace, prodDetailsList, consDetailsList, sparkDetail
 
 	for topic in topicPlace:
 		topicName = topic["topicName"]
-		issuingID = (int) (topic["topicBroker"])-1
+		issuingID = topic["topicBroker"]
 		topicPartition = topic["topicPartition"]
 		topicReplica = topic["topicReplica"]
-		issuingNode = net.hosts[issuingID]
+		issuingNode = net.hosts[issuingID-1]
 
-		print("Creating topic "+topicName+" at broker "+str(issuingID+1)+" partition "+str(topicPartition))
+		print("Creating topic "+topicName+" at broker "+str(issuingID)+" partition "+str(topicPartition))
 
-		out = issuingNode.cmd("kafka/bin/kafka-topics.sh --create --bootstrap-server 10.0.0."+str(issuingID+1)+":9092\
-			 --replication-factor "+topicReplica+" --partitions " + topicPartition + \
-				" --topic "+topicName, shell=True)         
+		out = issuingNode.cmd("kafka/bin/kafka-topics.sh --create --bootstrap-server 10.0.0."+str(issuingID)+
+			":9092 --replication-factor "+str(topicReplica)+" --partitions " + str(topicPartition) +
+			" --topic "+topicName, shell=True)
+
+		#out = issuingNode.cmd("kafka/bin/kafka-topics.sh --create --bootstrap-server 10.0.0."+str(issuingID)+":9092\
+		#	 --replication-factor "+str(topicReplica)+" --partitions " + str(topicPartition) + \
+		#		" --topic "+topicName, shell=True)         
 		
 		print(out)
 		topicNodes.append(issuingNode)
 
-		topicDetails = issuingNode.cmd("kafka/bin/kafka-topics.sh --describe --bootstrap-server 10.0.0."+str(issuingID+1)+":9092", shell=True)
+		topicDetails = issuingNode.cmd("kafka/bin/kafka-topics.sh --describe --bootstrap-server 10.0.0."+str(issuingID)+":9092", shell=True)
 		print("Topic description at the beginning of the simulation:")
 		print(topicDetails)
 
