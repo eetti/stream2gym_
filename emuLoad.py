@@ -284,7 +284,7 @@ def runLoad(net, args, topicPlace, prodDetailsList, consDetailsList, sparkDetail
 
 	for topic in topicPlace:
 		topicName = topic["topicName"]
-		issuingID = topic["topicBroker"]
+		issuingID = int(topic["topicBroker"])
 		topicPartition = topic["topicPartition"]
 		topicReplica = topic["topicReplica"]
 		issuingNode = net.hosts[issuingID-1]

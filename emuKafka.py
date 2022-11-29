@@ -8,7 +8,6 @@ import subprocess
 import time
 import networkx as nx
 
-# import pyyaml module to read the yaml files
 from configParser import readYAMLConfig
 
 
@@ -167,8 +166,8 @@ def placeKafkaBrokers(net, args):
 	if onlySpark == 0: 
 		topicConfigPath = inputTopo.graph["topicConfig"]
 		print("topic config directory: " + topicConfigPath)
-		#topicPlace = readTopicConfig(topicConfigPath, nBroker) 
-		topicPlace = readYAMLConfig(topicConfigPath)
+		topicPlace = readTopicConfig(topicConfigPath, nBroker) 
+		# topicPlace = readYAMLConfig(topicConfigPath)
 	
 	# reading disconnection config
 	try:
@@ -258,6 +257,7 @@ def runKafka(net, brokerPlace, brokerWaitTime=200):
 		netNodes[node.name] = node
 		
 	startTime = time.time()
+	popens = {}
 	for bNode in brokerPlace:
 		bID = "h"+str(bNode)
 
@@ -265,9 +265,33 @@ def runKafka(net, brokerPlace, brokerWaitTime=200):
 		
 		print("Creating Kafka broker at node "+str(bNode))
 
-		startingHost.popen("kafka/bin/kafka-server-start.sh kafka/config/server"+str(bNode)+".properties &", shell=True)
+		# startingHost.popen("kafka/bin/kafka-server-start.sh kafka/config/server"+str(bNode)+".properties &", shell=True)
+		popens[startingHost] = startingHost.popen(
+            "kafka/bin/kafka-server-start.sh kafka/config/server"+str(bNode)+".properties &", shell=True)
 		
 		time.sleep(1)
+
+	brokerWait = True
+	totalTime = 0
+	brokerCount = 0
+	for bNode in brokerPlace:
+		while brokerWait:
+			print("Testing Connection to Broker " + str(bNode) + "...")
+			out, err, exitCode = startingHost.pexec(
+				"nc -z -v 10.0.0." + str(bNode) + " 9092")
+			stopTime = time.time()
+			totalTime = stopTime - startTime
+			if(exitCode == 0):
+				brokerWait = False
+				brokerCount += 1
+			# elif(totalTime > brokerWaitTime):
+			#    print("ERROR: Timed out waiting for Kafka brokers to start")
+			#    sys.exit(1)
+			else:
+				print("Waiting for Broker " + str(bNode) + " to Start...")
+				time.sleep(10)
+		brokerWait = True
+	print("Successfully Created "+str(brokerCount)+" Kafka Brokers in " + str(totalTime) + " seconds")
 
 def cleanKafkaState(brokerPlace):
 	for bID in brokerPlace:

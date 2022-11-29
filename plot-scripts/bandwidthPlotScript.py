@@ -1,3 +1,5 @@
+# example command to run this script: sudo python3 plot-scripts/bandwidthPlotScript.py --number-of-switches 3 --switch-ports S1-P1,S1-P2,S1-P3 --port-type access-port --message-rate 30 --ntopics 1 --replication 3 --log-dir logs/output
+
 #!/usr/bin/python3
 
 import os
@@ -10,6 +12,7 @@ import matplotlib
 matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 from matplotlib.font_manager import FontProperties
+from random import gauss
 
 interval = 5
 inputBarDraw = 0
@@ -90,6 +93,8 @@ def getStatsValue(switch,portNumber, portFlag):
 #drawing single plot for a single flag of each port for one switch           
 def drawPlot(switchNo,portNo,portFlag,x,y,yLabel,occurrence): 
     global inputBarDraw
+    # print("Switch no: "+str(switchNo))
+    # print("Port no: "+str(portNo))
     if inputBarDraw == 0:
         msgSize = processMessageInput()
         dataRateList = plotInputDataRate(msgSize, args.mRate, occurrence, 1)
@@ -99,7 +104,6 @@ def drawPlot(switchNo,portNo,portFlag,x,y,yLabel,occurrence):
         if portFlag != "rx pkts" or portFlag != "tx pkts":
             plt.plot(x,dataRateList,label = "input")
             inputBarDraw = 1
-
     plt.plot(x,y, label = "S-" +str(switchNo)+" P-"+str(portNo))
     plt.xlabel('Time (s)', fontproperties=font)
     if portFlag == "rx pkts" or portFlag == "tx pkts":
@@ -110,8 +114,6 @@ def drawPlot(switchNo,portNo,portFlag,x,y,yLabel,occurrence):
 
     plt.xticks(fontproperties=font)
     plt.yticks(fontproperties=font)
-
-    plt.plot(x,y)
 
 #     plt.ylim([0,3.5])           # to limit the Y-axis value
 
@@ -213,7 +215,6 @@ def parseInput(portSwitchId):
 def drawIndividualBandwidth(portId, switchId, portFlag):
     bandwidth, occurrence, maxBandwidth = getStatsValue(switchId,portId, portFlag)        # Here portId=1 is the fixed entry port of hosts
     timeList = list(range(0,occurrence*interval,interval))
-    
     if portFlag=="rx pkts" or portFlag=="tx pkts":
         drawPlot(switchId,portId,portFlag,timeList, bandwidth, "Bandwidth (pkts/sec)", occurrence)
     elif portFlag=="bytes":
@@ -275,7 +276,7 @@ def getLeaderList():
     return leaderReplicaList        
 #     print ("Leader replicas: " + str(leaderReplicaList)[1:-1])
 
-def createHist():
+# def createHist():
 
     new_list = range(math.floor(min(leaderReplicaList)), math.ceil(max(leaderReplicaList))+1)
     plt.figure(figsize=(3,3))
@@ -328,9 +329,11 @@ plotIndividualPortBandwidth()           #for individual entry port plots
 print("Individual "+args.portType+" bandwidth consumption plot created")
 
 clearExistingPlot()
+
 plotAggregatedBandwidth()      #for aggregated plot    
 print("Aggregated plot created.")
 
 clearExistingPlot()                                       
+
 # createHist()    
 # print("Histogram created")
