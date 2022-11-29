@@ -25,7 +25,7 @@
   
    
   <graph id="simple-topo" edgedefault="undirected">
-    <data key="topicCfg">use-cases/disconnection/millitary-coordination/topicConfiguration.txt</data>
+    <data key="topicCfg">use-cases/disconnection/millitary-coordination/topicConfiguration.yaml</data>
     <data key="dcCfg">use-cases/disconnection/millitary-coordination/disconnectionConfiguration.txt</data>
 
     <node id="s1"/>
