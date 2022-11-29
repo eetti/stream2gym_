@@ -3,10 +3,14 @@
 import os
 import logging
 
+from mininet.util import pmonitor
+
+ZOOKEEPER_LOG_FILE = "zk-log.txt"
 
 def configureLogDir(nSwitches, mSizeString, mRate, nTopics):  
 	logDir = "logs/output/"
 
+	os.system("sudo rm -rf " + logDir + "/" + ZOOKEEPER_LOG_FILE)
 	os.system("sudo rm -rf " + logDir + "/bandwidth/; " + "sudo mkdir -p " + logDir + "/bandwidth/")
 	os.system("sudo rm -rf " + logDir + "/prod/; " + "sudo mkdir -p " + logDir + "/prod/")    
 	os.system("sudo rm -rf " + logDir + "/cons/; " + "sudo mkdir -p " + logDir + "/cons/")

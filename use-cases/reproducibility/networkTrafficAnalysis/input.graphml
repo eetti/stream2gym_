@@ -12,6 +12,7 @@
   <key id="bk" for="node" attr.name="broker" attr.type="int"/>
   <key id="prodType" for="node" attr.name="producerType" attr.type="string"/>   <!-- producer type can be SFST/MFST/ELTT/INDIVIDUAL -->
   <key id="prodCfg" for="node" attr.name="producerConfig" attr.type="string"/>  <!-- for SFST/ELTT: one pair of filePath, topicName, number of files to produce; for MFMT: multiple pair of filePaths, topicNames; -->
+  <key id="consType" for="node" attr.name="consumerType" attr.type="string"/>   <!-- consumer type can be STANDARD/INDIVIDUAL;if it is INDIVIDUAL, it will also contain the consumer script path -->
   <key id="consCfg" for="node" attr.name="consumerConfig" attr.type="string"/>  <!-- consConfig will contain the topic name(s) from where the consumer will consumer and number of consumer instances in this node--> 
   <key id="sparkCfg" for="node" attr.name="sparkConfig" attr.type="string"/>    <!-- sparkConfig will contain the spark application path and topic name(s)/output directory from where the spark ingest its processed output --> 
   
@@ -24,7 +25,6 @@
   
    
   <graph id="simple-topo" edgedefault="undirected">
-    <!-- <data key="topicCfg">use-cases/reproducibility/networkTrafficAnalysis/topicConfiguration.txt</data> -->
     <data key="topicCfg">use-cases/reproducibility/networkTrafficAnalysis/topicConfiguration.yaml</data>
 
     <node id="s1"/>
@@ -38,10 +38,13 @@
 
     <node id="h2">
       <data key="sparkCfg">use-cases/reproducibility/networkTrafficAnalysis/spark-port-statistics.py,outputTopic</data>
+      <!-- <data key="sparkCfg">use-cases/reproducibility/networkTrafficAnalysis/topicDuplicate.py,outputTopic</data> -->
+      <data key="consType">STANDARD</data>
       <data key="consCfg">inputTopic,1</data>
 	  </node> 
 
     <node id="h3">
+      <data key="consType">STANDARD</data>
       <data key="consCfg">outputTopic,1</data>
 	  </node>         
 

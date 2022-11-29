@@ -9,10 +9,39 @@ import time
 import os
 import sys
 import itertools
+import logging
 
 import subprocess
 from subprocess import Popen, PIPE, STDOUT
 from datetime import datetime
+
+# from emuLogs import ZOOKEEPER_LOG_FILE
+
+# # Method to extract Zookeeper leader information from Zookeeper log
+# def readCurrentZkLeader(logDir):
+# 	zkLeader = None
+# 	with open(logDir+"/" + ZOOKEEPER_LOG_FILE) as f:
+# 		for line in f:
+# 			if "LEADING - LEADER ELECTION TOOK " in line:
+# 				first = line.split(">")[0]
+# 				zkLeader = first[1:]
+# 				print(f'Zookeeper leader is {zkLeader}')
+# 				break
+# 	return zkLeader
+
+# # Method for logging topic(s) leader
+# def logTopicLeaders(net, logDir, args):
+# 	issuingNode = net.hosts[0]
+# 	print("Finding topic leaders at localhost:2181")
+# 	zkLeaderNode = readCurrentZkLeader(logDir)
+# 	logging.info("ZK Leader node is " + zkLeaderNode)	
+# 	for i in range(args.nTopics):
+# 		out = issuingNode.cmd("kafka/bin/kafka-topics.sh --zookeeper localhost:2181 --describe --topic topic-"+str(i), shell=True)			
+# 		split1 = out.split('Leader: ')
+# 		split2 = split1[1].split('\t')
+# 		topicLeaderNode = 'h' + split2[0]			
+# 		print(f"Leader for topic-{str(i)} is node {topicLeaderNode}")
+# 		logging.info("topic-"+ str(i) +" leader is node " + topicLeaderNode)
 
 # Using threads for producer instances
 def spawnThreadedProducers(net, mSizeString, mRate, tClassString, nTopics, args, prodDetailsList, topicPlace):
@@ -213,10 +242,12 @@ def spawnSparkClients(net, sparkDetailsList):
 		sprkID = "h"+sparkNode
 		node = netNodes[sprkID]
 
-		node.popen("sudo spark/pyspark/bin/spark-submit --packages org.apache.spark:spark-sql-kafka-0-10_2.12:3.2.1 "+sparkApp\
-					+" "+str(node.name)+" "+sparkOutputTo+" &", shell=True)
+		# node.popen("sudo spark/pyspark/bin/spark-submit --packages org.apache.spark:spark-sql-kafka-0-10_2.12:3.2.1 "+sparkApp\
+		# 			+" "+str(node.name)+" "+sparkOutputTo+" &", shell=True)
 
-		# node.popen("sudo python3 use-cases/reproducibility/networkTrafficAnalysis/topicDuplicate.py &", shell=True)
+		node.popen("sudo spark/pyspark/bin/spark-submit --packages org.apache.spark:spark-sql-kafka-0-10_2.12:3.2.1 "+sparkApp\
+					+" &", shell=True)
+
 	
 def spawnKafkaMySQLConnector(net, prodDetailsList, mysqlPath):
 	netNodes = {}
@@ -232,31 +263,6 @@ def spawnKafkaMySQLConnector(net, prodDetailsList, mysqlPath):
 	print("connector starts on node: "+connID)
 	
 	node.popen("sudo kafka/bin/connect-standalone.sh kafka/config/connect-standalone-new.properties "+ mysqlPath +" > logs/connectorOutput.txt &", shell=True)
-
-def spawnTopicDuplicate(net, sparkDetailsList):
-	netNodes = {}
-
-	for node in net.hosts:
-		netNodes[node.name] = node
-
-	for sprk in sparkDetailsList:
-		time.sleep(30)
-		
-		sparkNode = sprk["nodeId"]
-		# sparkInputFrom = sprk["topicsToConsume"]
-		sparkApp = sprk["applicationPath"]
-		sparkOutputTo = sprk["produceTo"]
-		print("spark node: "+sparkNode)
-		print("spark App: "+sparkApp)
-		# print("spark input from: "+sparkInputFrom)
-		print("spark output to: "+sparkOutputTo)
-		print("*************************")
-
-		sprkID = "h"+sparkNode
-		node = netNodes[sprkID]
-
-		node.popen("sudo python3 use-cases/reproducibility/networkTrafficAnalysis/topicDuplicate.py &", shell=True)
-
 
 def runLoad(net, args, topicPlace, prodDetailsList, consDetailsList, sparkDetailsList, \
 	mysqlPath, brokerPlace, isDisconnect, dcDuration, dcLinks, logDir, topicWaitTime=100):
@@ -294,10 +300,6 @@ def runLoad(net, args, topicPlace, prodDetailsList, consDetailsList, sparkDetail
 		out = issuingNode.cmd("kafka/bin/kafka-topics.sh --create --bootstrap-server 10.0.0."+str(issuingID)+
 			":9092 --replication-factor "+str(topicReplica)+" --partitions " + str(topicPartition) +
 			" --topic "+topicName, shell=True)
-
-		#out = issuingNode.cmd("kafka/bin/kafka-topics.sh --create --bootstrap-server 10.0.0."+str(issuingID)+":9092\
-		#	 --replication-factor "+str(topicReplica)+" --partitions " + str(topicPartition) + \
-		#		" --topic "+topicName, shell=True)         
 		
 		print(out)
 		topicNodes.append(issuingNode)
@@ -306,7 +308,6 @@ def runLoad(net, args, topicPlace, prodDetailsList, consDetailsList, sparkDetail
 		print("Topic description at the beginning of the simulation:")
 		print(topicDetails)
 
-	print(topicNodes)
 	stopTime = time.time()
 	totalTime = stopTime - startTime
 	print("Successfully Created " + str(len(topicPlace)) + " Topics in " + str(totalTime) + " seconds")
@@ -318,8 +319,6 @@ def runLoad(net, args, topicPlace, prodDetailsList, consDetailsList, sparkDetail
 
 	if args.onlyKafka == 0:
 		spawnSparkClients(net, sparkDetailsList)
-		# if we want to create duplicate of a topic, use this python script
-		# spawnTopicDuplicate(net, sparkDetailsList)
 		time.sleep(30)
 		print("Spark Clients created")
 
@@ -381,6 +380,7 @@ def runLoad(net, args, topicPlace, prodDetailsList, consDetailsList, sparkDetail
 
 		timer += 10
 
+	# logTopicLeaders(net, logDir, args)
 	print(f"Workload finished at {str(datetime.now())}")	
 
 def disconnectLink(net, n1, n2):

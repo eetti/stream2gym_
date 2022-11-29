@@ -21,7 +21,12 @@
 
   
 ## Input details
-1. topicConfiguration.txt : associated topic name(s) in each line
+1. topicConfiguration.yaml :
+   - contains topic configurations
+     - specify topic name ('topicName')
+     - specify broker ID to initiate this topic ('topicBroker')
+     - number of partition(s) in this topic ('topicPartition')
+     - number of replica(s) in this topic ('topicReplica')
 2. input.graphml:
    - contains topology description
      - node details (switch, host)

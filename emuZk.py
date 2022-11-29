@@ -7,6 +7,8 @@ import sys
 import subprocess
 import time
 
+import emuLogs
+
 
 def configureZkCluster(zkPlace):
 	print("Congigure Zookeeper cluster")
@@ -70,6 +72,7 @@ def runZk(net, zkPlace, zkWaitTime=100):
 	for node in net.hosts:
 		netNodes[node.name] = node
 	
+	popens = {}
 	startTime = time.time()
 	for zNode in zkPlace:
 		zID = "h"+str(zNode)

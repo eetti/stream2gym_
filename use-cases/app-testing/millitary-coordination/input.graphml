@@ -24,7 +24,7 @@
   
    
   <graph id="simple-topo" edgedefault="undirected">
-    <data key="topicCfg">use-cases/app-testing/millitary-coordination/topicConfiguration.txt</data>
+    <data key="topicCfg">use-cases/app-testing/millitary-coordination/topicConfiguration.yaml</data>
 
     <node id="s1"/>
 
