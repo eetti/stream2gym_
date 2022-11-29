@@ -1,0 +1,7 @@
+# topic configuration file
+---
+  topicName: inputTopic
+  topicBroker: 1
+  topicPartition: 10
+  topicReplica: 1
+...

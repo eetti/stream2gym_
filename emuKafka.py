@@ -166,9 +166,9 @@ def placeKafkaBrokers(net, args):
 	if onlySpark == 0: 
 		topicConfigPath = inputTopo.graph["topicConfig"]
 		print("topic config directory: " + topicConfigPath)
-		topicPlace = readTopicConfig(topicConfigPath, nBroker) 
-		# topicPlace = readYAMLConfig(topicConfigPath)
-	
+		#topicPlace = readTopicConfig(topicConfigPath, nBroker) 
+		topicPlace = readYAMLConfig(topicConfigPath)
+
 	# reading disconnection config
 	try:
 		dcPath = inputTopo.graph["disconnectionConfig"]

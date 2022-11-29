@@ -23,7 +23,7 @@
   
    
   <graph id="simple-topo" edgedefault="undirected">
-    <data key="topicCfg">use-cases/reproducibility/topicConfiguration.txt</data>
+    <data key="topicCfg">use-cases/reproducibility/videoAnalysis/topicConfiguration.yaml</data>
 
     <node id="s1"/>
 
@@ -31,7 +31,7 @@
       <data key="zk">1</data>
       <data key="bk">1</data>
       <data key="prodType">ELTT</data>
-      <data key="prodCfg">use-cases/reproducibility/dataDir/mnist_test.csv,inputTopic,10</data>
+      <data key="prodCfg">use-cases/reproducibility/dataDir/mnist_test.csv,inputTopic,10,1</data>
       <data key="consCfg">inputTopic,10</data>
 	  </node>            
 
