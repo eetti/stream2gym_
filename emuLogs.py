@@ -8,7 +8,7 @@ from mininet.util import pmonitor
 ZOOKEEPER_LOG_FILE = "zk-log.txt"
 
 def configureLogDir(nSwitches, mSizeString, mRate, nTopics):  
-	logDir = "logs/output/"
+	logDir = "logs/output"
 
 	os.system("sudo rm -rf " + logDir + "/" + ZOOKEEPER_LOG_FILE)
 	os.system("sudo rm -rf " + logDir + "/bandwidth/; " + "sudo mkdir -p " + logDir + "/bandwidth/")
@@ -18,37 +18,16 @@ def configureLogDir(nSwitches, mSizeString, mRate, nTopics):
 	logging.basicConfig(filename=logDir+"/events.log",
 						format='%(levelname)s:%(message)s',
  						level=logging.INFO)
-	return 
-
-	# os.system("sudo rm -rf logs/kafka/"+"switches:" +str(nSwitches)+ "_mSize:"+ mSizeString\
-	# 	+ "_mRate:"+ str(mRate)+ "_topics:"+str(nTopics)\
-	# 	+"/bandwidth/"+"; sudo mkdir -p logs/kafka/"+"switches:" +str(nSwitches)+ "_mSize:"\
-	# 	+ mSizeString+ "_mRate:"+ str(mRate)+ "_topics:"+str(nTopics)+"/bandwidth/")
-    
-	# os.system("sudo rm -rf logs/kafka/"+"switches:" +str(nSwitches)+ "_mSize:"+ mSizeString\
-	# 	+ "_mRate:"+ str(mRate)+ "_topics:"+str(nTopics)\
-	# 	+"/prod/"+"; sudo mkdir -p logs/kafka/"+"switches:" +str(nSwitches)+ "_mSize:"\
-	# 	+ mSizeString+ "_mRate:"+ str(mRate)+ "_topics:"+str(nTopics)+"/prod/")    
-
-	# os.system("sudo rm -rf logs/kafka/"+"switches:" +str(nSwitches)+ "_mSize:"+ mSizeString\
-	# 	+ "_mRate:"+ str(mRate)+ "_topics:"+str(nTopics)\
-	# 	+"/cons/"+"; sudo mkdir -p logs/kafka/"+"switches:" +str(nSwitches)+ "_mSize:"\
-	# 	+ mSizeString+ "_mRate:"+ str(mRate)+ "_topics:"+str(nTopics) +"/cons/")
-
-	# # os.system("sudo rm -rf logs/output/; sudo mkdir -p logs/output/")
-	# os.system("sudo rm -rf logs/output/prod/; sudo mkdir -p logs/output/prod/")
-	# os.system("sudo rm -rf logs/output/cons/; sudo mkdir -p logs/output/cons/")
-
-	# logging.basicConfig(filename="logs/kafka/"+"switches:" +str(nSwitches)+ "_mSize:"\
-	# 						+ mSizeString+ "_mRate:"+ str(mRate)+ "_topics:"+str(nTopics) \
-	# 						+"/events.log",\
-	# 					format='%(levelname)s:%(message)s',\
- 	# 					level=logging.INFO)
-
-	# return logDir
+	return logDir
 
 
 def cleanLogs():
 	os.system("sudo rm -rf logs/kafka/")
 	os.system("sudo rm -rf logs/output/")
 	os.system("sudo rm -rf kafka/logs/")    
+
+def logMininetProcesses(popens, logFilePath):
+	bandwidthLog = open(logFilePath, "a")
+	for host, line in pmonitor(popens):
+		if host:
+			bandwidthLog.write("<%s>: %s" % (host.name, line))

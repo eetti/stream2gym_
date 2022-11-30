@@ -6,6 +6,7 @@ import os
 import sys
 import subprocess
 import time
+import multiprocessing
 
 import emuLogs
 
@@ -65,7 +66,7 @@ def configureZkCluster(zkPlace):
 
 
 
-def runZk(net, zkPlace, zkWaitTime=100):
+def runZk(net, zkPlace, logDir, zkWaitTime=100):
 
 	netNodes = {}
 
@@ -81,31 +82,37 @@ def runZk(net, zkPlace, zkWaitTime=100):
 		
 		print("Creating Zookeeper instance at node "+str(zNode))
 
-		startingHost.popen("kafka/bin/zookeeper-server-start.sh kafka/config/zookeeper"+str(zNode)+".properties &", shell=True)
+		popens[startingHost] = startingHost.popen("kafka/bin/zookeeper-server-start.sh kafka/config/zookeeper"+str(zNode)+".properties &", shell=True)
 		time.sleep(1)
 	
+	logPath = logDir + "/" + emuLogs.ZOOKEEPER_LOG_FILE
+	process = multiprocessing.Process(target=emuLogs.logMininetProcesses, args=(popens, logPath))
+	process.start()
+
 	zkWait = True
 	totalTime = 0
 	clientPort = 2181
+	zkCounter = 0
 	for zNode in zkPlace:
-	    while zkWait:
-	        print("Testing Connection to Zookeeper at node " + str(zNode) + "...")
-	        zID = "h"+str(zNode)
-	        startingHost = netNodes[zID]
-	        out, err, exitCode = startingHost.pexec("nc -z -v 10.0.0." + str(zNode) + " " + str(clientPort))
-	        stopTime = time.time()
-	        totalTime = stopTime - startTime
-	        if(exitCode == 0):
-	            zkWait = False
-	        #elif(totalTime > zkWaitTime):
-	        #    print("ERROR: Timed out waiting for zookeeper instances to start")
-	        #    sys.exit(1)
-	        else:
-	            print("Waiting for Zookeeper at node " + str(zNode) + " to Start...")
-	            time.sleep(10)
-	    zkWait = True
-	    clientPort += 1
-	print("Successfully Created Zookeeper Instances in " + str(totalTime) + " seconds")
+		while zkWait:
+			print("Testing Connection to Zookeeper at node " + str(zNode) + "...")
+			zID = "h"+str(zNode)
+			startingHost = netNodes[zID]
+			out, err, exitCode = startingHost.pexec("nc -z -v 10.0.0." + str(zNode) + " " + str(clientPort))
+			stopTime = time.time()
+			totalTime = stopTime - startTime
+			if(exitCode == 0):
+				zkWait = False
+				zkCounter += 1
+			#elif(totalTime > zkWaitTime):
+			#    print("ERROR: Timed out waiting for zookeeper instances to start")
+			#    sys.exit(1)
+			else:
+				print("Waiting for Zookeeper at node " + str(zNode) + " to Start...")
+				time.sleep(10)
+		zkWait = True
+		clientPort += 1
+	print("Successfully Created "+str(zkCounter)+" Zookeeper Instances in " + str(totalTime) + " seconds")
 
 
 
@@ -117,13 +124,3 @@ def cleanZkState(zkPlace):
 
 		#Erase properties file
 		os.system("sudo rm -f kafka/config/zookeeper" + str(zkID) + ".properties")
-
-
-
-
-
-
-
-
-
-

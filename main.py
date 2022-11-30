@@ -252,7 +252,7 @@ if __name__ == '__main__':
 					+" "+ str(args.nZk) +" &", shell=True)
 	pID += 1
 
-	emuZk.runZk(net, zkPlace)
+	emuZk.runZk(net, zkPlace, logDir)
 	emuKafka.runKafka(net, brokerPlace)
     
 	emuLoad.runLoad(net, args, topicPlace, prodDetailsList, consDetailsList, sparkDetailsList,\

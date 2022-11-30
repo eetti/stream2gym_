@@ -15,33 +15,35 @@ import subprocess
 from subprocess import Popen, PIPE, STDOUT
 from datetime import datetime
 
-# from emuLogs import ZOOKEEPER_LOG_FILE
+from emuLogs import ZOOKEEPER_LOG_FILE
 
-# # Method to extract Zookeeper leader information from Zookeeper log
-# def readCurrentZkLeader(logDir):
-# 	zkLeader = None
-# 	with open(logDir+"/" + ZOOKEEPER_LOG_FILE) as f:
-# 		for line in f:
-# 			if "LEADING - LEADER ELECTION TOOK " in line:
-# 				first = line.split(">")[0]
-# 				zkLeader = first[1:]
-# 				print(f'Zookeeper leader is {zkLeader}')
-# 				break
-# 	return zkLeader
+# Method to extract Zookeeper leader information from Zookeeper log
+def readCurrentZkLeader(logDir):
+	zkLeader = None
+	with open(logDir+"/" + ZOOKEEPER_LOG_FILE) as f:
+		for line in f:
+			if "LEADING - LEADER ELECTION TOOK " in line:
+				first = line.split(">")[0]
+				zkLeader = first[1:]
+				print(f'Zookeeper leader is {zkLeader}')
+				break
+	return zkLeader
 
-# # Method for logging topic(s) leader
-# def logTopicLeaders(net, logDir, args):
-# 	issuingNode = net.hosts[0]
-# 	print("Finding topic leaders at localhost:2181")
-# 	zkLeaderNode = readCurrentZkLeader(logDir)
-# 	logging.info("ZK Leader node is " + zkLeaderNode)	
-# 	for i in range(args.nTopics):
-# 		out = issuingNode.cmd("kafka/bin/kafka-topics.sh --zookeeper localhost:2181 --describe --topic topic-"+str(i), shell=True)			
-# 		split1 = out.split('Leader: ')
-# 		split2 = split1[1].split('\t')
-# 		topicLeaderNode = 'h' + split2[0]			
-# 		print(f"Leader for topic-{str(i)} is node {topicLeaderNode}")
-# 		logging.info("topic-"+ str(i) +" leader is node " + topicLeaderNode)
+# Method for logging topic(s) leader
+def logTopicLeaders(net, logDir, topicPlace):
+	issuingNode = net.hosts[0]
+	print("Finding topic leaders at localhost:2181")
+	zkLeaderNode = readCurrentZkLeader(logDir)
+	logging.info("ZK Leader node is " + zkLeaderNode)	
+	for topic in topicPlace:
+		topicName = topic["topicName"]
+		out = issuingNode.cmd("kafka/bin/kafka-topics.sh --zookeeper localhost:2181 --describe --topic "+str(topicName), shell=True)
+		split1 = out.split('Leader: ')
+		print(split1)
+		split2 = split1[1].split('\t')
+		topicLeaderNode = 'h' + split2[0]			
+		print(f"Leader for {str(topicName)} is node {topicLeaderNode}")
+		logging.info(str(topicName) +" leader is node " + topicLeaderNode)
 
 # Using threads for producer instances
 def spawnThreadedProducers(net, mSizeString, mRate, tClassString, nTopics, args, prodDetailsList, topicPlace):
@@ -331,6 +333,9 @@ def runLoad(net, args, topicPlace, prodDetailsList, consDetailsList, sparkDetail
 	# time.sleep(10)
 	print("Consumers created")
 
+	# Log the topic leaders
+	logTopicLeaders(net, logDir, topicPlace)	
+
 	timer = 0
 
 	# Set up disconnect
@@ -339,6 +344,7 @@ def runLoad(net, args, topicPlace, prodDetailsList, consDetailsList, sparkDetail
 		disconnectTimer = dcDuration
 
 	print(f"Starting workload at {str(datetime.now())}")
+	logging.info('Starting workload at ' + str(datetime.now()))
 	
 	while timer < duration:
 		time.sleep(10)
@@ -352,11 +358,6 @@ def runLoad(net, args, topicPlace, prodDetailsList, consDetailsList, sparkDetail
 					n1 = net.getNodeByName(linkSplit[0])
 					n2 = net.getNodeByName(linkSplit[1])
 					disconnectLink(net, n1, n2)
-					
-					# checking topic leader after disconnection
-					# topicDetails = topicNodes[0].cmd("kafka/bin/kafka-topics.sh --describe --bootstrap-server 10.0.0.2:9092", shell=True)
-					# print("Topic leader after disconnection")
-					# print(topicDetails)
 
 				isDisconnected = True
 
@@ -380,15 +381,18 @@ def runLoad(net, args, topicPlace, prodDetailsList, consDetailsList, sparkDetail
 
 		timer += 10
 
-	# logTopicLeaders(net, logDir, args)
+	logTopicLeaders(net, logDir, topicPlace)
 	print(f"Workload finished at {str(datetime.now())}")	
+	logging.info('Workload finished at ' + str(datetime.now()))
 
 def disconnectLink(net, n1, n2):
 	print(f"***********Setting link down from {n1.name} <-> {n2.name} at {str(datetime.now())}")
+	logging.info(f"***********Setting link down from {n1.name} <-> {n2.name} at {str(datetime.now())}")
 	net.configLinkStatus(n2.name, n1.name, "down")
 	net.pingAll()
 
 def reconnectLink(net, n1, n2):
 	print(f"***********Setting link up from {n1.name} <-> {n2.name} at {str(datetime.now())}")
+	logging.info(f"***********Setting link up from {n1.name} <-> {n2.name} at {str(datetime.now())}")
 	net.configLinkStatus(n2.name, n1.name, "up")
 	net.pingAll()
