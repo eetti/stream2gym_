@@ -39,11 +39,9 @@ def getSparkDetails(net, inputTopoFile):
 	#Read nodewise spark information
 	for node, data in inputTopo.nodes(data=True):  
 		if node[0] == 'h':
-			print("node id: "+node[1])
-
 			if 'sparkConfig' in data: 
 				sparkApp, produceTo = readSparkConfig(data["sparkConfig"])
-				sparkDetails = {"nodeId": node[1], "applicationPath": sparkApp, "produceTo": produceTo}
+				sparkDetails = {"nodeId": node[1:], "applicationPath": sparkApp, "produceTo": produceTo}
 				
 				sparkDetailsList.append(sparkDetails)
 			

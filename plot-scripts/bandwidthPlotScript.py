@@ -1,5 +1,5 @@
 # example command to run this script: sudo python3 plot-scripts/bandwidthPlotScript.py --number-of-switches 3 --switch-ports S1-P1,S1-P2,S1-P3 --port-type access-port --message-rate 30 --ntopics 1 --replication 3 --log-dir logs/output
-
+# sudo python3 plot-scripts/bandwidthPlotScript.py --number-of-switches 10 --switch-ports S1-P1,S1-P2,S1-P3,S1-P4,S1-P5,S1-P6,S1-P7,S1-P8,S1-P9,S1-P10 --port-type access-port --message-rate 30 --ntopics 2 --replication 10 --log-dir logs/output
 #!/usr/bin/python3
 
 import os

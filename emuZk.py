@@ -19,8 +19,7 @@ def configureZkCluster(zkPlace):
 	propertyFile = open("kafka/config/zookeeper.properties", "r")
 	zkProperties = propertyFile.read()
 
-	for zkID in zkPlace:
-		print("in emuZk configureZkCluster with ZK: "+ str(zkID))        
+	for zkID in zkPlace:       
 		os.system("sudo mkdir kafka/zookeeper" + str(zkID) + "/")
 		os.system("sudo mkdir kafka/zookeeper" + str(zkID) + "/data/")
 		os.system("sudo mkdir kafka/zookeeper" + str(zkID) + "/logs/")

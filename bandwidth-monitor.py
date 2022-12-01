@@ -8,9 +8,6 @@ import sys
 interval = 5
 
 nSwitches = int(sys.argv[1])
-mSizeString = sys.argv[2]
-mRate = float(sys.argv[3])
-nTopics = int(sys.argv[4])
 
 while True:
 

@@ -143,6 +143,8 @@ def placeKafkaBrokers(net, args):
 
 	brokerPlace = []
 	zkPlace = []
+	switchPlace = []
+	hostPlace = []
 
 	topicPlace = []
 
@@ -187,10 +189,11 @@ def placeKafkaBrokers(net, args):
 	for node, data in inputTopo.nodes(data=True):  
 		if node[0] == 'h':
 			nHosts += 1 
+			hostPlace.append(node[1:]) 
 			if 'zookeeper' in data: 
-				zkPlace.append(node[1]) 
+				zkPlace.append(node[1:]) 
 			if 'broker' in data: 
-				brokerPlace.append(node[1])
+				brokerPlace.append(node[1:])
 			if 'producerType' in data: 
 				if data["producerType"] != "SFST" and data["producerType"] != "MFST"\
 					and data["producerType"] != "ELTT":
@@ -201,7 +204,7 @@ def placeKafkaBrokers(net, args):
 					producerPath = "producer.py"
 
 				prodFile, prodTopic, prodNumberOfFiles, nProducerInstances = readProdConfig(data["producerConfig"])
-				prodDetails = {"nodeId": node[1], "producerType": producerType,\
+				prodDetails = {"nodeId": node[1:], "producerType": producerType,\
 					"produceFromFile":prodFile, "produceInTopic": prodTopic,\
 						"prodNumberOfFiles": prodNumberOfFiles, \
 						"nProducerInstances": nProducerInstances, \
@@ -217,21 +220,22 @@ def placeKafkaBrokers(net, args):
 					consumerPath = "consumer.py"
 
 				consTopics = readConsConfig(data["consumerConfig"])
-				consDetails = {"nodeId": node[1], "consumeFromTopic": consTopics,\
+				consDetails = {"nodeId": node[1:], "consumeFromTopic": consTopics,\
 								"consumerType": consumerType, "consumerPath": consumerPath}
 				consDetailsList.append(consDetails)
  
-			elif 'consumerType' not in data and 'consumerConfig' in data:
-				consumerType = "STANDARD"
-				consumerPath = "consumer.py"
+			# elif 'consumerType' not in data and 'consumerConfig' in data:
+			# 	consumerType = "STANDARD"
+			# 	consumerPath = "consumer.py"
 
-				consTopics = readConsConfig(data["consumerConfig"])
-				consDetails = {"nodeId": node[1], "consumeFromTopic": consTopics,\
-								"consumerType": consumerType, "consumerPath": consumerPath}
-				consDetailsList.append(consDetails)
+			# 	consTopics = readConsConfig(data["consumerConfig"])
+			# 	consDetails = {"nodeId": node[1:], "consumeFromTopic": consTopics,\
+			# 					"consumerType": consumerType, "consumerPath": consumerPath}
+			# 	consDetailsList.append(consDetails)
 
 		elif node[0] == 's':
 			nSwitches += 1
+			switchPlace.append(node[1:]) 
 	print("zookeepers:")
 	print(*zkPlace)
 	# print("brokers: \n")
@@ -244,7 +248,7 @@ def placeKafkaBrokers(net, args):
 	print(*consDetailsList)
 
 	return brokerPlace, zkPlace, topicPlace, prodDetailsList, consDetailsList, \
-		isDisconnect, dcDuration, dcLinks, nSwitches, nHosts
+		isDisconnect, dcDuration, dcLinks, switchPlace, hostPlace
 
 
 

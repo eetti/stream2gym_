@@ -201,10 +201,14 @@ if __name__ == '__main__':
 	net.build()
 
 	brokerPlace, zkPlace, topicPlace, prodDetailsList, consDetailsList, isDisconnect, \
-		dcDuration, dcLinks, nSwitches, nHosts = emuKafka.placeKafkaBrokers(net, args)
+		dcDuration, dcLinks, switchPlace, hostPlace = emuKafka.placeKafkaBrokers(net, args)
 	nTopics = len(topicPlace)
+	nSwitches = len(switchPlace)
+	nHosts = len(hostPlace)
 	print("Number of switches in the topology: "+str(nSwitches))
 	print("Number of hostnodes in the topology: "+str(nHosts))
+	print("Number of zookeepers in the topology: "+str(len(zkPlace)))
+	print("Number of brokers in the topology: "+str(len(brokerPlace)))
 	print("Number of topics: "+str(nTopics))
 
 	# checking whether the application is only kafka or kafka-spark
@@ -248,9 +252,7 @@ if __name__ == '__main__':
 	print("Finished network connectivity test")
     		
 	#Start monitoring tasks
-	popens[pID] = subprocess.Popen("sudo python3 bandwidth-monitor.py "+str(nSwitches)\
-					+" " +args.mSizeString+" "+str(args.mRate) +" " +str(nTopics) \
-					+" "+ str(args.nZk) +" &", shell=True)
+	popens[pID] = subprocess.Popen("sudo python3 bandwidth-monitor.py "+str(nSwitches)+" &", shell=True)
 	pID += 1
 
 	emuZk.runZk(net, zkPlace, logDir)

@@ -30,7 +30,7 @@
 
     <node id="h1">
       <data key="prodType">MFST</data>
-      <data key="prodCfg">use-cases/app-testing/word-count/inputTopic1/,Greetings,1,1</data>
+      <data key="prodCfg">use-cases/app-testing/word-count/inputTopic1/,Greetings,100,1</data>
       <data key="consType">STANDARD</data>
       <data key="consCfg">Greetings,1</data> 
 	  </node>            
@@ -39,7 +39,7 @@
       <data key="zk">1</data>
       <data key="bk">1</data>
       <data key="prodType">MFST</data>
-      <data key="prodCfg">use-cases/app-testing/word-count/inputTopic2/,Soccer,1,1</data>
+      <data key="prodCfg">use-cases/app-testing/word-count/inputTopic2/,Soccer,12,1</data>
       <data key="consType">STANDARD</data>
       <data key="consCfg">Soccer,1</data>  
 	  </node>   

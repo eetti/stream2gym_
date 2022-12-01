@@ -25,24 +25,27 @@ def readCurrentZkLeader(logDir):
 			if "LEADING - LEADER ELECTION TOOK " in line:
 				first = line.split(">")[0]
 				zkLeader = first[1:]
-				print(f'Zookeeper leader is {zkLeader}')
+				# print(f'Zookeeper leader is {zkLeader}')
 				break
 	return zkLeader
 
 # Method for logging topic(s) leader
 def logTopicLeaders(net, logDir, topicPlace):
-	issuingNode = net.hosts[0]
+	# issuingNode = net.hosts[0]
 	print("Finding topic leaders at localhost:2181")
 	zkLeaderNode = readCurrentZkLeader(logDir)
-	logging.info("ZK Leader node is " + zkLeaderNode)	
+	print("ZK Leader node is " + str(zkLeaderNode))
+	logging.info("ZK Leader node is " + str(zkLeaderNode))
 	for topic in topicPlace:
 		topicName = topic["topicName"]
+		issuingID = int(topic["topicBroker"])
+		issuingNode = net.hosts[issuingID-1]
 		out = issuingNode.cmd("kafka/bin/kafka-topics.sh --zookeeper localhost:2181 --describe --topic "+str(topicName), shell=True)
 		split1 = out.split('Leader: ')
 		print(split1)
 		split2 = split1[1].split('\t')
 		topicLeaderNode = 'h' + split2[0]			
-		print(f"Leader for {str(topicName)} is node {topicLeaderNode}")
+		print(f"Leader for topic {str(topicName)} is node {topicLeaderNode}")
 		logging.info(str(topicName) +" leader is node " + topicLeaderNode)
 
 # Method to log the wireshark traces
@@ -53,75 +56,6 @@ def traceWireshark(hostsToCapture, f, logDir):
 		filename = logDir + "/pcapTraces/" + hostName + "-eth1" + "-" + f + ".pcap"
 		output = h.cmd("sudo tcpdump -i " + hostName +"-eth1 -w "+ filename +" &", shell=True)	
 		print(output)
-
-# Using threads for producer instances
-def spawnThreadedProducers(net, mSizeString, mRate, tClassString, nTopics, args, prodDetailsList, topicPlace):
-	acks = args.acks
-	compression = args.compression
-	batchSize = args.batchSize
-	linger = args.linger
-	requestTimeout = args.requestTimeout
-	brokers = args.nBroker
-	messageFilePath = args.messageFilePath   
-
-	tClasses = tClassString.split(',')
-	#print("Traffic classes: " + str(tClasses))
-
-	nodeClassification = {}
-	netNodes = {}    
-
-	classID = 1
-
-	for tClass in tClasses:
-		nodeClassification[classID] = []
-		classID += 1
-	
-	#Distribute nodes among classes
-	for node in net.hosts:
-		netNodes[node.name] = node
-
-	j =0
-	for j in prodDetailsList:
-		j['tClasses'] = str(randint(1,len(tClasses)))
-	
-	for prod in prodDetailsList:
-		nodeID = 'h' + prod['nodeId']
-		
-		producerType = prod["producerType"]
-		producerPath = prod["producerPath"]
-		messageFilePath = prod['produceFromFile']
-		tClasses = prod['tClasses']
-		prodTopic = prod['produceInTopic']
-		prodNumberOfFiles = prod['prodNumberOfFiles']
-		nProducerInstances = prod['nProducerInstances']
-		
-		node = netNodes[nodeID]
-
-		try:
-			topicName = [x for x in topicPlace if x['topicName'] == prodTopic][0]["topicName"]
-			brokerId = [x for x in topicPlace if x['topicName'] == prodTopic][0]["topicBroker"] 
-
-			print("Producing messages to topic "+topicName+" at broker "+brokerId)
-			
-			prodInstance = 1
-
-			if producerType == 'INDIVIDUAL':
-				print(nodeID)
-				print("Producer instance in Thread: "+str(nProducerInstances))
-				print(producerPath)
-
-				node.popen("python3 "+ producerPath +" " +nodeID+" "+str(nProducerInstances)+" &", shell=True)
-				
-			else:
-				print("Standard producer")
-				# node.popen("python3 "+producerPath+" " +nodeID+" "+tClasses+" "+mSizeString+" "+str(mRate)+" "+str(nTopics)+" "+str(acks)+" "+str(compression)\
-				# +" "+str(batchSize)+" "+str(linger)+" "+str(requestTimeout)+" "+brokerId+" "+messageFilePath\
-				# +" "+topicName+" "+producerType+" "+prodNumberOfFiles+" "+str(prodInstance)+" &", shell=True)
-
-		except IndexError:
-			print("Error: Production topic name not matched with the already created topics")
-			sys.exit(1)
-		
 
 def spawnProducers(net, mSizeString, mRate, tClassString, nTopics, args, prodDetailsList, topicPlace):
 	acks = args.acks
@@ -221,8 +155,6 @@ def spawnConsumers(net, consDetailsList, topicPlace):
 			print("Consuming messages from topic "+topicName+" at broker "+str(brokerId))
 
 			while consInstance <= int(numberOfConsumers):
-				# node.popen("python3 consumer.py "+str(node.name)+" "+topicName+" "+brokerId+" "+str(consInstance)+" &", shell=True)
-				# consumerPath = 'use-cases/app-testing/millitary-coordination/military-data-consumer.py'
 				node.popen("python3 "+consumerPath+" "+str(node.name)+" "+topicName+" "+str(brokerId)+" "+str(consInstance)+" &", shell=True)
 				
 				consInstance += 1
@@ -246,7 +178,6 @@ def spawnSparkClients(net, sparkDetailsList):
 		sparkOutputTo = sprk["produceTo"]
 		print("spark node: "+sparkNode)
 		print("spark App: "+sparkApp)
-		# print("spark input from: "+sparkInputFrom)
 		print("spark output to: "+sparkOutputTo)
 		print("*************************")
 
@@ -259,7 +190,7 @@ def spawnSparkClients(net, sparkDetailsList):
 		node.popen("sudo spark/pyspark/bin/spark-submit --packages org.apache.spark:spark-sql-kafka-0-10_2.12:3.2.1 "+sparkApp\
 					+" &", shell=True)
 
-	
+
 def spawnKafkaMySQLConnector(net, prodDetailsList, mysqlPath):
 	netNodes = {}
 
@@ -337,7 +268,6 @@ def runLoad(net, args, topicPlace, prodDetailsList, consDetailsList, sparkDetail
 		print("Spark Clients created")
 
 	spawnProducers(net, mSizeString, mRate, tClassString, nTopics, args, prodDetailsList, topicPlace)
-	# spawnThreadedProducers(net, mSizeString, mRate, tClassString, nTopics, args, prodDetailsList, topicPlace)
 	# time.sleep(120)
 	print("Producers created")
 	
