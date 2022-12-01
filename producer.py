@@ -181,7 +181,7 @@ try:
 	elif prodType == "ELTT":
 		msgNo = 1
 		# while True:
-		while i <= prodNumberOfFiles:  #if i <= prodNumberOfFiles:
+		while i <= prodNumberOfFiles:  
 			with open(directoryPath,'r') as file:
 				for count, line in enumerate(file):
 					sentMessage = line.encode()

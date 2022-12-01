@@ -7,13 +7,16 @@ from mininet.util import pmonitor
 
 ZOOKEEPER_LOG_FILE = "zk-log.txt"
 
-def configureLogDir(nSwitches, mSizeString, mRate, nTopics):  
+def configureLogDir(nSwitches, mSizeString, mRate, nTopics, captureAll):  
 	logDir = "logs/output"
 
 	os.system("sudo rm -rf " + logDir + "/" + ZOOKEEPER_LOG_FILE)
 	os.system("sudo rm -rf " + logDir + "/bandwidth/; " + "sudo mkdir -p " + logDir + "/bandwidth/")
 	os.system("sudo rm -rf " + logDir + "/prod/; " + "sudo mkdir -p " + logDir + "/prod/")    
 	os.system("sudo rm -rf " + logDir + "/cons/; " + "sudo mkdir -p " + logDir + "/cons/")
+
+	if captureAll:
+		os.system("sudo rm -rf " + logDir + "/pcapTraces/; " + "sudo mkdir -p " + logDir + "/pcapTraces/")
 
 	logging.basicConfig(filename=logDir+"/events.log",
 						format='%(levelname)s:%(message)s',

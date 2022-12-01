@@ -176,9 +176,10 @@ if __name__ == '__main__':
 
 	# parser.add_argument('--only-kafka', dest='onlyKafka', type=int, default=0, help='To run Kafka only')
 	parser.add_argument('--only-spark', dest='onlySpark', type=int, default=0, help='To run Spark application only')
+	
+	parser.add_argument('--capture-all', dest='captureAll', action='store_true', help='Capture the traffic of all the hosts')
 	  
 	args = parser.parse_args()
-
 	# print(args)
 	validateInput(args)
 	
@@ -228,7 +229,7 @@ if __name__ == '__main__':
 		# Add NAT connectivity
 		net.addNAT().configDefault()  
 
-	logDir = emuLogs.configureLogDir(nSwitches, args.mSizeString, args.mRate, nTopics)
+	logDir = emuLogs.configureLogDir(nSwitches, args.mSizeString, args.mRate, nTopics, args.captureAll)
 	emuZk.configureZkCluster(zkPlace)
 	emuKafka.configureKafkaCluster(brokerPlace, zkPlace, args)
 

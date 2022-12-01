@@ -12,6 +12,7 @@
   <key id="bk" for="node" attr.name="broker" attr.type="int"/>
   <key id="prodType" for="node" attr.name="producerType" attr.type="string"/>   <!-- producer type can be SFST/MFST -->
   <key id="prodCfg" for="node" attr.name="producerConfig" attr.type="string"/>  <!-- for SFST: one pair of filePath, topicName; for MFMT: multiple pair of filePaths, topicNames; -->
+  <key id="consType" for="node" attr.name="consumerType" attr.type="string"/>   <!-- consumer type can be STANDARD/INDIVIDUAL;if it is INDIVIDUAL, it will also contain the consumer script path -->
   <key id="consCfg" for="node" attr.name="consumerConfig" attr.type="string"/>  <!-- consConfig will contain the topic name(s) from where the consumer will consumer --> 
   <key id="sparkCfg" for="node" attr.name="sparkConfig" attr.type="string"/>    <!-- sparkConfig will contain the spark application path and topic name(s)/output directory from where the spark ingest its processed output --> 
 
@@ -23,13 +24,14 @@
   
    
   <graph id="simple-topo" edgedefault="undirected">
-    <data key="topicCfg">use-cases/app-testing/word-count/topicConfiguration.txt</data>
+    <data key="topicCfg">use-cases/app-testing/word-count/topicConfiguration.yaml</data>
 
     <node id="s1"/>
 
     <node id="h1">
       <data key="prodType">MFST</data>
       <data key="prodCfg">use-cases/app-testing/word-count/inputTopic1/,Greetings,1,1</data>
+      <data key="consType">STANDARD</data>
       <data key="consCfg">Greetings,1</data> 
 	  </node>            
     
@@ -38,16 +40,19 @@
       <data key="bk">1</data>
       <data key="prodType">MFST</data>
       <data key="prodCfg">use-cases/app-testing/word-count/inputTopic2/,Soccer,1,1</data>
+      <data key="consType">STANDARD</data>
       <data key="consCfg">Soccer,1</data>  
 	  </node>   
 
     <node id="h3">   
       <data key="sparkCfg">use-cases/app-testing/word-count/sparkApp1.py,outTopic1</data>
+      <data key="consType">STANDARD</data>
       <data key="consCfg">outTopic1,1</data>        
 	  </node>
 
     <node id="h4"> 
       <data key="sparkCfg">use-cases/app-testing/word-count/sparkApp2.py,outTopic2</data>            
+      <data key="consType">STANDARD</data>
       <data key="consCfg">outTopic2,1</data> 
 	  </node>         
 

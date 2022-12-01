@@ -45,6 +45,15 @@ def logTopicLeaders(net, logDir, topicPlace):
 		print(f"Leader for {str(topicName)} is node {topicLeaderNode}")
 		logging.info(str(topicName) +" leader is node " + topicLeaderNode)
 
+# Method to log the wireshark traces
+def traceWireshark(hostsToCapture, f, logDir):
+	for h in hostsToCapture:		
+		#temp = h.nameToIntf		
+		hostName = h.name
+		filename = logDir + "/pcapTraces/" + hostName + "-eth1" + "-" + f + ".pcap"
+		output = h.cmd("sudo tcpdump -i " + hostName +"-eth1 -w "+ filename +" &", shell=True)	
+		print(output)
+
 # Using threads for producer instances
 def spawnThreadedProducers(net, mSizeString, mRate, tClassString, nTopics, args, prodDetailsList, topicPlace):
 	acks = args.acks
@@ -280,6 +289,9 @@ def runLoad(net, args, topicPlace, prodDetailsList, consDetailsList, sparkDetail
 	time.sleep(5)
 
 	print("Start workload")
+	if args.captureAll:
+		print("Started capturing wireshark traces")
+		traceWireshark(net.hosts, "start", logDir)
 
 	seed(1)
 
@@ -342,6 +354,7 @@ def runLoad(net, args, topicPlace, prodDetailsList, consDetailsList, sparkDetail
 	if isDisconnect:
 		isDisconnected = False
 		disconnectTimer = dcDuration
+		hostsToDisconnect = []
 
 	print(f"Starting workload at {str(datetime.now())}")
 	logging.info('Starting workload at ' + str(datetime.now()))
@@ -357,6 +370,7 @@ def runLoad(net, args, topicPlace, prodDetailsList, consDetailsList, sparkDetail
 					linkSplit = link.split('-')
 					n1 = net.getNodeByName(linkSplit[0])
 					n2 = net.getNodeByName(linkSplit[1])
+					hostsToDisconnect.append(n2)
 					disconnectLink(net, n1, n2)
 
 				isDisconnected = True
@@ -367,6 +381,8 @@ def runLoad(net, args, topicPlace, prodDetailsList, consDetailsList, sparkDetail
 					n1 = net.getNodeByName(linkSplit[0])
 					n2 = net.getNodeByName(linkSplit[1])				
 					reconnectLink(net, n1, n2)
+					if args.captureAll:
+						traceWireshark(hostsToDisconnect, "reconnect", logDir)
 
 					# checking topic leader after reconnection
 					topicDetails = topicNodes[0].cmd("kafka/bin/kafka-topics.sh --describe --bootstrap-server 10.0.0.1:9092", shell=True)

@@ -1,0 +1,25 @@
+# topic configuration file
+---
+  topicName: Greetings
+  topicBroker: 2
+  topicPartition: 1
+  topicReplica: 1
+...
+---
+  topicName: Soccer
+  topicBroker: 2
+  topicPartition: 1
+  topicReplica: 1
+...
+---
+  topicName: outTopic1
+  topicBroker: 2
+  topicPartition: 1
+  topicReplica: 1
+...
+---
+  topicName: outTopic2
+  topicBroker: 2
+  topicPartition: 1
+  topicReplica: 1
+...
