@@ -42,7 +42,12 @@ In this application, we present a use-case where the taxi driver can yield highe
 1. About data
    - nycTaxiRidesdata.csv: mostly geographical details of the ride
    - nycTaxiFaresdata.csv : ride financial information
-2. topicConfiguration.txt : associated topic names in each line
+2. topicConfiguration.yaml :
+   - contains topic configurations
+     - specify topic name ('topicName')
+     - specify broker ID to initiate this topic ('topicBroker')
+     - number of partition(s) in this topic ('topicPartition')
+     - number of replica(s) in this topic ('topicReplica')
 3. rideSelection.py : Spark SS application
 4. input.graphml:
    - contains topology description
@@ -52,8 +57,11 @@ In this application, we present a use-case where the taxi driver can yield highe
      - topicConfig: path to the topic configuration file
      - zookeeper: 1 = hostnode contains a zookeeper instance
      - broker: 1 = hostnode contains a zookeeper instance
-     - producerType: producer type can be SFST/MFMT/RND; SFST denotes from Single File to Single Topic. MFMT,RND not supported right now.
-     - producerConfig: for SFST, one pair of filePath, topicName
+     - producerType: producer type can be SFST/MFMT/ELTT/INDIVIDUAL; SFST denotes from Single File to Single Topic. ELTT is defined when Each line To Topic i.e. each line of the file is produced to the topic as a single message. For SFST/MFMT/ELTT, a standard producer will work be default.
+     Provided that the user has his own producer, he can use it by specifying INDIVIDUAL in the producerType and give the relative path as input in producerType attribute as a pair of producerType,producerFilePath.
+     - producerConfig: for SFST/ELTT, one tuple of filePath, name of the topic to produce, number of files and number of producer instances in this node. For INDIVIDUAL producer type, filePath and number of files are two optional parameters
+     - consumerType: consumer type can be STANDARD/INDIVIDUAL; To use standard consumer, specify 'STANDARD'. Provided that the user has his own consumer, he can use it by specifying INDIVIDUAL in the consumerType and give the relative path as input in producerType attribute as a pair like INDIVIDUAL,producerFilePath
+     - consumerConfig: specify the topic name to  consumer from and number of consumer instances in this node as a comma separated pair.
      - sparkConfig: sparkConfig will contain the input source, spark application path and output sink. Input source is a kafka topic, output sink can be kafka topic/a file directory.
  5. nbhd.jsonl: contains all Manhattan neighborhoods coordinates one per line.
  

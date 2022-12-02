@@ -1,0 +1,13 @@
+# topic configuration file
+---
+  topicName: maritimeInput
+  topicBroker: 1
+  topicPartition: 1
+  topicReplica: 1
+...
+---
+  topicName: maritimeOutput
+  topicBroker: 2
+  topicPartition: 1
+  topicReplica: 1
+...

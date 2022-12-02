@@ -1,1 +1,0 @@
-inputTopic broker 1 partition 10

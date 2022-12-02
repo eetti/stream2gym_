@@ -12,6 +12,7 @@
   <key id="bk" for="node" attr.name="broker" attr.type="int"/>
   <key id="prodType" for="node" attr.name="producerType" attr.type="string"/>   <!-- producer type can be SFST/MFMT/RND; MFMT,RND not supported right now. -->
   <key id="prodCfg" for="node" attr.name="producerConfig" attr.type="string"/>  <!-- for SFST: one pair of filePath, topicName; for MFMT: multiple pair of filePaths, topicNames; -->
+  <key id="consType" for="node" attr.name="consumerType" attr.type="string"/>   <!-- consumer type can be STANDARD/INDIVIDUAL;if it is INDIVIDUAL, it will also contain the consumer script path -->
   <key id="consCfg" for="node" attr.name="consumerConfig" attr.type="string"/>  <!-- consConfig will contain the topic name(s) from where the consumer will consume --> 
   <key id="sparkCfg" for="node" attr.name="sparkConfig" attr.type="string"/>    <!-- sparkConfig will contain the input source,
                                                                     spark application path and output sink. Input source is a
@@ -25,13 +26,14 @@
   
    
   <graph id="simple-topo" edgedefault="undirected">
-    <data key="topicCfg">/home/ubuntu/Desktop/amnis-data-sync/use-cases/app-testing/ride-selection/topicConfiguration.txt</data>
+    <data key="topicCfg">use-cases/app-testing/ride-selection/topicConfiguration.yaml</data>
 
     <node id="h1">
       <data key="zk">1</data>
       <data key="bk">1</data>
       <data key="prodType">SFST</data>
-      <data key="prodCfg">/home/ubuntu/Desktop/amnis-data-sync/use-cases/app-testing/ride-selection/nycTaxiRidesData.csv,taxirides,1</data>
+      <data key="prodCfg">use-cases/app-testing/ride-selection/nycTaxiRidesData.csv,taxirides,1,1</data>
+      <data key="consType">STANDARD</data>
       <data key="consCfg">taxirides,1</data>
 	  </node>            
     
@@ -41,9 +43,10 @@
     <node id="h2">
       <data key="bk">1</data>
       <data key="prodType">SFST</data>
-      <data key="prodCfg">/home/ubuntu/Desktop/amnis-data-sync/use-cases/app-testing/ride-selection/nycTaxiFaresData.csv,taxifares,1</data>
+      <data key="prodCfg">use-cases/app-testing/ride-selection/nycTaxiFaresData.csv,taxifares,1,1</data>
+      <data key="consType">STANDARD</data>
       <data key="consCfg">taxifares,1</data>
-      <data key="sparkCfg">/home/ubuntu/Desktop/amnis-data-sync/use-cases/app-testing/ride-selection/rideSelection.py,/home/ubuntu/Desktop/amnis-data-sync/logs</data>
+      <data key="sparkCfg">use-cases/app-testing/ride-selection/rideSelection.py,logs/output</data>
 	  </node>            
 
     <edge source="h1" target="s1">

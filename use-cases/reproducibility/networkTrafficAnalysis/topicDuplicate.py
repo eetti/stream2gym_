@@ -61,6 +61,10 @@ def consumeFromQueue(threadLogger,threadID, data): # consumer
         threadLogger.info("Produced in thread "+str(threadID)+": "+item)
 
 if __name__ == "__main__":
+    # create the shared barrier
+    nConsumers = 1
+    nProducers = 1
+    
     queue = Queue()
     logFile = "logs/output/"+"topicDuplicateLogger.log"
     threadLogger = setup_logger('threadLogger', logFile)
@@ -73,9 +77,6 @@ if __name__ == "__main__":
         auto_offset_reset='earliest'
         )
 
-    # create the shared barrier
-    nConsumers = 1
-    nProducers = 1
     barrier = Barrier(nProducers)
     # start the consumers
     consumers = [Thread(target=consumeFromQueue, args=(threadLogger,i, queue, ))\

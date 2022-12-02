@@ -11,11 +11,6 @@ import json
 import logging
 
 try:
-    # nodeName = sys.argv[1]
-    # sparkOutputTo = sys.argv[2]
-
-    # nodeID = nodeName[1:]
-
     sparkInputFrom = "maritimeInput"
     sparkOutputTo = "maritimeOutput"
 

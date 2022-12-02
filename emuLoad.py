@@ -40,7 +40,7 @@ def logTopicLeaders(net, logDir, topicPlace):
 		topicName = topic["topicName"]
 		issuingID = int(topic["topicBroker"])
 		issuingNode = net.hosts[issuingID-1]
-		out = issuingNode.cmd("kafka/bin/kafka-topics.sh --zookeeper localhost:2181 --describe --topic "+str(topicName), shell=True)
+		out = issuingNode.cmd("kafka/bin/kafka-topics.sh --bootstrap-server 10.0.0."+str(issuingID)+":9092 --describe --topic "+str(topicName), shell=True)
 		split1 = out.split('Leader: ')
 		print(split1)
 		split2 = split1[1].split('\t')

@@ -1,2 +1,0 @@
-fraudInput broker 1 partition 1
-fraudOutput broker 1 partition 1

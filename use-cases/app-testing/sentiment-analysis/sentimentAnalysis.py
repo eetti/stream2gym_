@@ -34,14 +34,10 @@ def text_classification(words):
 if __name__ == "__main__":
     try:
         # nodeName = sys.argv[1]
-        # nodeID = nodeName[1:]
-        # host = "10.0.0."+nodeID
-        # port = int(sys.argv[2])
-
-        nodeName = sys.argv[1]
-        sparkOutputTo = sys.argv[2]
-
-        nodeID = nodeName[1:]
+        # sparkOutputTo = sys.argv[2]
+        
+        nodeID = "2"
+        sparkOutputTo = 'logs/output'
         host = "10.0.0."+nodeID
         kafkaNode = host + ":9092"
 

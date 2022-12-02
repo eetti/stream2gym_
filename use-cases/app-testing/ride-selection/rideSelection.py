@@ -33,10 +33,11 @@ def parse_data_from_kafka_message(sdf, schema):
         sdf = sdf.withColumn(field.name, col.getItem(idx).cast(field.dataType))
     return sdf.select([field.name for field in schema])
 
-nodeName = sys.argv[1]
-sparkOutputTo = sys.argv[2]
+# nodeName = sys.argv[1]
+# sparkOutputTo = sys.argv[2]
 
-nodeID = nodeName[1:]
+nodeID = "2"  #nodeName[1:]
+sparkOutputTo = "logs/output"
 host = "10.0.0."+nodeID
 kafkaNode = host + ":9092"
 
@@ -110,7 +111,7 @@ sdf = sdfFaresWithWatermark \
         """))
 
 """ *** FEATURE ENGINEERING NEIGHBORHOODS *** """
-nbhds_df = spark.read.json("/home/ubuntu/Desktop/amnis-data-sync/use-cases/app-testing/ride-selection/nbhd.jsonl") # nbhd.jsonl file has to be available!
+nbhds_df = spark.read.json("use-cases/app-testing/ride-selection/nbhd.jsonl") # nbhd.jsonl file has to be available!
 lookupdict = nbhds_df.select("name","coord").rdd.collectAsMap()
 broadcastVar = spark.sparkContext.broadcast(lookupdict) #use broadcastVar.value from now on
 manhattan_bbox = [[-74.0489866963,40.681530375],[-73.8265135518,40.681530375],[-73.8265135518,40.9548628598],[-74.0489866963,40.9548628598],[-74.0489866963,40.681530375]]

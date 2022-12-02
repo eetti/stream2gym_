@@ -1,4 +1,0 @@
-Greetings broker 2 partition 1
-Soccer broker 2 partition 1
-outTopic1 broker 2 partition 1
-outTopic2 broker 2 partition 1

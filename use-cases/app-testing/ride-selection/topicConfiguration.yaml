@@ -1,0 +1,13 @@
+# topic configuration file
+---
+  topicName: taxirides
+  topicBroker: 1
+  topicPartition: 1
+  topicReplica: 1
+...
+---
+  topicName: taxifares
+  topicBroker: 2
+  topicPartition: 1
+  topicReplica: 1
+...

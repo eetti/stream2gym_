@@ -1,0 +1,13 @@
+# topic configuration file
+---
+  topicName: fraudInput
+  topicBroker: 1
+  topicPartition: 1
+  topicReplica: 1
+...
+---
+  topicName: fraudOutput
+  topicBroker: 1
+  topicPartition: 1
+  topicReplica: 1
+...

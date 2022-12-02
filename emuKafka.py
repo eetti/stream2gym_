@@ -113,12 +113,12 @@ def configureKafkaCluster(brokerPlace, zkPlace, args):
 		zkPort = 2181
 
 		for i in range(len(zkPlace)-1):
-			#zkAddresses += "10.0.0." + str(zkPlace[i]) + ":" +str(zkPort)+","
-			zkAddresses += "localhost:"+str(zkPort)+","
+			zkAddresses += "10.0.0." + str(zkPlace[i]) + ":" +str(zkPort)+","
+			# zkAddresses += "localhost:"+str(zkPort)+","
 			zkPort += 1
 
-		zkAddresses += "localhost:"+str(zkPort)
-		#zkAddresses += "10.0.0."+str(zkPlace[-1])+ ":" +str(zkPort)
+		# zkAddresses += "localhost:"+str(zkPort)
+		zkAddresses += "10.0.0."+str(zkPlace[-1])+ ":" +str(zkPort)
 		print("zk connect: " + zkAddresses)
 
 		bProperties = bProperties.replace(

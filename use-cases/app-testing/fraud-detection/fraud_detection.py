@@ -20,8 +20,9 @@ from pyspark.ml.classification import LinearSVC
 
 import sys
 
-nodeName = sys.argv[1]
-sparkOutputTo = sys.argv[2]
+# nodeName = sys.argv[1]
+# sparkOutputTo = sys.argv[2]
+sparkOutputTo = 'use-cases/app-testing/fraud-detection/trainedmodel'
 
 
 dfpath =  "use-cases/app-testing/fraud-detection/training.csv"

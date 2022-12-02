@@ -12,7 +12,7 @@ import emuLogs
 
 
 def configureZkCluster(zkPlace):
-	print("Congigure Zookeeper cluster")
+	print("Configure Zookeeper cluster")
 
 	clientPort = 2181
 

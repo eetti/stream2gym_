@@ -20,8 +20,9 @@ import sys
 import logging
 
 try:
-        nodeName = sys.argv[1]
-        sparkOutputTo = sys.argv[2]
+        # nodeName = sys.argv[1]
+        # sparkOutputTo = sys.argv[2]
+        sparkOutputTo = 'fraudOutput'
 
         nodeID = "1" #nodeName[1:]
         host = "10.0.0."+nodeID
@@ -32,7 +33,7 @@ try:
         logging.basicConfig(filename="logs/output/fraudSpark.log",\
         format='%(asctime)s %(levelname)s:%(message)s',\
         level=logging.INFO)
-        logging.info("node: "+nodeName)
+        logging.info("node: "+str(nodeID))
         logging.info("input: "+sparkInputFrom)
         logging.info("output: "+sparkOutputTo)
 

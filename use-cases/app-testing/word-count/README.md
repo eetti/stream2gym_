@@ -29,7 +29,12 @@ In this application, we facilated the running word-count application using a two
   
 ## Input details
 1. randomText1.txt: contains text data.
-2. topicConfiguration.txt : associated topic name(s) in each line
+2. topicConfiguration.yaml :
+   - contains topic configurations
+     - specify topic name ('topicName')
+     - specify broker ID to initiate this topic ('topicBroker')
+     - number of partition(s) in this topic ('topicPartition')
+     - number of replica(s) in this topic ('topicReplica')
 3. Spark SS application
    - sparkApp1.py: first spark application
    - sparkApp2.py: second spark application
