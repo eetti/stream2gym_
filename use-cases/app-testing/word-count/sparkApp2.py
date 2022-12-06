@@ -21,7 +21,6 @@ try:
     nodeID = "2" #nodeName[1:]
     host = "10.0.0."+nodeID
     kafkaNode = host + ":9092"
-    # kafkaNode = "10.0.0.1:9092,10.0.0.2:9092"
     logging.info("node: "+nodeID)
     logging.info("input: "+sparkInputFrom)
     logging.info("output: "+sparkOutputTo)

@@ -30,30 +30,31 @@ try:
 	logging.info("topicBroker "+brokerId)
 
 	while True:
-
 		bootstrapServers="10.0.0."+brokerId+":9092"
-		
 		consumer = KafkaConsumer(topicName,\
 			bootstrap_servers=bootstrapServers,\
 			auto_offset_reset='earliest',
 			group_id="group-"+str(nodeID)+"-instance"+str(consInstance))
 			# enable_auto_commit=True,                                     
 			# )
+		try:
+			logging.info('Connect to broker looking for topic %s. ', topicName)
+			i = 1
+			for msg in consumer:
+				msgContent = str(msg.value, 'utf-8')
+				
+				if 'File: ' in msgContent:
+					fileNumber = msgContent.split('File: ')[1]
+					logging.info("Message ID: %s",str(i))
+					logging.info("File %s Received   Message Received word: %s", fileNumber, msgContent)
 
-		logging.info('Connect to broker looking for topic %s. ', topicName)
-		i = 1
-		for msg in consumer:
-			msgContent = str(msg.value, 'utf-8')
+				else:
+					logging.info("Message received: " + msgContent)
+				
+				i += 1
 			
-			if 'File: ' in msgContent:
-				fileNumber = msgContent.split('File: ')[1]
-				logging.info("Message ID: %s",str(i))
-				logging.info("File %s Received   Message Received word: %s", fileNumber, msgContent)
-
-			else:
-				logging.info("Message received: " + msgContent)
-			
-			i += 1
+		except Exception as e:
+			logging.error(e + " from messageID "+str(i))
 
 except Exception as e:
 	logging.error(e)

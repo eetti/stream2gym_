@@ -10,7 +10,8 @@ try:
     # nodeName = sys.argv[1]
     # sparkOutputTo = sys.argv[2]
 
-    sparkInputFrom = "inTopic1,inTopic2"
+    # sparkInputFrom = "inTopic1,inTopic2"
+    sparkInputFrom = "inTopic1"
     sparkOutputTo = "outTopic1"
 
     logging.basicConfig(filename="logs/output/spark1.log",\
