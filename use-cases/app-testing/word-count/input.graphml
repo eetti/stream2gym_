@@ -29,6 +29,7 @@
     <node id="s1"/>
 
     <node id="h1">
+      <!-- <data key="bk">1</data> -->
       <data key="prodType">MFST</data>
       <data key="prodCfg">use-cases/app-testing/word-count/inputTopic1/,Greetings,1,1</data>
       <data key="consType">STANDARD</data>
@@ -45,6 +46,7 @@
 	  </node>   
 
     <node id="h3">   
+      <!-- <data key="bk">1</data> -->
       <data key="sparkCfg">use-cases/app-testing/word-count/sparkApp1.py,outTopic1</data>
       <data key="consType">STANDARD</data>
       <data key="consCfg">outTopic1,1</data>        

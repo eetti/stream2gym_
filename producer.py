@@ -118,12 +118,13 @@ try:
 
 	mSizeParams = mSizeString.split(',')
 	nodeID = node[1:]
-    
-	logging.basicConfig(filename="logs/output/prod/"+"prod-"+str(nodeID)+".log",
-							format='%(asctime)s %(levelname)s:%(message)s',
-							level=logging.INFO)   
+	logDir = 'logs/output'
                          
-
+	logging.basicConfig(filename=logDir+"/prod/"+"prod-node"+nodeID+\
+								"-instance"+str(prodInstanceID)+".log",
+								format='%(asctime)s %(levelname)s:%(message)s',
+								level=logging.INFO) 
+	
 	logging.info("node to initiate producer: "+nodeID)
 	logging.info("topic name: "+prodTopic)
 	logging.info("topic broker: "+brokerId)
