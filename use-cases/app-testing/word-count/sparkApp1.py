@@ -17,7 +17,7 @@ try:
 		format='%(asctime)s %(levelname)s:%(message)s',\
 		level=logging.INFO)
     
-    nodeID = "3" #nodeName[1:]
+    nodeID = "2" #nodeName[1:]
     host = "10.0.0."+nodeID
 
     logging.info("node: "+nodeID)
@@ -59,33 +59,23 @@ try:
                 ).alias('word')
             )
 
-    # # # Getting the word frequency count per file
-    # result = words.groupBy('topic', 'file', 'word')\
-    #     .agg( approx_count_distinct('word').alias('frequency') ).orderBy('topic','file')
+    # # Getting the word frequency count per file
+    result = words.groupBy('topic', 'file', 'word')\
+        .agg( approx_count_distinct('word').alias('frequency') ).orderBy('topic','file')
 
-    # # # Formatting the result for storage into a kafka topic
-    # result = result.select( concat( lit('Topic: '), 'topic', lit(' File: '),\
-    #      'file', lit('  Word: '), 'word', lit('  Frequency: '), 'frequency' ).alias('value') )
+    # # Formatting the result for storage into a kafka topic
+    result = result.select( concat( lit('Topic: '), 'topic', lit(' File: '),\
+         'file', lit('  Word: '), 'word', lit('  Frequency: '), 'frequency' ).alias('value') )
 
-    # # Use of Kafka topic as a sink
-    # output = result.writeStream \
-    # .format("kafka") \
-    # .outputMode('complete')\
-    # .option("kafka.bootstrap.servers", kafkaNode) \
-    # .option("topic", sparkOutputTo) \
-    # .option("checkpointLocation", "logs/output/wordCount_checkpoint_intermediate") \
-    # .start()
-    # output.awaitTermination()
-
-    output = words.writeStream.queryName("all_tweets")\
-            .format("csv")\
-            .option("path", "logs/output/sentiment-analysis-result")\
-            .option("checkpointLocation", "logs/output/sentiment-analysis-checkpoint")\
-            .start()
-
-    
-    output.awaitTermination(30)
-    output.stop()
+    # Use of Kafka topic as a sink
+    output = result.writeStream \
+    .format("kafka") \
+    .outputMode('complete')\
+    .option("kafka.bootstrap.servers", kafkaNode) \
+    .option("topic", sparkOutputTo) \
+    .option("checkpointLocation", "logs/output/wordCount_checkpoint_intermediate") \
+    .start()
+    output.awaitTermination()
 
 except Exception as e:
 	logging.error(e)

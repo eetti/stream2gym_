@@ -1,3 +1,4 @@
+# sudo python3 use-cases/disconnection/millitary-coordination/GD-scenario/scripts/messageHeatMap.py --topic 2 --number-of-producers 10 --number-of-consumers 10 --log-dir logs/output
 #!/usr/bin/env python3
 
 import sys
@@ -9,35 +10,50 @@ import matplotlib.pyplot as plt
 import pandas as pd
 import seaborn as sns
 
-# parser = argparse.ArgumentParser(description='Script for visualizing message delivery.')
-# parser.add_argument('--log-dir', dest='logDir', type=str, help='Log directory')
-# parser.add_argument('--prod', dest='nProd', type=int, default=0, help='Number of producers')
-# parser.add_argument('--cons', dest='nCons', type=int, default=0, help='Number of consumers')
-# parser.add_argument('--topic', dest='nTopic', type=int, default=0, help='Number of topics')
+parser = argparse.ArgumentParser(description='Script for visualizing message delivery.')
+parser.add_argument('--log-dir', dest='logDir', type=str, help='Log directory')
+parser.add_argument('--number-of-producers', dest='nProducer', type=int, default=0, help='Number of producers')
+parser.add_argument('--number-of-consumers', dest='nConsumer', type=int, default=0, help='Number of consumers')
+parser.add_argument('--topic', dest='nTopic', type=int, default=0, help='Number of topics')
 
-# args = parser.parse_args()
+args = parser.parse_args()
 
-prodDetails = [{'prodNodeID':1, 'prodInstID':1}, {'prodNodeID':2, 'prodInstID':1}, {'prodNodeID':3, 'prodInstID':1}]
-consDetails = [{'consNodeID':1, 'consInstID':1}, {'consNodeID':2, 'consInstID':1}, {'consNodeID':3, 'consInstID':1}]
-nProducer = len(prodDetails)
-nConsumer = len(consDetails)
-logDir = '/home/monzurul/Desktop/stream2gym/logs/output/'
-nTopic = 1
-print(nProducer)
+logDir = args.logDir
+nProducer = args.nProducer
+nConsumer = args.nConsumer
+nTopic = args.nTopic
+
+prodDetails = []
+consDetails = []
+for i in range(nProducer):
+    prodInstance = {'prodNodeID':i+1, 'prodInstID':1}
+    prodDetails.append(prodInstance)
+
+for i in range(nConsumer):
+    consInstance = {'consNodeID':i+1, 'consInstID':1}
+    consDetails.append(consInstance)
+
+# prodDetails = [{'prodNodeID':1, 'prodInstID':1}, {'prodNodeID':2, 'prodInstID':1}, {'prodNodeID':3, 'prodInstID':1}]
+# consDetails = [{'consNodeID':1, 'consInstID':1}, {'consNodeID':2, 'consInstID':1}, {'consNodeID':3, 'consInstID':1}]
+# nProducer = len(prodDetails)
+# nConsumer = len(consDetails)
+# logDir = '/home/monzurul/Desktop/stream2gym/logs/output/'
+# nTopic = 1
+# print(nProducer)
 
 #Create heat maps for all producers
-heatMapDir = 'logs/output/msg-delivery/'
-failedMsgDir = 'logs/output/failed-messages/'
-bkConfirmationDir = 'logs/output/broker-confirmation/'
+heatMapDir = logDir+'/msg-delivery/'
+failedMsgDir = logDir+'/failed-messages/'
+bkConfirmationDir = logDir+'/broker-confirmation/'
 os.system("sudo rm -rf "+heatMapDir+"; sudo mkdir -p "+heatMapDir)
 os.system("sudo rm -rf "+failedMsgDir+"; sudo mkdir -p "+failedMsgDir)
 os.system("sudo rm -rf "+bkConfirmationDir+"; sudo mkdir -p "+bkConfirmationDir)
 
 params = {  
 			'num_consumers' : nConsumer,
-			'cons_dir' : logDir+'cons/',
+			'cons_dir' : logDir+'/cons/',
 			'num_producers' : nProducer,
-			'prod_dir' : logDir+'prod/',
+			'prod_dir' : logDir+'/prod/',
 			'num_topics' : nTopic
 		}
 		

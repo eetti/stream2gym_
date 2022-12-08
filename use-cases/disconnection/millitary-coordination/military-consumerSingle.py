@@ -17,12 +17,12 @@ try:
 	consInstance = sys.argv[4]
 	nodeID = nodeName[1:]
 
-	nTopics = 1      #hardcoded for now
+	nTopics = 2      
 	cRate = 0.5
 	fetchMinBytes = 1
 	fetchMaxWait = 500
 	sessionTimeout = 10000 
-	topicCheckInterval = 1.0    #hardcoded for now
+	topicCheckInterval = 0.1
 
 	logDir = "logs/output"
 
@@ -32,17 +32,16 @@ try:
 		level=logging.INFO)
 	logging.info("Individual consumer single")
 	logging.info("node to initiate consumer: "+nodeID)
-	# logging.info("topicName "+topicName)
 	logging.info("topicBroker "+brokerID)
 
 	consumers = []
 	timeout = int((1.0/cRate) * 1000)
-	# bootstrapServers="10.0.0."+str(nodeID)+":9092"     #GD implementation
-	bootstrapServers="10.0.0."+str(brokerID)+":9092"
+	bootstrapServers="10.0.0."+str(nodeID)+":9092"     #GD implementation
+	# bootstrapServers="10.0.0."+str(brokerID)+":9092"
 
 
 	# One consumer for all topics
-	# topicName = 'topic-*'
+	topicName = 'topic-*'
 	logging.info("topicName "+topicName)
 	consumptionLag = random() < 0.95				
 	logging.info("**Configuring KafkaConsumer** topicName=" + topicName + " bootstrap_servers=" + str(bootstrapServers) +

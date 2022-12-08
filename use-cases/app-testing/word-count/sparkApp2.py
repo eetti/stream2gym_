@@ -8,9 +8,6 @@ from pyspark.sql.functions import *
 
 
 try:
-    # nodeName = sys.argv[1]
-    # sparkOutputTo = sys.argv[2]
-
     sparkInputFrom = "outTopic1"
     sparkOutputTo = "outTopic2"
     

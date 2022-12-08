@@ -53,6 +53,7 @@
 	  </node>
 
     <node id="h4"> 
+      <!-- <data key="bk">1</data> -->
       <data key="sparkCfg">use-cases/app-testing/word-count/sparkApp2.py,outTopic2</data>            
       <data key="consType">STANDARD</data>
       <data key="consCfg">outTopic2,1</data> 
