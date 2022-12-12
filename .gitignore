@@ -15,3 +15,5 @@ use-cases/disconnection/millitary-coordination/scripts/
 use-cases/reproducibility/networkTrafficAnalysis/input-temporary.graphml
 use-cases/app-testing/millitary-coordination/3-node-scenario/
 use-cases/app-testing/millitary-coordination/logs/
+use-cases/app-testing/millitary-coordination/input-temp.graphml
+use-cases/app-testing/millitary-coordination/topicConfiguration-temp.yaml
