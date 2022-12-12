@@ -84,17 +84,17 @@ try:
 	
 	tClass = 1.0
 	mSizeString = 'fixed,10'
-	mRate = 1.0
-	nTopics = 1
+	mRate = 30   #1.0
+	nTopics = 2
 
 	acks = 1
-	compression = 'None'
+	compression = 'gzip'   #'None'
 	batchSize = 16384
-	linger = 0
-	requestTimeout = 30000
-	brokers = 3
-	messageFilePath = 'None'
-	nSwitches = 1
+	linger = 5000    #0
+	requestTimeout = 100000  #30000
+	brokers = 10
+	messageFilePath = 'use-cases/disconnection/millitary-coordination/Cars103.xml'
+	nSwitches = 10
 
 	logDir = "logs/output"
 
@@ -160,7 +160,7 @@ try:
 		bNodeID = bytes(newNodeID, 'utf-8')
 		bMsg = bNodeID + bMsgID + bytearray(message)
 		topicID = randint(0, nTopics-1)
-		topicName = 'topic-0' #'topic-'+str(topicID)
+		topicName = 'topic-'+str(topicID)
 
 		prodStatus = producer.send(topicName, bMsg)
 		logging.info('Topic-name: %s; Message ID: %s; Message: %s',\

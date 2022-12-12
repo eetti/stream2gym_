@@ -1,0 +1,13 @@
+# topic configuration file
+---
+  topicName: inTopic
+  topicBroker: 2
+  topicPartition: 1
+  topicReplica: 1
+...
+---
+  topicName: outTopic
+  topicBroker: 2
+  topicPartition: 1
+  topicReplica: 1
+...

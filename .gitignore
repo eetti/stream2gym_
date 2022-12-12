@@ -12,3 +12,6 @@ use-cases/reproducibility/networkTrafficAnalysis/__pycache__/
 use-cases/reproducibility/networkTrafficAnalysis/logs/
 use-cases/disconnection/millitary-coordination/logs
 use-cases/disconnection/millitary-coordination/scripts/
+use-cases/reproducibility/networkTrafficAnalysis/input-temporary.graphml
+use-cases/app-testing/millitary-coordination/3-node-scenario/
+use-cases/app-testing/millitary-coordination/logs/

@@ -20,11 +20,9 @@ import sys
 import logging
 
 try:
-        # nodeName = sys.argv[1]
-        # sparkOutputTo = sys.argv[2]
         sparkOutputTo = 'fraudOutput'
 
-        nodeID = "1" #nodeName[1:]
+        nodeID = "1" 
         host = "10.0.0."+nodeID
         kafkaNode = host + ":9092"
 
@@ -42,7 +40,6 @@ try:
 
         predpath = "logs/output/fraud_detection/prediction_output"
         checkpath = "logs/output/fraud_detection/fraudCheckpoint"
-        # kafkatopic = "fraudInTopic"
 
         spark = SparkSession.builder.appName("Fraud Detections").getOrCreate()
 

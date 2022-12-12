@@ -1,0 +1,5 @@
+# producer configuration file
+---
+  producerPath: use-cases/disconnection/millitary-coordination/military-data-producer.py
+  producerInstances: 1
+...

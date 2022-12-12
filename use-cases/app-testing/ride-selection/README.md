@@ -59,7 +59,8 @@ In this application, we present a use-case where the taxi driver can yield highe
      - broker: 1 = hostnode contains a zookeeper instance
      - producerType: producer type can be SFST/MFMT/ELTT/INDIVIDUAL; SFST denotes from Single File to Single Topic. ELTT is defined when Each line To Topic i.e. each line of the file is produced to the topic as a single message. For SFST/MFMT/ELTT, a standard producer will work be default.
      Provided that the user has his own producer, he can use it by specifying INDIVIDUAL in the producerType and give the relative path as input in producerType attribute as a pair of producerType,producerFilePath.
-     - producerConfig: for SFST/ELTT, one tuple of filePath, name of the topic to produce, number of files and number of producer instances in this node. For INDIVIDUAL producer type, filePath and number of files are two optional parameters
+     - producerConfig: specified in producerConfiguration yaml files.
+          for SFST/ELTT, user needs to specify filePath, name of the topic to produce, number of files and number of producer instances in this node. For INDIVIDUAL producer type, only topic name and number of producer instances on this node are the two required parameters to specify.
      - consumerType: consumer type can be STANDARD/INDIVIDUAL; To use standard consumer, specify 'STANDARD'. Provided that the user has his own consumer, he can use it by specifying INDIVIDUAL in the consumerType and give the relative path as input in producerType attribute as a pair like INDIVIDUAL,producerFilePath
      - consumerConfig: specify the topic name to  consumer from and number of consumer instances in this node as a comma separated pair.
      - sparkConfig: sparkConfig will contain the input source, spark application path and output sink. Input source is a kafka topic, output sink can be kafka topic/a file directory.

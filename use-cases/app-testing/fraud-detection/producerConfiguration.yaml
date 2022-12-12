@@ -1,0 +1,7 @@
+# producer configuration file h1
+---
+  filePath: use-cases/app-testing/fraud-detection/testing.csv
+  topicName: fraudInput
+  totalMessages: 1
+  producerInstances: 1
+...

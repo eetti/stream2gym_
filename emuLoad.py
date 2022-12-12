@@ -100,11 +100,13 @@ def spawnProducers(net, mSizeString, mRate, tClassString, nTopics, args, prodDet
 		node = netNodes[nodeID]
 
 		try:
-			topicName = [x for x in topicPlace if x['topicName'] == prodTopic][0]["topicName"]
-			brokerId = [x for x in topicPlace if x['topicName'] == prodTopic][0]["topicBroker"] 
-
-			print("Producing messages to topic "+topicName+" at broker "+str(brokerId))
 			print("Producer type: "+producerType)
+			if producerType != 'INDIVIDUAL':
+				topicName = [x for x in topicPlace if x['topicName'] == prodTopic][0]["topicName"]
+				brokerId = [x for x in topicPlace if x['topicName'] == prodTopic][0]["topicBroker"] 
+
+				print("Producing messages to topic "+topicName+" at broker "+str(brokerId))
+			
 
 			prodInstance = 1
 
@@ -112,7 +114,7 @@ def spawnProducers(net, mSizeString, mRate, tClassString, nTopics, args, prodDet
 				if producerType == 'INDIVIDUAL':
 					node.popen("python3 "+ producerPath +" " +nodeID+" "+str(prodInstance)+" &", shell=True)
 					
-				else:
+				else:					
 					node.popen("python3 "+producerPath+" " +nodeID+" "+tClasses+" "+mSizeString+" "+str(mRate)+" "+str(nTopics)+" "+str(acks)+" "+str(compression)\
 					+" "+str(batchSize)+" "+str(linger)+" "+str(requestTimeout)+" "+str(brokerId)+" "+messageFilePath\
 					+" "+topicName+" "+producerType+" "+prodNumberOfFiles+" "+str(prodInstance)+" &", shell=True)

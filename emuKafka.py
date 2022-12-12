@@ -58,25 +58,33 @@ def readDisconnectionConfig(dcConfigPath):
 	return dcDuration, dcLinks
 
 
-def readProdConfig(prodConfig):
-	lenProdCfg = len(prodConfig.split(","))
-	if lenProdCfg != 2 and lenProdCfg != 4:
-		print("ERROR: Producer config parameter should contain production file path(optional), \
-			topic name to produce, number of producer files(optional) and number of producer intances in a node")
+def readProdConfig(prodConfigPath, producerType, nodeID):
+	prodConfig = readYAMLConfig(prodConfigPath)
+	if producerType == 'INDIVIDUAL' and len(prodConfig[0]) != 2:
+		print("ERROR: for CUSTOM producer please provide producer file path and number of producer instance on node "+str(nodeID))
 		sys.exit(1)
-	
-	if lenProdCfg == 4:
-		prodFile = prodConfig.split(",")[0]     #prodFile will hold the file path/directory path based on producer type SFST or MFST respectively
-		prodTopic = prodConfig.split(",")[1]
-		prodNumberOfFiles = prodConfig.split(",")[2]
-		nProducerInstances = prodConfig.split(",")[3]
-	else:
-		prodFile = ""
-		prodTopic = prodConfig.split(",")[0]
-		prodNumberOfFiles = 1
-		nProducerInstances = prodConfig.split(",")[1]
+	if producerType != 'INDIVIDUAL' and len(prodConfig[0]) != 4:
+		print("ERROR: to use any standard producer please provide filePath, name of the topic to produce, number of files and number of producer instances in node "+str(nodeID))
+		sys.exit(1)
 
-	return prodFile, prodTopic, prodNumberOfFiles, nProducerInstances
+	prodFile = ""
+	prodTopic = ""
+	prodNumberOfFiles = ""
+	nProducerInstances = ""
+	producerPath = "producer.py"
+
+	if prodConfig[0].get("filePath") is not None:
+		prodFile = prodConfig[0]["filePath"]
+	if prodConfig[0].get("topicName") is not None:
+		prodTopic = prodConfig[0]["topicName"]
+	if prodConfig[0].get("totalMessages") is not None:
+		prodNumberOfFiles = prodConfig[0]["totalMessages"]
+	if prodConfig[0].get("producerInstances") is not None:
+		nProducerInstances = prodConfig[0]["producerInstances"]	
+	if prodConfig[0].get("producerPath") is not None:
+		producerPath = prodConfig[0]["producerPath"]
+
+	return prodFile, prodTopic, prodNumberOfFiles, nProducerInstances, producerPath
 
 def readConsConfig(consConfig):
 	#topic list contains the topics from where the consumer will consume
@@ -195,15 +203,9 @@ def placeKafkaBrokers(net, args):
 			if 'broker' in data: 
 				brokerPlace.append(node[1:])
 			if 'producerType' in data: 
-				if data["producerType"] != "SFST" and data["producerType"] != "MFST"\
-					and data["producerType"] != "ELTT":
-					producerType = data["producerType"].split(",")[0]
-					producerPath = data["producerType"].split(",")[1].strip()
-				else:
-					producerType = data["producerType"]
-					producerPath = "producer.py"
-
-				prodFile, prodTopic, prodNumberOfFiles, nProducerInstances = readProdConfig(data["producerConfig"])
+				producerType = data["producerType"]
+				nodeID = node[1:]
+				prodFile, prodTopic, prodNumberOfFiles, nProducerInstances, producerPath = readProdConfig(data["producerConfig"], producerType, nodeID)
 				prodDetails = {"nodeId": node[1:], "producerType": producerType,\
 					"produceFromFile":prodFile, "produceInTopic": prodTopic,\
 						"prodNumberOfFiles": prodNumberOfFiles, \
@@ -223,15 +225,6 @@ def placeKafkaBrokers(net, args):
 				consDetails = {"nodeId": node[1:], "consumeFromTopic": consTopics,\
 								"consumerType": consumerType, "consumerPath": consumerPath}
 				consDetailsList.append(consDetails)
- 
-			# elif 'consumerType' not in data and 'consumerConfig' in data:
-			# 	consumerType = "STANDARD"
-			# 	consumerPath = "consumer.py"
-
-			# 	consTopics = readConsConfig(data["consumerConfig"])
-			# 	consDetails = {"nodeId": node[1:], "consumeFromTopic": consTopics,\
-			# 					"consumerType": consumerType, "consumerPath": consumerPath}
-			# 	consDetailsList.append(consDetails)
 
 		elif node[0] == 's':
 			nSwitches += 1

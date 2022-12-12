@@ -24,7 +24,7 @@
   
    
   <graph id="simple-topo" edgedefault="undirected">
-    <data key="topicCfg">use-cases/app-testing/millitary-coordination/topicConfiguration.yaml</data>
+    <data key="topicCfg">use-cases/app-testing/millitary-coordination/topicConfiguration-temp.yaml</data>
 
     <node id="s1"/>
     <node id="s2"/>
@@ -152,7 +152,7 @@
 	<data key="st">1</data>
 	<data key="dt">1</data>
     </edge>    
-    <edge source="h7" target="s7">
+  <edge source="h7" target="s7">
 	<data key="st">1</data>
 	<data key="dt">1</data>
     </edge>    
@@ -167,7 +167,7 @@
     <edge source="h10" target="s10">
 	<data key="st">1</data>
 	<data key="dt">1</data>
-    </edge> 	
+    </edge>
 	
     
     <edge source="s2" target="s1">
@@ -182,7 +182,7 @@
 	<data key="st">4</data>
 	<data key="dt">4</data>
     </edge>
-    <edge source="s5" target="s1">
+  <edge source="s5" target="s1">
 	<data key="st">5</data>
 	<data key="dt">5</data>
     </edge>
@@ -198,7 +198,7 @@
 	  <data key="st">8</data>
 	  <data key="dt">8</data>
   </edge>
-	<edge source="s9" target="s1">
+	  <edge source="s9" target="s1">
     <data key="st">9</data>
     <data key="dt">9</data>
   </edge>

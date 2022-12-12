@@ -22,6 +22,7 @@ import emuLoad
 import emuLogs
 import emuSpark
 import emuMySQL
+import configParser
 
 pID=0
 popens = {}
@@ -201,7 +202,7 @@ if __name__ == '__main__':
 	net.build()
 
 	brokerPlace, zkPlace, topicPlace, prodDetailsList, consDetailsList, isDisconnect, \
-		dcDuration, dcLinks, switchPlace, hostPlace = emuKafka.placeKafkaBrokers(net, args)
+		dcDuration, dcLinks, switchPlace, hostPlace = configParser.readConfigParams(net, args) #emuKafka.placeKafkaBrokers(net, args)
 	nTopics = len(topicPlace)
 	nSwitches = len(switchPlace)
 	nHosts = len(hostPlace)

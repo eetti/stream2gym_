@@ -1,0 +1,7 @@
+# producer configuration file h1
+---
+  filePath: use-cases/app-testing/maritime-monitoring/data.json
+  topicName: maritimeInput
+  totalMessages: 1
+  producerInstances: 1
+...

@@ -82,36 +82,6 @@ try:
 
                 time.sleep(1)
         
-        # query.awaitTermination()
-
-        # ==========================================
-        #pkt_df3 = pkt_df2.select("pkt.*")
-
-        #summary = pkt_df3 \
-        #         .groupBy("proto") \
-        #         .count()
-
-        #query = summary \
-        # query = groupedDf \
-        #         .writeStream \
-        #         .trigger(processingTime='5 seconds') \
-        #         .outputMode("complete") \
-        #         .format("console") \
-        #         .start()
-
-        ### If you want to try storing the data frames in files.
-        #query = pkt_df3 \
-        #        .writeStream \
-        #        .trigger(processingTime='5 seconds') \
-        #        .outputMode("append") \
-        #        .format("csv") \
-        #        .option("checkpointLocation", "/home/raja/kafka/pkt-example") \
-        #        .option("path", "/home/raja/kafka/pkt-example") \
-        #        .start()
-
-
-        # query.awaitTermination()
-
 except Exception as e:
     logging.error(e)
     sys.exit(1)
