@@ -21,7 +21,7 @@ The tool was tested on Ubuntu 18.04.1 and is based on Python 3.6, Kafka 2.13-2.8
   - Xterm
   - Kafka-python 2.0.2
   - Matplotlib 3.3.4
-  - Seaborn 0.11.2
+  - Seaborn 0.12.1
 
   Most dependencies can be installed using `apt install`:
   

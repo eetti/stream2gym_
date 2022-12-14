@@ -1,9 +1,41 @@
-# example command: sudo python3 use-cases/app-testing/millitary-coordination/scripts/measurePeakCPU-Mem.py --log-dir use-cases/app-testing/millitary-coordination/logs/cpu-mem --host-list 2,4,6,8,10
+# example command: sudo python3 use-cases/app-testing/millitary-coordination/scripts/measurePeakCPU-Mem.py --log-dir use-cases/app-testing/millitary-coordination/logs/cpu-mem/round1 --host-list 2,4,6,8,10
 #!/bin/usr/python3
 
 import argparse
 import matplotlib.pyplot as plt
+import seaborn as sns
 
+def clearExistingPlot():
+    # clear the previous figure
+    plt.close()
+    plt.cla()
+    plt.clf() 
+
+def plotUtilizationCDF(utilz, logDir, counter, hostList, plotChoice='CPU'):
+    colorLst = ['r','g','b', 'y','k']
+    hist_kwargs = {"linewidth": 2,
+                  "edgecolor" :'salmon',
+                  "alpha": 0.4, 
+                  "color":  "w",
+                #   "label": "Histogram",
+                  "cumulative": True}
+    kde_kwargs = {'linewidth': 3,
+                  'color': colorLst[counter],
+                  "alpha": 0.7,
+                #   'label':'Kernel Density Estimation Plot',
+                  'cumulative': True}
+
+    sns.distplot(utilz, hist_kws=hist_kwargs, kde_kws=kde_kwargs)
+    plt.legend(labels=hostList,  title = "nHosts")
+    
+    # Add labels
+    plt.title('CDF of '+plotChoice+' utilization')
+    plt.xlabel(plotChoice+' utilization(%)')
+    plt.ylabel('CDF')
+    
+    plt.savefig(logDir+"/"+plotChoice+"CDF.png",format='png', bbox_inches="tight")
+
+print(sns.__version__)
 # taking log-directory and comma separated list of hosts
 parser = argparse.ArgumentParser(description='Script for visualizing peak CPU and peak memory utilisation.')
 parser.add_argument('--log-dir', dest='logDir', type=str, help='Log directory of cpu and memory usage')
@@ -20,13 +52,15 @@ for index, item in enumerate(hostList):
     # measure Peak CPU usage for all hosts
     with open(logDir+'/'+item+'-hosts-5min-run-cpu.log') as cpuFP:
         cpuLst = [float(x) for x in cpuFP.read().split()]
+        plotUtilizationCDF(cpuLst, logDir, index, hostList, 'CPU')
         peakCPUUsage.append(max(cpuLst))
 
     # measure Peak Memory usage for all hosts
     with open(logDir+'/'+item+'-hosts-5min-run-mem.log') as memFP:
         memLst = [float(x) for x in memFP.read().split()]
+        # plotUtilizationCDF(memLst, logDir, index, hostList, 'Memory')
         peakMemUsage.append(max(memLst))
-
+clearExistingPlot()
 # print(peakMemUsage)
 peakMemPercentage = []
 for item in peakMemUsage:
@@ -49,8 +83,7 @@ plt.yticks(range(minCPU,maxCPU+10, 5))
 plt.savefig(logDir+"/CPUUsage.png",format='png', bbox_inches="tight")
 
 # clearing the existing plot
-plt.cla()
-plt.clf()
+clearExistingPlot()
 
 # plot and save peak memory usage with respect to hosts
 plt.plot(hostList,peakMemPercentage,color='red')
