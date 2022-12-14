@@ -1,0 +1,7 @@
+# producer configuration file h1
+---
+  filePath: use-cases/reproducibility/videoAnalysis/dataDir/mnist_test.csv
+  topicName: inputTopic
+  totalMessages: 10
+  producerInstances: 1
+...

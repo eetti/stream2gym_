@@ -31,7 +31,7 @@
       <data key="zk">1</data>
       <data key="bk">1</data>
       <data key="prodType">ELTT</data>
-      <data key="prodCfg">use-cases/reproducibility/videoAnalysis/dataDir/mnist_test.csv,inputTopic,10,1</data>
+      <data key="prodCfg">use-cases/reproducibility/videoAnalysis/producerConfiguration.yaml</data>
       <data key="consType">STANDARD</data>
       <data key="consCfg">inputTopic,10</data>
 	  </node>            

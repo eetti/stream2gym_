@@ -1,0 +1,5 @@
+# producer configuration file
+---
+  producerPath: use-cases/reproducibility/networkTrafficAnalysis/flowProducerProcess.py
+  producerInstances: 100
+...
