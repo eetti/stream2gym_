@@ -12,9 +12,7 @@ import logging
 try:
 	seed(2)
 	nodeName = sys.argv[1]
-	topicName = sys.argv[2]
-	brokerID = sys.argv[3]
-	consInstance = sys.argv[4]
+	consInstance = sys.argv[2]
 	nodeID = nodeName[1:]
 
 	nTopics = 2      
@@ -32,13 +30,10 @@ try:
 		level=logging.INFO)
 	logging.info("Individual consumer single")
 	logging.info("node to initiate consumer: "+nodeID)
-	logging.info("topicBroker "+brokerID)
 
 	consumers = []
 	timeout = int((1.0/cRate) * 1000)
-	bootstrapServers="10.0.0."+str(nodeID)+":9092"     #GD implementation
-	# bootstrapServers="10.0.0."+str(brokerID)+":9092"
-
+	bootstrapServers="10.0.0."+str(nodeID)+":9092"  
 
 	# One consumer for all topics
 	topicName = 'topic-*'

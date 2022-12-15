@@ -104,10 +104,8 @@ def spawnProducers(net, mSizeString, mRate, tClassString, nTopics, args, prodDet
 			if producerType != 'INDIVIDUAL':
 				topicName = [x for x in topicPlace if x['topicName'] == prodTopic][0]["topicName"]
 				brokerId = [x for x in topicPlace if x['topicName'] == prodTopic][0]["topicBroker"] 
-
 				print("Producing messages to topic "+topicName+" at broker "+str(brokerId))
 			
-
 			prodInstance = 1
 
 			while prodInstance <= int(nProducerInstances):
@@ -136,28 +134,33 @@ def spawnConsumers(net, consDetailsList, topicPlace):
 		consInstance = 1
 		
 		consNode = cons["nodeId"]
-		topicName = cons["consumeFromTopic"][0]
+		topicName = cons["consumeFromTopic"]
 		consumerType = cons["consumerType"]
 		consumerPath = cons["consumerPath"]
+		nConsumerInstances = cons['nConsumerInstances']
 
 		consID = "h"+consNode      
 		node = netNodes[consID]
 
-		# number of consumers
-		numberOfConsumers = int(cons["consumeFromTopic"][-1])
-
 		print("consumer node: "+consNode)
 		print("topic: "+topicName)
-		print("Number of consumers for this topic: "+str(numberOfConsumers))
+		print("Number of consumers for this topic: "+str(nConsumerInstances))
 
 		try:
-			topicName = [x for x in topicPlace if x['topicName'] == topicName][0]["topicName"]
-			brokerId = [x for x in topicPlace if x['topicName'] == topicName][0]["topicBroker"] 
+			print("Consumer type: "+consumerType)
+			if consumerType != 'INDIVIDUAL':
+				topicName = [x for x in topicPlace if x['topicName'] == topicName][0]["topicName"]
+				brokerId = [x for x in topicPlace if x['topicName'] == topicName][0]["topicBroker"] 
+				print("Consuming messages from topic "+topicName+" at broker "+str(brokerId))
 
-			print("Consuming messages from topic "+topicName+" at broker "+str(brokerId))
-
-			while consInstance <= int(numberOfConsumers):
-				node.popen("python3 "+consumerPath+" "+str(node.name)+" "+topicName+" "+str(brokerId)+" "+str(consInstance)+" &", shell=True)
+			while consInstance <= int(nConsumerInstances):
+				if consumerType == 'INDIVIDUAL':
+					node.popen("python3 "+consumerPath+" "+str(node.name)+" "+str(consInstance)+" &", shell=True)
+				else:
+					topicName = [x for x in topicPlace if x['topicName'] == topicName][0]["topicName"]
+					brokerId = [x for x in topicPlace if x['topicName'] == topicName][0]["topicBroker"] 
+					print("Consuming messages from topic "+topicName+" at broker "+str(brokerId))
+					node.popen("python3 "+consumerPath+" "+str(node.name)+" "+topicName+" "+str(brokerId)+" "+str(consInstance)+" &", shell=True)
 				
 				consInstance += 1
 

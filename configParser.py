@@ -42,47 +42,11 @@ def readProdConfig(prodConfigPath, producerType, nodeID):
 		print("ERROR: to use any standard producer please provide filePath, name of the topic to produce, number of files and number of producer instances in node "+str(nodeID))
 		sys.exit(1)
 
-	# prodFile = ""
-	# prodTopic = ""
-	# prodNumberOfFiles = ""
-	# nProducerInstances = ""
-	# producerPath = "producer.py"
-
 	prodFile = "" if prodConfig[0].get("filePath", "") is None else prodConfig[0].get("filePath", "")
 	prodTopic = "" if prodConfig[0].get("topicName", "") is None else prodConfig[0].get("topicName", "")
 	prodNumberOfFiles = "" if str(prodConfig[0].get("totalMessages", "")) is None else str(prodConfig[0].get("totalMessages", ""))
 	nProducerInstances = "" if str(prodConfig[0].get("producerInstances", "")) is None else str(prodConfig[0].get("producerInstances", ""))
 	producerPath = "producer.py" if prodConfig[0].get("producerPath", "producer.py") is None else prodConfig[0].get("producerPath", "producer.py")
-	
-	# messageRate = 1.0
-	# acks = 1
-	# compression = 'None'
-	# batchSize = 16384
-	# linger = 0
-	# requestTimeout = 30000
-
-	# if prodConfig[0].get("filePath") is not None:
-	# 	prodFile = prodConfig[0]["filePath"]
-	# if prodConfig[0].get("topicName") is not None:
-	# 	prodTopic = prodConfig[0]["topicName"]
-	# if prodConfig[0].get("totalMessages") is not None:
-	# 	prodNumberOfFiles = str(prodConfig[0]["totalMessages"])
-	# if prodConfig[0].get("producerInstances") is not None:
-	# 	nProducerInstances = str(prodConfig[0]["producerInstances"])	
-	# if prodConfig[0].get("producerPath") is not None:
-	# 	producerPath = prodConfig[0]["producerPath"]
-	# if prodConfig[0].get("messageRate") is not None:
-	# 	messageRate = prodConfig[0]["messageRate"]
-	# if prodConfig[0].get("acks") is not None:
-	# 	acks = prodConfig[0]["acks"]
-	# if prodConfig[0].get("compression") is not None:
-	# 	compression = prodConfig[0]["acks"]
-	# if prodConfig[0].get("batchSize") is not None:
-	# 	batchSize = prodConfig[0]["batchSize"]
-	# if prodConfig[0].get("linger") is not None:
-	# 	linger = prodConfig[0]["linger"]
-	# if prodConfig[0].get("requestTimeout") is not None:
-	# 	requestTimeout = prodConfig[0]["requestTimeout"]
 
 	prodDetails = {"nodeId": nodeID, "producerType": producerType,\
 					"produceFromFile":prodFile, "produceInTopic": prodTopic,\
@@ -92,14 +56,32 @@ def readProdConfig(prodConfigPath, producerType, nodeID):
 					# "acks":acks, "compression":compression, "batchSize": batchSize, \
 					# "linger": linger, "requestTimeout": requestTimeout}
 
-	print("Prod details: "+str(prodDetails))
-	return prodDetails #prodFile, prodTopic, prodNumberOfFiles, nProducerInstances, producerPath
+	return prodDetails 
 
-def readConsConfig(consConfig):
-	#topic list contains the topics from where the consumer will consume
-	consTopic = consConfig.split(",")		
+# def readConsConfig(consConfig):
+# 	#topic list contains the topics from where the consumer will consume
+# 	consTopic = consConfig.split(",")		
 
-	return consTopic
+# 	return consTopic
+
+def readConsConfig(consConfigPath, consumerType, nodeID):
+	consConfig = readYAMLConfig(consConfigPath)
+	if len(consConfig[0]) != 2:
+		if consumerType == 'INDIVIDUAL':
+			print("ERROR: for CUSTOM consumer please provide consumer file path and number of consumer instance on node "+str(nodeID))
+		else:
+			print("ERROR: to use the STANDARD consumer please provide name of the topic to consume and number of consumer instances in node "+str(nodeID))	
+		sys.exit(1)
+
+	consTopic = "" if consConfig[0].get("topicName", "") is None else consConfig[0].get("topicName", "")
+	nConsumerInstances = "" if str(consConfig[0].get("consumerInstances", "")) is None else str(consConfig[0].get("consumerInstances", ""))
+	consumerPath = "consumer.py" if consConfig[0].get("consumerPath", "consumer.py") is None else consConfig[0].get("consumerPath", "consumer.py")
+
+	consDetails = {"nodeId": nodeID, "consumerType": consumerType,\
+					"consumeFromTopic": consTopic, "nConsumerInstances": nConsumerInstances, \
+					"consumerPath": consumerPath}
+
+	return consDetails 
 
 def readConfigParams(net, args):
 	inputTopoFile = args.topo
@@ -115,11 +97,9 @@ def readConfigParams(net, args):
 
 	prodDetailsList = []
 	prodDetails = {}
-	prodDetailsKeys = {"nodeId", "producerType","produceFromFile", "produceInTopic"}
 
 	consDetailsList = []
 	consDetails = {}
-	consDetailsKeys = {"nodeId", "consumeFromTopic"}
 
 	#Read topo information
 	try:
@@ -162,40 +142,26 @@ def readConfigParams(net, args):
 			if 'producerType' in data: 
 				producerType = data["producerType"]
 				nodeID = node[1:]
-				# prodFile, prodTopic, prodNumberOfFiles, nProducerInstances, producerPath = readProdConfig(data["producerConfig"], producerType, nodeID)
 				prodDetails = readProdConfig(data["producerConfig"], producerType, nodeID)
-				# prodDetails = {"nodeId": node[1:], "producerType": producerType,\
-				# 	"produceFromFile":prodFile, "produceInTopic": prodTopic,\
-				# 		"prodNumberOfFiles": prodNumberOfFiles, \
-				# 		"nProducerInstances": nProducerInstances, \
-				# 			"producerPath": producerPath}
 				prodDetailsList.append(prodDetails)
-
-			if 'consumerType' in data and 'consumerConfig' in data: 
-				if data["consumerType"] != "STANDARD":
-					consumerType = data["consumerType"].split(",")[0]
-					consumerPath = data["consumerType"].split(",")[1].strip()
-				else:
-					consumerType = "STANDARD"
-					consumerPath = "consumer.py"
-
-				consTopics = readConsConfig(data["consumerConfig"])
-				consDetails = {"nodeId": node[1:], "consumeFromTopic": consTopics,\
-								"consumerType": consumerType, "consumerPath": consumerPath}
+			if 'consumerType' in data:
+				consumerType = data["consumerType"]
+				nodeID = node[1:]
+				consDetails = readConsConfig(data["consumerConfig"], consumerType, nodeID)
 				consDetailsList.append(consDetails)
-
 		elif node[0] == 's':
 			nSwitches += 1
 			switchPlace.append(node[1:]) 
+
 	print("zookeepers:")
 	print(*zkPlace)
 	# print("brokers: \n")
 	# print(*brokerPlace)
 
-	print("producer details")
+	print("producer details: ")
 	print(*prodDetailsList)
 
-	print("consumer details")
+	print("consumer details: ")
 	print(*consDetailsList)
 
 	return brokerPlace, zkPlace, topicPlace, prodDetailsList, consDetailsList, \
