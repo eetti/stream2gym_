@@ -1,0 +1,5 @@
+# consumer configuration file
+---
+  topicName : outTopic
+  consumerInstances : 1
+...

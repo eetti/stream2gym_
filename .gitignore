@@ -17,3 +17,4 @@ use-cases/app-testing/millitary-coordination/3-node-scenario/
 use-cases/app-testing/millitary-coordination/logs/
 use-cases/app-testing/millitary-coordination/input-temp.graphml
 use-cases/app-testing/millitary-coordination/topicConfiguration-temp.yaml
+use-cases/app-testing/word-count/input-temp.graphml

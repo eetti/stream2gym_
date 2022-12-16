@@ -1,0 +1,5 @@
+# consumer configuration file
+---
+  consumerPath : use-cases/disconnection/millitary-coordination/military-consumerSingle.py
+  consumerInstances : 1
+...

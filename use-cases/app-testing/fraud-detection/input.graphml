@@ -32,7 +32,7 @@
       <data key="prodType">SFST</data>
       <data key="prodCfg">use-cases/app-testing/fraud-detection/producerConfiguration.yaml</data>
       <data key="consType">STANDARD</data>
-      <data key="consCfg">fraudInput,1</data>
+      <data key="consCfg">use-cases/app-testing/fraud-detection/consumerConfigurationHost1.yaml</data>
 	  </node>            
     
     <node id="s1"/>
@@ -40,7 +40,7 @@
 
     <node id="h2">
       <data key="consType">STANDARD</data>
-      <data key="consCfg">fraudOutput,1</data>
+      <data key="consCfg">use-cases/app-testing/fraud-detection/consumerConfigurationHost2.yaml</data>
       <data key="sparkCfg">use-cases/app-testing/fraud-detection/fraud_predicting.py,fraudOutput</data>
 	  </node>            
 

@@ -51,9 +51,15 @@ In this application, we facilated the running word-count application using a two
      - producerConfig: specified in producerConfiguration.yaml
           for SFST/ELTT, user needs to specify filePath, name of the topic to produce, number of files and number of producer instances in this node. For INDIVIDUAL producer type, only producer script path and number of producer instances on this node are the two required parameters to specify.
      - consumerType: consumer type can be STANDARD/INDIVIDUAL; To use standard consumer, specify 'STANDARD'. Provided that the user has his own consumer, he can use it by specifying INDIVIDUAL in the consumerType and give the relative path as input in producerType attribute as a pair like INDIVIDUAL,producerFilePath
-     - consumerConfig: specify the topic name to  consumer from and number of consumer instances in this node as a comma separated pair.
+     - consumerConfig: each consumer configuration is specified in ''consumerConfiguration<HostID>.yaml' file. In the YAML file, 
+       - for STNDARD consumer, specify the topic name where the consumer will consumer from and number of consumer instances in this node.
+       - for INDIVIDUAL consumer, specify the consumer script path and number of consumer instances in this node.
      - sparkConfig: sparkConfig will contain the spark application path and output sink. Output sink can be kafka topic/a file directory.
  
 ## Running
    
  ```sudo python3 main.py use-cases/app-testing/word-count/input.graphml --nzk 1 --nbroker 1```
+
+
+<!-- command to run the temporary configuration:
+sudo python3 main.py use-cases/app-testing/word-count/input-temp.graphml --nzk 1 --nbroker 4 -->

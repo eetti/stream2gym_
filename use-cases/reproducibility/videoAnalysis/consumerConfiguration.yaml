@@ -1,0 +1,5 @@
+# consumer configuration file
+---
+  topicName : inputTopic
+  consumerInstances : 10
+...

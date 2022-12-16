@@ -1,0 +1,9 @@
+# consumer configuration file for host1
+---
+  topicName : Greetings
+  consumerInstances : 1
+  # fetchMinBytes :
+  # fetchMaxWait :
+  # sessionTimeout :
+  # consumerRate :
+...

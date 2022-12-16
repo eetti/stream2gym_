@@ -32,7 +32,7 @@
       <data key="prodType">MFST</data>
       <data key="prodCfg">use-cases/app-testing/word-count/producerConfigurationHost1.yaml</data>
       <data key="consType">STANDARD</data>
-      <data key="consCfg">Greetings,1</data> 
+      <data key="consCfg">use-cases/app-testing/word-count/consumerConfigurationHost1.yaml</data> 
 	  </node>            
     
     <node id="h2">
@@ -41,19 +41,19 @@
       <data key="prodType">MFST</data>
       <data key="prodCfg">use-cases/app-testing/word-count/producerConfigurationHost2.yaml</data>
       <data key="consType">STANDARD</data>
-      <data key="consCfg">Soccer,1</data>  
+      <data key="consCfg">use-cases/app-testing/word-count/consumerConfigurationHost2.yaml</data>  
 	  </node>   
 
     <node id="h3">   
       <data key="sparkCfg">use-cases/app-testing/word-count/sparkApp1.py,outTopic1</data>
       <data key="consType">STANDARD</data>
-      <data key="consCfg">outTopic1,1</data>        
+      <data key="consCfg">use-cases/app-testing/word-count/consumerConfigurationHost3.yaml</data>        
 	  </node>
 
     <node id="h4"> 
       <data key="sparkCfg">use-cases/app-testing/word-count/sparkApp2.py,outTopic2</data>            
       <data key="consType">STANDARD</data>
-      <data key="consCfg">outTopic2,1</data> 
+      <data key="consCfg">use-cases/app-testing/word-count/consumerConfigurationHost4.yaml</data> 
 	  </node>         
 
     <edge source="s1" target="h1">

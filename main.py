@@ -182,8 +182,7 @@ if __name__ == '__main__':
 	  
 	args = parser.parse_args()
 	# print(args)
-	validateInput(args)
-	
+
 	#Clean up mininet state
 	cleanProcess = subprocess.Popen("sudo mn -c", shell=True)
 	time.sleep(2)
@@ -202,7 +201,7 @@ if __name__ == '__main__':
 	net.build()
 
 	brokerPlace, zkPlace, topicPlace, prodDetailsList, consDetailsList, isDisconnect, \
-		dcDuration, dcLinks, switchPlace, hostPlace = configParser.readConfigParams(net, args) #emuKafka.placeKafkaBrokers(net, args)
+		dcDuration, dcLinks, switchPlace, hostPlace = configParser.readConfigParams(net, args)
 	nTopics = len(topicPlace)
 	nSwitches = len(switchPlace)
 	nHosts = len(hostPlace)
@@ -212,6 +211,9 @@ if __name__ == '__main__':
 	print("Number of brokers in the topology: "+str(len(brokerPlace)))
 	print("Number of topics: "+str(nTopics))
 
+	print(consDetailsList)
+	validateInput(args)
+	
 	# checking whether the application is only kafka or kafka-spark
 	sparkDetailsList, mysqlPath = emuSpark.getSparkDetails(net, args.topo)
 	if not sparkDetailsList:   # if there is no configuration for spark

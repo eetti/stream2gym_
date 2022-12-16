@@ -32,7 +32,7 @@ def readDisconnectionConfig(dcConfigPath):
 	print(*dcLinks)
 	return dcDuration, dcLinks
 
-
+# reading from producer YAML specification
 def readProdConfig(prodConfigPath, producerType, nodeID):
 	prodConfig = readYAMLConfig(prodConfigPath)
 	if producerType == 'INDIVIDUAL' and len(prodConfig[0]) != 2:
@@ -58,28 +58,31 @@ def readProdConfig(prodConfigPath, producerType, nodeID):
 
 	return prodDetails 
 
-# def readConsConfig(consConfig):
-# 	#topic list contains the topics from where the consumer will consume
-# 	consTopic = consConfig.split(",")		
-
-# 	return consTopic
-
+# reading from consumer YAML specification
 def readConsConfig(consConfigPath, consumerType, nodeID):
 	consConfig = readYAMLConfig(consConfigPath)
-	if len(consConfig[0]) != 2:
-		if consumerType == 'INDIVIDUAL':
-			print("ERROR: for CUSTOM consumer please provide consumer file path and number of consumer instance on node "+str(nodeID))
-		else:
-			print("ERROR: to use the STANDARD consumer please provide name of the topic to consume and number of consumer instances in node "+str(nodeID))	
-		sys.exit(1)
-
 	consTopic = "" if consConfig[0].get("topicName", "") is None else consConfig[0].get("topicName", "")
-	nConsumerInstances = "" if str(consConfig[0].get("consumerInstances", "")) is None else str(consConfig[0].get("consumerInstances", ""))
+	nConsumerInstances = "1" if str(consConfig[0].get("consumerInstances", "1")) is None else str(consConfig[0].get("consumerInstances", "1"))
 	consumerPath = "consumer.py" if consConfig[0].get("consumerPath", "consumer.py") is None else consConfig[0].get("consumerPath", "consumer.py")
+	fetchMinBytes = 1 if str(consConfig[0].get("fetchMinBytes", 1)) is None else str(consConfig[0].get("fetchMinBytes", 1))
+	fetchMaxWait = 500 if str(consConfig[0].get("fetchMaxWait", 500)) is None else str(consConfig[0].get("fetchMaxWait", 500))
+	sessionTimeout = 10000 if str(consConfig[0].get("sessionTimeout", 10000)) is None else str(consConfig[0].get("sessionTimeout", 10000))
+	consumerRate = 0.5 if str(consConfig[0].get("consumerRate", 0.5)) is None else str(consConfig[0].get("consumerRate", 0.5))
+	topicCheckInterval = 1.0 if str(consConfig[0].get("topicCheckInterval", 1.0)) is None else str(consConfig[0].get("topicCheckInterval", 1.0))
 
+	# if len(consConfig[0]) != 2:
+	if consumerType == 'INDIVIDUAL' and consumerPath == "consumer.py":
+		print("ERROR: for CUSTOM consumer, consumer file path is required")
+		sys.exit(1)
+	elif consumerType == 'STANDARD' and consTopic == "" :
+		print("ERROR: for STANDARD consumer, topic name is required")	
+		sys.exit(1)
+	
 	consDetails = {"nodeId": nodeID, "consumerType": consumerType,\
 					"consumeFromTopic": consTopic, "nConsumerInstances": nConsumerInstances, \
-					"consumerPath": consumerPath}
+					"consumerPath": consumerPath, "fetchMinBytes": fetchMinBytes, \
+					"fetchMaxWait": fetchMaxWait, "sessionTimeout": sessionTimeout, \
+					"consumerRate": consumerRate, "topicCheckInterval": topicCheckInterval}
 
 	return consDetails 
 

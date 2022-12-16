@@ -1,0 +1,5 @@
+# consumer configuration file in h2
+---
+  topicName : maritimeOutput
+  consumerInstances : 1
+...

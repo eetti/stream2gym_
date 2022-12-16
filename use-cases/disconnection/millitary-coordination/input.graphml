@@ -44,8 +44,8 @@
       <data key="bk">1</data>
       <data key="prodType">INDIVIDUAL,use-cases/disconnection/millitary-coordination/military-data-producer.py</data>
       <data key="prodCfg">topic-0,1</data>
-      <data key="consType">INDIVIDUAL,use-cases/disconnection/millitary-coordination/military-consumerSingle.py</data>
-      <data key="consCfg">topic-0,1</data>
+      <data key="consType">INDIVIDUAL</data>
+      <data key="consCfg">use-cases/disconnection/millitary-coordination/consumerConfiguration.yaml</data>
 	  </node>
     
     <node id="h2">
@@ -53,8 +53,8 @@
       <data key="bk">1</data>
       <data key="prodType">INDIVIDUAL,use-cases/disconnection/millitary-coordination/military-data-producer.py</data>
       <data key="prodCfg">topic-0,1</data>
-      <data key="consType">INDIVIDUAL,use-cases/disconnection/millitary-coordination/military-consumerSingle.py</data>
-      <data key="consCfg">topic-0,1</data>
+      <data key="consType">INDIVIDUAL</data>
+      <data key="consCfg">use-cases/disconnection/millitary-coordination/consumerConfiguration.yaml</data>
 	  </node>   
 
     <node id="h3">   
@@ -62,8 +62,8 @@
       <data key="bk">1</data>
       <data key="prodType">INDIVIDUAL,use-cases/disconnection/millitary-coordination/military-data-producer.py</data>
       <data key="prodCfg">topic-0,1</data>
-      <data key="consType">INDIVIDUAL,use-cases/disconnection/millitary-coordination/military-consumerSingle.py</data>
-      <data key="consCfg">topic-0,1</data>
+      <data key="consType">INDIVIDUAL</data>
+      <data key="consCfg">use-cases/disconnection/millitary-coordination/consumerConfiguration.yaml</data>
 	  </node>
 
     <node id="h4">   
@@ -71,8 +71,8 @@
       <data key="bk">1</data>
       <data key="prodType">INDIVIDUAL,use-cases/disconnection/millitary-coordination/military-data-producer.py</data>
       <data key="prodCfg">topic-0,1</data>
-      <data key="consType">INDIVIDUAL,use-cases/disconnection/millitary-coordination/military-consumerSingle.py</data>
-      <data key="consCfg">topic-0,1</data>
+      <data key="consType">INDIVIDUAL</data>
+      <data key="consCfg">use-cases/disconnection/millitary-coordination/consumerConfiguration.yaml</data>
 	  </node>
 
     <node id="h5">   
@@ -80,8 +80,8 @@
       <data key="bk">1</data>
       <data key="prodType">INDIVIDUAL,use-cases/disconnection/millitary-coordination/military-data-producer.py</data>
       <data key="prodCfg">topic-0,1</data>
-      <data key="consType">INDIVIDUAL,use-cases/disconnection/millitary-coordination/military-consumerSingle.py</data>
-      <data key="consCfg">topic-0,1</data>
+      <data key="consType">INDIVIDUAL</data>
+      <data key="consCfg">use-cases/disconnection/millitary-coordination/consumerConfiguration.yaml</data>
 	  </node>
 
     <node id="h6">   
@@ -89,8 +89,8 @@
       <data key="bk">1</data>
       <data key="prodType">INDIVIDUAL,use-cases/disconnection/millitary-coordination/military-data-producer.py</data>
       <data key="prodCfg">topic-0,1</data>
-      <data key="consType">INDIVIDUAL,use-cases/disconnection/millitary-coordination/military-consumerSingle.py</data>
-      <data key="consCfg">topic-0,1</data>
+      <data key="consType">INDIVIDUAL</data>
+      <data key="consCfg">use-cases/disconnection/millitary-coordination/consumerConfiguration.yaml</data>
 	  </node>
 
     <node id="h7">   
@@ -98,8 +98,8 @@
       <data key="bk">1</data>
       <data key="prodType">INDIVIDUAL,use-cases/disconnection/millitary-coordination/military-data-producer.py</data>
       <data key="prodCfg">topic-0,1</data>
-      <data key="consType">INDIVIDUAL,use-cases/disconnection/millitary-coordination/military-consumerSingle.py</data>
-      <data key="consCfg">topic-0,1</data>
+      <data key="consType">INDIVIDUAL</data>
+      <data key="consCfg">use-cases/disconnection/millitary-coordination/consumerConfiguration.yaml</data>
 	  </node>
 
     <node id="h8">
@@ -107,8 +107,8 @@
       <data key="bk">1</data>
       <data key="prodType">INDIVIDUAL,use-cases/disconnection/millitary-coordination/military-data-producer.py</data>
       <data key="prodCfg">topic-0,1</data>
-      <data key="consType">INDIVIDUAL,use-cases/disconnection/millitary-coordination/military-consumerSingle.py</data>
-      <data key="consCfg">topic-0,1</data>
+      <data key="consType">INDIVIDUAL</data>
+      <data key="consCfg">use-cases/disconnection/millitary-coordination/consumerConfiguration.yaml</data>
 	  </node>
 
     <node id="h9">   
@@ -116,8 +116,8 @@
       <data key="bk">1</data>
       <data key="prodType">INDIVIDUAL,use-cases/disconnection/millitary-coordination/military-data-producer.py</data>
       <data key="prodCfg">topic-0,1</data>
-      <data key="consType">INDIVIDUAL,use-cases/disconnection/millitary-coordination/military-consumerSingle.py</data>
-      <data key="consCfg">topic-0,1</data>
+      <data key="consType">INDIVIDUAL</data>
+      <data key="consCfg">use-cases/disconnection/millitary-coordination/consumerConfiguration.yaml</data>
 	  </node>
 
     <node id="h10">
@@ -125,8 +125,8 @@
       <data key="bk">1</data>
       <data key="prodType">INDIVIDUAL,use-cases/disconnection/millitary-coordination/military-data-producer.py</data>
       <data key="prodCfg">topic-0,1</data>
-      <data key="consType">INDIVIDUAL,use-cases/disconnection/millitary-coordination/military-consumerSingle.py</data>
-      <data key="consCfg">topic-0,1</data>
+      <data key="consType">INDIVIDUAL</data>
+      <data key="consCfg">use-cases/disconnection/millitary-coordination/consumerConfiguration.yaml</data>
 	  </node>
   
 

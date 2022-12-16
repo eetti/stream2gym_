@@ -1,0 +1,5 @@
+# consumer configuration file for host2
+---
+  topicName : Soccer
+  consumerInstances : 1
+...

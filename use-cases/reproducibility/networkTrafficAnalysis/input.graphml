@@ -40,12 +40,12 @@
       <data key="sparkCfg">use-cases/reproducibility/networkTrafficAnalysis/spark-port-statistics.py,outputTopic</data>
       <!-- <data key="sparkCfg">use-cases/reproducibility/networkTrafficAnalysis/topicDuplicate.py,outputTopic</data> -->
       <data key="consType">STANDARD</data>
-      <data key="consCfg">inputTopic,1</data>
+      <data key="consCfg">use-cases/reproducibility/networkTrafficAnalysis/consumerConfigurationHost2.yaml</data>
 	  </node> 
 
     <node id="h3">
       <data key="consType">STANDARD</data>
-      <data key="consCfg">outputTopic,1</data>
+      <data key="consCfg">use-cases/reproducibility/networkTrafficAnalysis/consumerConfigurationHost3.yaml</data>
 	  </node>         
 
     <edge source="s1" target="h1">

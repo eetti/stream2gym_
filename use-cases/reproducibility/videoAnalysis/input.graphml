@@ -33,7 +33,7 @@
       <data key="prodType">ELTT</data>
       <data key="prodCfg">use-cases/reproducibility/videoAnalysis/producerConfiguration.yaml</data>
       <data key="consType">STANDARD</data>
-      <data key="consCfg">inputTopic,10</data>
+      <data key="consCfg">use-cases/reproducibility/videoAnalysis/consumerConfiguration.yaml</data>
 	  </node>            
 
     <edge source="s1" target="h1">
