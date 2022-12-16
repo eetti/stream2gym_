@@ -10,9 +10,9 @@
   <!-- node attributes -->
   <key id="zk" for="node" attr.name="zookeeper" attr.type="int"/>
   <key id="bk" for="node" attr.name="broker" attr.type="int"/>
-  <key id="prodType" for="node" attr.name="producerType" attr.type="string"/>   <!-- producer type can be SFST/MFST/ELTT/INDIVIDUAL -->
+  <key id="prodType" for="node" attr.name="producerType" attr.type="string"/>   <!-- producer type can be SFST/MFST/ELTT/CUSTOM -->
   <key id="prodCfg" for="node" attr.name="producerConfig" attr.type="string"/>  <!-- for SFST/ELTT: one pair of filePath, topicName, number of files to produce; for MFMT: multiple pair of filePaths, topicNames; -->
-  <key id="consType" for="node" attr.name="consumerType" attr.type="string"/>   <!-- consumer type can be STANDARD/INDIVIDUAL;if it is INDIVIDUAL, it will also contain the consumer script path -->
+  <key id="consType" for="node" attr.name="consumerType" attr.type="string"/>   <!-- consumer type can be STANDARD/CUSTOM;if it is CUSTOM, it will also contain the consumer script path -->
   <key id="consCfg" for="node" attr.name="consumerConfig" attr.type="string"/>  <!-- consConfig will contain the topic name(s) from where the consumer will consumer and number of consumer instances in this node--> 
   <key id="sparkCfg" for="node" attr.name="sparkConfig" attr.type="string"/>    <!-- sparkConfig will contain the spark application path and topic name(s)/output directory from where the spark ingest its processed output --> 
   
@@ -32,7 +32,7 @@
     <node id="h1">
       <data key="zk">1</data>
       <data key="bk">1</data>
-      <data key="prodType">INDIVIDUAL</data>
+      <data key="prodType">CUSTOM</data>
       <data key="prodCfg">use-cases/reproducibility/networkTrafficAnalysis/producerConfiguration.yaml</data>
 	  </node>   
 

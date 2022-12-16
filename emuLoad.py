@@ -101,7 +101,7 @@ def spawnProducers(net, mSizeString, mRate, tClassString, nTopics, args, prodDet
 
 		try:
 			print("Producer type: "+producerType)
-			if producerType != 'INDIVIDUAL':
+			if producerType != 'CUSTOM':
 				topicName = [x for x in topicPlace if x['topicName'] == prodTopic][0]["topicName"]
 				brokerId = [x for x in topicPlace if x['topicName'] == prodTopic][0]["topicBroker"] 
 				print("Producing messages to topic "+topicName+" at broker "+str(brokerId))
@@ -109,7 +109,7 @@ def spawnProducers(net, mSizeString, mRate, tClassString, nTopics, args, prodDet
 			prodInstance = 1
 
 			while prodInstance <= int(nProducerInstances):
-				if producerType == 'INDIVIDUAL':
+				if producerType == 'CUSTOM':
 					node.popen("python3 "+ producerPath +" " +nodeID+" "+str(prodInstance)+" &", shell=True)
 					
 				else:					
@@ -148,13 +148,13 @@ def spawnConsumers(net, consDetailsList, topicPlace):
 
 		try:
 			print("Consumer type: "+consumerType)
-			if consumerType != 'INDIVIDUAL':
+			if consumerType != 'CUSTOM':
 				topicName = [x for x in topicPlace if x['topicName'] == topicName][0]["topicName"]
 				brokerId = [x for x in topicPlace if x['topicName'] == topicName][0]["topicBroker"] 
 				print("Consuming messages from topic "+topicName+" at broker "+str(brokerId))
 
 			while consInstance <= int(nConsumerInstances):
-				if consumerType == 'INDIVIDUAL':
+				if consumerType == 'CUSTOM':
 					node.popen("python3 "+consumerPath+" "+str(node.name)+" "+str(consInstance)+" &", shell=True)
 				else:
 					topicName = [x for x in topicPlace if x['topicName'] == topicName][0]["topicName"]

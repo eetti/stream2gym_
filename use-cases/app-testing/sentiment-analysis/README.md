@@ -46,14 +46,14 @@ This is a python library supports various operation for Natural language process
      - topicConfig : path to the topic configuration file
      - zookeeper : 1 = hostnode contains a zookeeper instance
      - broker : 1 = hostnode contains a zookeeper instance
-     - producerType: producer type can be SFST/MFMT/ELTT/INDIVIDUAL; SFST denotes from Single File to Single Topic. ELTT is defined when Each line To Topic i.e. each line of the file is produced to the topic as a single message. For SFST/MFMT/ELTT, a standard producer will work be default.
-     Provided that the user has his own producer, he can use it by specifying INDIVIDUAL in the producerType and give the relative path as input in producerType attribute as a pair of producerType,producerFilePath.
+     - producerType: producer type can be SFST/MFMT/ELTT/CUSTOM; SFST denotes from Single File to Single Topic. ELTT is defined when Each line To Topic i.e. each line of the file is produced to the topic as a single message. For SFST/MFMT/ELTT, a standard producer will work be default.
+     Provided that the user has his own producer, he can use it by specifying CUSTOM in the producerType and give the relative path as input in producerType attribute as a pair of producerType,producerFilePath.
      - producerConfig: specified in producerConfiguration.yaml
-          for SFST/ELTT, user needs to specify filePath, name of the topic to produce, number of files and number of producer instances in this node. For INDIVIDUAL producer type, only producer script path and number of producer instances on this node are the two required parameters to specify.
-     - consumerType: consumer type can be STANDARD/INDIVIDUAL; To use standard consumer, specify 'STANDARD'. Provided that the user has his own consumer, he can use it by specifying INDIVIDUAL in the consumerType and give the relative path as input in producerType attribute as a pair like INDIVIDUAL,producerFilePath
+          for SFST/ELTT, user needs to specify filePath, name of the topic to produce, number of files and number of producer instances in this node. For CUSTOM producer type, only producer script path and number of producer instances on this node are the two required parameters to specify.
+     - consumerType: consumer type can be STANDARD/CUSTOM; To use standard consumer, specify 'STANDARD'. Provided that the user has his own consumer, he can use it by specifying CUSTOM in the consumerType and give the relative path as input in producerType attribute as a pair like CUSTOM,producerFilePath
      - consumerConfig: each consumer configuration is specified in consumerConfiguration.yaml file. In the YAML file, 
          - for STNDARD consumer, specify the topic name where the consumer will consumer from and number of consumer instances in this node.
-         - for INDIVIDUAL consumer, specify the consumer script path and number of consumer instances in this node.
+         - for CUSTOM consumer, specify the consumer script path and number of consumer instances in this node.
      - sparkConfig: sparkConfig will contain the spark application path and output sink. Output sink can be kafka topic/a file directory.
      
 ## Running

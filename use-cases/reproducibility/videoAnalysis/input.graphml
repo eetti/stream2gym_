@@ -12,7 +12,7 @@
   <key id="bk" for="node" attr.name="broker" attr.type="int"/>
   <key id="prodType" for="node" attr.name="producerType" attr.type="string"/>   <!-- producer type can be SFST/MFST/ELTT -->
   <key id="prodCfg" for="node" attr.name="producerConfig" attr.type="string"/>  <!-- for SFST/ELTT: one pair of filePath, topicName, number of files to produce; for MFMT: multiple pair of filePaths, topicNames; -->
-  <key id="consType" for="node" attr.name="consumerType" attr.type="string"/>   <!-- consumer type can be STANDARD/INDIVIDUAL;if it is INDIVIDUAL, it will also contain the consumer script path -->
+  <key id="consType" for="node" attr.name="consumerType" attr.type="string"/>   <!-- consumer type can be STANDARD/CUSTOM;if it is CUSTOM, it will also contain the consumer script path -->
   <key id="consCfg" for="node" attr.name="consumerConfig" attr.type="string"/>  <!-- consConfig will contain the topic name(s) from where the consumer will consumer and number of consumer instances in this node--> 
 
   <!-- edge attributes -->

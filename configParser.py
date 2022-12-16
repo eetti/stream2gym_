@@ -35,10 +35,10 @@ def readDisconnectionConfig(dcConfigPath):
 # reading from producer YAML specification
 def readProdConfig(prodConfigPath, producerType, nodeID):
 	prodConfig = readYAMLConfig(prodConfigPath)
-	if producerType == 'INDIVIDUAL' and len(prodConfig[0]) != 2:
+	if producerType == 'CUSTOM' and len(prodConfig[0]) != 2:
 		print("ERROR: for CUSTOM producer please provide producer file path and number of producer instance on node "+str(nodeID))
 		sys.exit(1)
-	if producerType != 'INDIVIDUAL' and len(prodConfig[0]) != 4:
+	if producerType != 'CUSTOM' and len(prodConfig[0]) != 4:
 		print("ERROR: to use any standard producer please provide filePath, name of the topic to produce, number of files and number of producer instances in node "+str(nodeID))
 		sys.exit(1)
 
@@ -71,7 +71,7 @@ def readConsConfig(consConfigPath, consumerType, nodeID):
 	topicCheckInterval = 1.0 if str(consConfig[0].get("topicCheckInterval", 1.0)) is None else str(consConfig[0].get("topicCheckInterval", 1.0))
 
 	# if len(consConfig[0]) != 2:
-	if consumerType == 'INDIVIDUAL' and consumerPath == "consumer.py":
+	if consumerType == 'CUSTOM' and consumerPath == "consumer.py":
 		print("ERROR: for CUSTOM consumer, consumer file path is required")
 		sys.exit(1)
 	elif consumerType == 'STANDARD' and consTopic == "" :
