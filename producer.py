@@ -151,13 +151,13 @@ try:
 					messageFilePath = directoryPath + oneFile
 					sentMessage = messageProductionMFST(messageFilePath, i, prodTopic)
 					fileID = "File: " +str(i)
+					
+					producer.send(prodTopic, sentMessage)
 
-					#log before producing to topic
+					#log after producing to topic
 					logging.info('      File has been sent ->  Topic: %s; File ID: %s', \
 										prodTopic, str(fileID))
 					logging.info('Topic-name: %s; Message ID: %s; Message: %s', prodTopic, i, sentMessage.decode())
-					
-					producer.send(prodTopic, sentMessage)
 					
 					i += 1
 

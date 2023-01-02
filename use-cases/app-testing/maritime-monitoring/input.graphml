@@ -42,7 +42,7 @@
     <node id="h2">
       <data key="bk">1</data>
       <data key="consType">STANDARD</data>
-      <data key="consCfg">use-cases/app-testing/maritime-monitoring/consumerConfigurationHost1.yaml</data>
+      <data key="consCfg">use-cases/app-testing/maritime-monitoring/consumerConfigurationHost2.yaml</data>
       <data key="sparkCfg">use-cases/app-testing/maritime-monitoring/maritime.py,maritimeOutput</data>
       <!-- <data key="mysqlCfg">use-cases/app-testing/maritime-monitoring/maritime-mysql-bulk-sink.properties</data> -->
 	  </node>            

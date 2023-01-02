@@ -33,10 +33,9 @@ try:
 		bootstrapServers="10.0.0."+brokerId+":9092"
 		consumer = KafkaConsumer(topicName,\
 			bootstrap_servers=bootstrapServers,\
-			auto_offset_reset='earliest',
-			group_id="group-"+str(nodeID)+"-instance"+str(consInstance))
-			# enable_auto_commit=True,                                     
-			# )
+			auto_offset_reset='earliest')#,
+			# group_id="group-"+str(nodeID)+"-instance"+str(consInstance))
+
 		try:
 			logging.info('Connect to broker looking for topic %s. ', topicName)
 			i = 1
