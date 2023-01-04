@@ -92,9 +92,7 @@ try:
 	batchSize = 16384
 	linger = 5000    #0
 	requestTimeout = 100000  #30000
-	brokers = 10
 	messageFilePath = 'use-cases/disconnection/millitary-coordination/Cars103.xml'
-	nSwitches = 10
 
 	logDir = "logs/output"
 
@@ -128,14 +126,16 @@ try:
 			acks=acks,
 			batch_size=batchSize,
 			linger_ms=linger,
-			request_timeout_ms=requestTimeout)
+			request_timeout_ms=requestTimeout,
+			buffer_memory=16777216)    #to assess impact on peak memory usage 
 	else:
 		producer = KafkaProducer(bootstrap_servers=bootstrapServers,
 			acks=acks,
 			compression_type=compression,
 			batch_size=batchSize,
 			linger_ms=linger,
-			request_timeout_ms=requestTimeout)
+			request_timeout_ms=requestTimeout,
+			buffer_memory=16777216)    #to assess impact on peak memory usage
 
 	# Read the message once and save in cache
 	if(messageFilePath != 'None'):

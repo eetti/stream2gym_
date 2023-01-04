@@ -1,0 +1,7 @@
+# producer configuration file h1
+---
+  filePath: use-cases/varying-networking-conditions/varying-link-latency/word-count/MFSTDataDir/
+  topicName: inTopic
+  totalMessages: 1
+  producerInstances: 1
+...

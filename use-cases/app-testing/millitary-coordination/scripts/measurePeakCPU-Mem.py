@@ -4,6 +4,7 @@
 import argparse
 import matplotlib.pyplot as plt
 import seaborn as sns
+import statistics
 
 def clearExistingPlot():
     # clear the previous figure
@@ -25,7 +26,7 @@ def plotUtilizationCDF(utilz, logDir, counter, hostList, plotChoice='CPU'):
                 #   'label':'Kernel Density Estimation Plot',
                   'cumulative': True}
 
-    sns.distplot(utilz, hist_kws=hist_kwargs, kde_kws=kde_kwargs)
+    sns.distplot(utilz, hist_kws=hist_kwargs, kde_kws=kde_kwargs).set(xlim=(0,100))
     plt.legend(labels=hostList,  title = "nHosts")
     
     # Add labels
@@ -48,12 +49,19 @@ hostList = hostStr.split(',')
 
 peakCPUUsage = []
 peakMemUsage = []
+medianCPUUsage = []
 for index, item in enumerate(hostList):
     # measure Peak CPU usage for all hosts
     with open(logDir+'/'+item+'-hosts-5min-run-cpu.log') as cpuFP:
         cpuLst = [float(x) for x in cpuFP.read().split()]
+        # print('CPU usage for '+item+' hostnodes: ')
+        # print(cpuLst)
+
         plotUtilizationCDF(cpuLst, logDir, index, hostList, 'CPU')
         peakCPUUsage.append(max(cpuLst))
+        # Median of list
+        medCpu = statistics.median(cpuLst)
+        medianCPUUsage.append(medCpu)
 
     # measure Peak Memory usage for all hosts
     with open(logDir+'/'+item+'-hosts-5min-run-mem.log') as memFP:
@@ -61,7 +69,7 @@ for index, item in enumerate(hostList):
         # plotUtilizationCDF(memLst, logDir, index, hostList, 'Memory')
         peakMemUsage.append(max(memLst))
 clearExistingPlot()
-# print(peakMemUsage)
+print(peakMemUsage)
 peakMemPercentage = []
 for item in peakMemUsage:
     memPercentage = round((float(item)/15953.4)* 100.0, 2)
@@ -71,16 +79,29 @@ for item in peakMemUsage:
 
 print('Host list: '+str(hostList))
 print('Peak CPU usage(%): '+str(peakCPUUsage))
+print('Median CPU usage(%): '+str(medianCPUUsage))
 print('Peak Memory usage(%): '+str(peakMemPercentage))
 
-# plot and save peak CPU usage with respect to hosts
-plt.plot(hostList,peakCPUUsage,color='blue')
+# # clearing the existing plot
+clearExistingPlot()
+
+# plot and save median CPU usage with respect to hosts
+plt.plot(hostList,medianCPUUsage,color='blue')
 plt.xlabel('Number of hosts', fontsize=16)
-plt.ylabel('Peak CPU usage(%)', fontsize=16)
-minCPU = int(min(peakCPUUsage))
-maxCPU = int(max(peakCPUUsage))
-plt.yticks(range(minCPU,maxCPU+10, 5))
-plt.savefig(logDir+"/CPUUsage.png",format='png', bbox_inches="tight")
+plt.ylabel('Median CPU usage(%)', fontsize=16)
+# minMedCPU = int(min(medianCPUUsage))
+# maxMedCPU = int(max(medianCPUUsage))
+# plt.yticks(range(minMedCPU,maxMedCPU+10, 5))
+plt.savefig(logDir+"/medianCPUUsage.png",format='png', bbox_inches="tight")
+
+# # plot and save peak CPU usage with respect to hosts
+# plt.plot(hostList,peakCPUUsage,color='blue')
+# plt.xlabel('Number of hosts', fontsize=16)
+# plt.ylabel('Peak CPU usage(%)', fontsize=16)
+# minPeakCPU = int(min(peakCPUUsage))
+# maxPeakCPU = int(max(peakCPUUsage))
+# plt.yticks(range(minPeakCPU,maxPeakCPU+10, 5))
+# plt.savefig(logDir+"/peakCPUUsage.png",format='png', bbox_inches="tight")
 
 # clearing the existing plot
 clearExistingPlot()

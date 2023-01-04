@@ -1,4 +1,4 @@
-# to run this script: sudo /home/monzurul/Desktop/amnis-data-sync/spark/pyspark/bin/spark-submit latencyScript.py <logDir>
+# to run this script: sudo spark/pyspark/bin/spark-submit use-cases/varying-networking-conditions/varying-link-latency/word-count/latencyScript.py <logDir>
 
 # This file calculates the latency of processing each file by a spark application, using information
 # from producer and consumer logs
@@ -27,8 +27,11 @@ spark.sparkContext.setLogLevel("ERROR")
 
 # Reading the producer and consumer log files into a dataframe each
 logDir = sys.argv[1]
-producerLog = logDir + '/prod-1.log'
-consumerLog = logDir + '/cons4.log'
+# producerLog = logDir + '/prod/prod-node1-instance1.log'
+# consumerLog = logDir + '/cons/cons-node4-instance1.log'
+
+producerLog = logDir + '/prod-node1-instance1.log'
+consumerLog = logDir + '/cons-node4-instance1.log'
 
 
 producerDF = spark.read.option('inferSchema', True).option('header', True).text(producerLog)
@@ -59,7 +62,7 @@ split_result = split("value", "File:")
 producerDF = producerDF.select(col('timestamp').alias('send_time'), split_result.getItem(0).alias('send_message'), \
         split_result.getItem(1).alias('file'))
 
-producerDF.show(101,truncate=False)
+# producerDF.show(101,truncate=False)
 
 split_result = split("value", "rrrr")
 consumerDF = consumerDF.select(col('timestamp').alias('receive_time'), split_result.getItem(0).alias('message'), \
@@ -72,7 +75,7 @@ consumerDF.createOrReplaceTempView('cons')
 consumerDF = spark.sql("SELECT file, FIRST(receive_time) AS receive_time, FIRST(message) AS receive_message \
         FROM cons GROUP BY file")
 
-consumerDF.show(101,truncate=False)
+# consumerDF.show(101,truncate=False)
 
 # # Now we combine the two dataframes in preparation for calculating the latency
 
@@ -123,47 +126,44 @@ resultDF = combinedDF.select('file',
 # print(combinedDF.printSchema())
 # combinedDF.show(20000, truncate = False)
 
-print(resultDF.printSchema())
-print(resultDF.columns)
-resultDF.show(200, truncate = False)
+# print(resultDF.printSchema())
+# print(resultDF.columns)
+# resultDF.show(200, truncate = False)
 
 # We display the results
 
 files = [data[0] for data in resultDF.select('file').collect()]
 latency = [data[0] for data in resultDF.select('latency').collect()]
 
-print("files before sorting: ")
-print(*files)
-print("latency before sorting by filenumber: ")
-print(*latency)
+# print("files before sorting: ")
+# print(*files)
+# print("latency before sorting by filenumber: ")
+# print(*latency)
 
 # from list of strings to list of integers
 res = [eval(i) for i in files]
 
 # sorting both list in ascending order of the file number
 tuple1, tuple2 = zip(*sorted(zip(res, latency)))
-print("files after sorting: ")
-print(*tuple1)
-# print(type(tuple1))
-# print(len(tuple1))
+# print("files after sorting: ")
+# print(*tuple1)
 
-print("latency after sorting by filenumber: ")
-print(*tuple2)
-# print(type(tuple2))
-# print(len(tuple2))
+# print("latency after sorting by filenumber: ")
+# print(*tuple2)
 
 # showing average as a horizontal line
 latencySum = p.sum(tuple2)
 averageLatency = float(latencySum/len(tuple1))
+print('Average latency: '+str(averageLatency))
 plt.axhline(y=averageLatency, color='r', linestyle='-')
 
 
-plt.xlabel('File')
+plt.xlabel('File ID')
 plt.ylabel('Latency in miliseconds')
 plt.title('Latency Per File')
 
 # plot X axis values at a interval
-plt.xticks(range(0,105,10))
+plt.xticks(range(0,1005,100))
 plt.scatter(tuple1, tuple2)
 
 plotLink = 'varying-H2-S-link-only-noSleep'

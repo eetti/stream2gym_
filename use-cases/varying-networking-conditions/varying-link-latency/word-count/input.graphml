@@ -24,7 +24,7 @@
   
    
   <graph id="simple-topo" edgedefault="undirected">
-    <data key="topicCfg">use-cases/varying-networking-conditions/varying-link-latency/topicConfiguration.yaml</data>
+    <data key="topicCfg">use-cases/varying-networking-conditions/varying-link-latency/word-count/topicConfiguration.yaml</data>
 
     <node id="s1"/>
 
@@ -39,7 +39,7 @@
 	  </node>   
 
     <node id="h3">   
-      <data key="sparkCfg">use-cases/varying-networking-conditions/varying-link-latency/word-count/sparkApp1.py,outTopic</data>
+      <data key="sparkCfg">use-cases/varying-networking-conditions/varying-link-latency/word-count/wordCount.py,outTopic</data>
 	  </node>
 
     <node id="h4">

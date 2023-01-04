@@ -28,16 +28,14 @@ In this application, we facilated the running word-count application using a two
   Aggegation
   
 ## Input details
-1. 1. dataDir: contains textual data files.
+1. dataDir: contains textual data files.
 2. topicConfiguration.yaml :
    - contains topic configurations
      - specify topic name ('topicName')
      - specify broker ID to initiate this topic ('topicBroker')
      - number of partition(s) in this topic ('topicPartition')
      - number of replica(s) in this topic ('topicReplica')
-3. Spark SS application
-   - sparkApp1.py: first spark application
-   - sparkApp2.py: second spark application
+3. wordCount.py: Spark SS application
 4. input.graphml:
    - contains topology description
      - node details (switch, host)
@@ -59,3 +57,7 @@ In this application, we facilated the running word-count application using a two
 ## Running
    
  ```sudo python3 main.py use-cases/varying-networking-conditions/varying-link-latency/word-count/input.graphml --nzk 1 --nbroker 1```
+
+
+<!-- to run the temporary configuration:
+sudo python3 main.py use-cases/varying-networking-conditions/varying-link-latency/word-count/input-temp.graphml --nzk 1 --nbroker 2 -->

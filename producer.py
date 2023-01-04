@@ -79,15 +79,15 @@ def messageProductionMFST(messageFilePath,fileNumber, topicName):
 			message = readMessageFromFile(messageFilePath)
 			logging.info("Message Generated From File "+messageFilePath)
 
-	# separator = 'rrrr '
-	# sentMessage = message + bytes(separator,'utf-8') + bytes(str(fileNumber), 'utf-8')
+	separator = 'rrrr '
+	sentMessage = message + bytes(separator,'utf-8') + bytes(str(fileNumber), 'utf-8')
 
-	topicAdd = " Topic: "
-	FileNumberAdd = " File: "
-	sentMessage = message + bytes(topicAdd,'utf-8')\
-         + bytes(str(topicName), 'utf-8')\
-            +bytes(FileNumberAdd,'utf-8')\
-            + bytes(str(fileNumber), 'utf-8')
+	# topicAdd = " Topic: "
+	# FileNumberAdd = " File: "
+	# sentMessage = message + bytes(topicAdd,'utf-8')\
+    #      + bytes(str(topicName), 'utf-8')\
+    #         +bytes(FileNumberAdd,'utf-8')\
+    #         + bytes(str(fileNumber), 'utf-8')
 
 	return sentMessage
 

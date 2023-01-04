@@ -33,8 +33,8 @@ try:
 		bootstrapServers="10.0.0."+brokerId+":9092"
 		consumer = KafkaConsumer(topicName,\
 			bootstrap_servers=bootstrapServers,\
-			auto_offset_reset='earliest')#,
-			# group_id="group-"+str(nodeID)+"-instance"+str(consInstance))
+			auto_offset_reset='earliest',\
+			group_id="group-"+str(nodeID)+"-instance"+str(consInstance))
 
 		try:
 			logging.info('Connect to broker looking for topic %s. ', topicName)
@@ -45,7 +45,7 @@ try:
 				if 'File: ' in msgContent:
 					fileNumber = msgContent.split('File: ')[1]
 					logging.info("Message ID: %s",str(i))
-					logging.info("File %s Received   Message Received word: %s", fileNumber, msgContent)
+					logging.info("File %s; Message: %s", fileNumber, msgContent)
 
 				else:
 					logging.info("Message received: " + msgContent)
