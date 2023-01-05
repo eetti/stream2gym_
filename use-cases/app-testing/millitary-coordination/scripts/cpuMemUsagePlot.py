@@ -1,6 +1,7 @@
 # command to run this script: sudo python3 use-cases/app-testing/millitary-coordination/scripts/cpuMemUsagePlot.py
 #!/bin/usr/python3
 import matplotlib.pyplot as plt
+import numpy as np
 
 def clearExistingPlot():
     # clear the previous figure
@@ -40,7 +41,6 @@ peakMemUsage3 = [31.46, 37.81, 44.8, 50.88, 56.59]
 
 avgPeakMemUsage1 = [(i+j+k) / 3 for i, j, k in zip(peakMemUsage1,peakMemUsage2, peakMemUsage3)]
 # print(avgPeakMemUsage1)
-plt.plot(hostList,avgPeakMemUsage1,color='red', label='16MiB')
 
 
 # peak memory usage results from 3 rounds of experiments (for default 32MiB buffer memory)
@@ -50,9 +50,26 @@ peakMemUsage6 = [47.88, 54.24, 60.05, 65.09, 72.32]
 
 avgPeakMemUsage2 = [(i+j+k) / 3 for i, j, k in zip(peakMemUsage4,peakMemUsage5, peakMemUsage6)]
 # print(avgPeakMemUsage2)
-plt.plot(hostList,avgPeakMemUsage2,color='blue', label='32MiB')
 
-plt.xlabel('Number of hosts', fontsize=16)
-plt.ylabel('Peak Memory usage(%)', fontsize=16)
+# plt.plot(hostList,avgPeakMemUsage1,color='red', label='16MiB')
+# plt.plot(hostList,avgPeakMemUsage2,color='blue', label='32MiB')
+# plt.xlabel('Number of hosts', fontsize=16)
+# plt.ylabel('Peak Memory usage(%)', fontsize=16)
+# plt.legend(title='Buffer Memory')
+# plt.savefig("use-cases/app-testing/millitary-coordination/logs/cpu-mem/MemoryUsage.png",format='png', bbox_inches="tight")
+
+# set width of bar
+barWidth = 0.25
+br1 = np.arange(len(hostList))
+br2 = [x + barWidth for x in br1]
+
+# Make the plot
+plt.bar(br1, avgPeakMemUsage1, color ='y', width = barWidth, edgecolor ='grey', label ='16MiB')
+plt.bar(br2, avgPeakMemUsage2, color ='b', width = barWidth,edgecolor ='grey', label ='32MiB')
+
+# Adding Xticks
+plt.xlabel('Number of hosts', fontweight ='bold', fontsize = 15)
+plt.ylabel('Peak Memory usage(%)', fontweight ='bold', fontsize = 15)
+plt.xticks([r + (barWidth/2) for r in range(len(hostList))],hostList)
 plt.legend(title='Buffer Memory')
 plt.savefig("use-cases/app-testing/millitary-coordination/logs/cpu-mem/MemoryUsage.png",format='png', bbox_inches="tight")
