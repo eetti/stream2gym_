@@ -2,8 +2,4 @@
 ---
   topicName : Greetings
   consumerInstances : 1
-  # fetchMinBytes :
-  # fetchMaxWait :
-  # sessionTimeout :
-  # consumerRate :
 ...

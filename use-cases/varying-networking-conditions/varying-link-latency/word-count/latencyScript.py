@@ -64,7 +64,8 @@ producerDF = producerDF.select(col('timestamp').alias('send_time'), split_result
 
 # producerDF.show(101,truncate=False)
 
-split_result = split("value", "rrrr")
+# split_result = split("value", "rrrr")
+split_result = split("value", "File: ")
 consumerDF = consumerDF.select(col('timestamp').alias('receive_time'), split_result.getItem(0).alias('message'), \
         split_result.getItem(1).alias('file'))
 

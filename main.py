@@ -27,9 +27,6 @@ import configParser
 pID=0
 popens = {}
 
-GROUP_MIN_SESSION_TIMEOUT_MS = 6000
-GROUP_MAX_SESSION_TIMEOUT_MS = 1800000
-
 REPLICA_LAG_TIME_MAX_MS = 30000
 
 # Kill all subprocesses
@@ -132,11 +129,6 @@ def validateInput(args):
 		print(*compressionList, sep = ", ") 
 		sys.exit(1)
 
-	# Note that the value must be in the allowable range as configured in the broker configuration by group.min.session.timeout.ms and group.max.session.timeout.ms
-	if args.sessionTimeout < GROUP_MIN_SESSION_TIMEOUT_MS or args.sessionTimeout > GROUP_MAX_SESSION_TIMEOUT_MS:
-		print("ERROR: Session timeout must be in the allowable range as configured in the broker configuration by group.min.session.timeout.ms value of " + str(GROUP_MIN_SESSION_TIMEOUT_MS) + " and group.max.session.timeout.ms value of " + str(GROUP_MAX_SESSION_TIMEOUT_MS))
-		sys.exit(1)
-
 	# This value should always be less than the replica.lag.time.max.ms at all times to prevent frequent shrinking of ISR for low throughput topics
 	if args.replicaMaxWait >= REPLICA_LAG_TIME_MAX_MS:
 		print("ERROR: replica.fetch.wait.max.ms must be less than the replica.lag.time.max.ms value of " +  str(REPLICA_LAG_TIME_MAX_MS) + " at all times")
@@ -162,10 +154,6 @@ if __name__ == '__main__':
 	parser.add_argument('--batch-size', dest='batchSize', type=int, default=16384, help='When multiple records are sent to the same partition, the producer will batch them together (bytes)')
 	parser.add_argument('--linger', dest='linger', type=int, default=0, help='Controls the amount of time (in ms) to wait for additional messages before sending the current batch')
 	parser.add_argument('--request-timeout', dest='requestTimeout', type=int, default=30000, help='Controls how long producer waits for a reply from server when sending data')
-
-	parser.add_argument('--fetch-min-bytes', dest='fetchMinBytes', type=int, default=1, help='Minimum amount of data consumer needs to receive from the broker when fetching records (bytes)')
-	parser.add_argument('--fetch-max-wait', dest='fetchMaxWait', type=int, default=500, help='How long the broker will wait (in ms) before sending data to consumer')
-	parser.add_argument('--session-timeout', dest='sessionTimeout', type=int, default=10000, help='Time (in ms) a consumer can be out of contact with brokers while still considered alive')
 	
 	parser.add_argument('--replica-max-wait', dest='replicaMaxWait', type=int, default=500, help='Max wait time for each fetcher request issued by follower replicas')
 	parser.add_argument('--replica-min-bytes', dest='replicaMinBytes', type=int, default=1, help='Minimum bytes expected for each fetch response')

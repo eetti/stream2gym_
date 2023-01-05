@@ -5,6 +5,9 @@ from yaml.loader import SafeLoader
 import sys
 import networkx as nx
 
+GROUP_MIN_SESSION_TIMEOUT_MS = 6000
+GROUP_MAX_SESSION_TIMEOUT_MS = 1800000
+
 def readYAMLConfig(configPath):
 	data = []
 
@@ -64,13 +67,17 @@ def readConsConfig(consConfigPath, consumerType, nodeID):
 	consTopic = "" if consConfig[0].get("topicName", "") is None else consConfig[0].get("topicName", "")
 	nConsumerInstances = "1" if str(consConfig[0].get("consumerInstances", "1")) is None else str(consConfig[0].get("consumerInstances", "1"))
 	consumerPath = "consumer.py" if consConfig[0].get("consumerPath", "consumer.py") is None else consConfig[0].get("consumerPath", "consumer.py")
-	fetchMinBytes = 1 if str(consConfig[0].get("fetchMinBytes", 1)) is None else str(consConfig[0].get("fetchMinBytes", 1))
-	fetchMaxWait = 500 if str(consConfig[0].get("fetchMaxWait", 500)) is None else str(consConfig[0].get("fetchMaxWait", 500))
-	sessionTimeout = 10000 if str(consConfig[0].get("sessionTimeout", 10000)) is None else str(consConfig[0].get("sessionTimeout", 10000))
-	consumerRate = 0.5 if str(consConfig[0].get("consumerRate", 0.5)) is None else str(consConfig[0].get("consumerRate", 0.5))
-	topicCheckInterval = 1.0 if str(consConfig[0].get("topicCheckInterval", 1.0)) is None else str(consConfig[0].get("topicCheckInterval", 1.0))
+	fetchMinBytes = 1 if int(consConfig[0].get("fetchMinBytes", 1)) is None else int(consConfig[0].get("fetchMinBytes", 1))
+	fetchMaxWait = 500 if int(consConfig[0].get("fetchMaxWait", 500)) is None else int(consConfig[0].get("fetchMaxWait", 500))
+	sessionTimeout = 10000 if int(consConfig[0].get("sessionTimeout", 10000)) is None else int(consConfig[0].get("sessionTimeout", 10000))
+	print(sessionTimeout)
+	print(type(sessionTimeout))
 
-	# if len(consConfig[0]) != 2:
+	# Note that the value must be in the allowable range as configured in the broker configuration by group.min.session.timeout.ms and group.max.session.timeout.ms
+	if sessionTimeout < GROUP_MIN_SESSION_TIMEOUT_MS or sessionTimeout > GROUP_MAX_SESSION_TIMEOUT_MS:
+		print("ERROR: Session timeout must be in the allowable range as configured in the broker configuration by group.min.session.timeout.ms value of " + str(GROUP_MIN_SESSION_TIMEOUT_MS) + " and group.max.session.timeout.ms value of " + str(GROUP_MAX_SESSION_TIMEOUT_MS))
+		sys.exit(1)
+
 	if consumerType == 'CUSTOM' and consumerPath == "consumer.py":
 		print("ERROR: for CUSTOM consumer, consumer file path is required")
 		sys.exit(1)
@@ -81,8 +88,7 @@ def readConsConfig(consConfigPath, consumerType, nodeID):
 	consDetails = {"nodeId": nodeID, "consumerType": consumerType,\
 					"consumeFromTopic": consTopic, "nConsumerInstances": nConsumerInstances, \
 					"consumerPath": consumerPath, "fetchMinBytes": fetchMinBytes, \
-					"fetchMaxWait": fetchMaxWait, "sessionTimeout": sessionTimeout, \
-					"consumerRate": consumerRate, "topicCheckInterval": topicCheckInterval}
+					"fetchMaxWait": fetchMaxWait, "sessionTimeout": sessionTimeout}
 
 	return consDetails 
 

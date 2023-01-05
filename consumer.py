@@ -17,6 +17,9 @@ try:
 	topicName = sys.argv[2]
 	brokerId = sys.argv[3]
 	consInstance = sys.argv[4]
+	fetchMinBytes = int(sys.argv[5])
+	fetchMaxWait = int(sys.argv[6])
+	sessionTimeout = int(sys.argv[7])
 
 	nodeID = nodeName[1:]
     
@@ -34,6 +37,9 @@ try:
 		consumer = KafkaConsumer(topicName,\
 			bootstrap_servers=bootstrapServers,\
 			auto_offset_reset='earliest',\
+			fetch_min_bytes=fetchMinBytes,\
+			fetch_max_wait_ms=fetchMaxWait,\
+			session_timeout_ms=sessionTimeout,\
 			group_id="group-"+str(nodeID)+"-instance"+str(consInstance))
 
 		try:
@@ -45,7 +51,7 @@ try:
 				if 'File: ' in msgContent:
 					fileNumber = msgContent.split('File: ')[1]
 					logging.info("Message ID: %s",str(i))
-					logging.info("File %s; Message: %s", fileNumber, msgContent)
+					logging.info("FileID %s; Message: %s", fileNumber, msgContent)
 
 				else:
 					logging.info("Message received: " + msgContent)

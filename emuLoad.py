@@ -138,6 +138,14 @@ def spawnConsumers(net, consDetailsList, topicPlace):
 		consumerType = cons["consumerType"]
 		consumerPath = cons["consumerPath"]
 		nConsumerInstances = cons['nConsumerInstances']
+		fetchMinBytes = cons['fetchMinBytes']
+		fetchMaxWait  = cons['fetchMaxWait']
+		sessionTimeout = cons['sessionTimeout']
+		
+		print("consumer terminal input details: ")
+		print(fetchMinBytes)
+		print(fetchMaxWait)
+		print(sessionTimeout)
 
 		consID = "h"+consNode      
 		node = netNodes[consID]
@@ -160,7 +168,8 @@ def spawnConsumers(net, consDetailsList, topicPlace):
 					topicName = [x for x in topicPlace if x['topicName'] == topicName][0]["topicName"]
 					brokerId = [x for x in topicPlace if x['topicName'] == topicName][0]["topicBroker"] 
 					print("Consuming messages from topic "+topicName+" at broker "+str(brokerId))
-					node.popen("python3 "+consumerPath+" "+str(node.name)+" "+topicName+" "+str(brokerId)+" "+str(consInstance)+" &", shell=True)
+					node.popen("python3 "+consumerPath+" "+str(node.name)+" "+topicName+" "+str(brokerId)+" "+str(consInstance)\
+						+" "+str(fetchMinBytes)+" "+str(fetchMaxWait)+" "+str(sessionTimeout)+" &", shell=True)
 				
 				consInstance += 1
 
