@@ -11,6 +11,7 @@ from datetime import datetime
 
 import matplotlib.pyplot as plt
 import numpy as np
+import seaborn as sns
 
 import builtins as p
 
@@ -18,6 +19,36 @@ import time
 import sys
 import shutil
 import os
+
+def clearExistingPlot():
+    # clear the previous figure
+    plt.close()
+    plt.cla()
+    plt.clf() 
+
+def plotUtilizationCDF(logDir, files, latency):
+    colorLst = ['r','g','b', 'y','k']
+    hist_kwargs = {"linewidth": 2,
+                  "edgecolor" :'salmon',
+                  "alpha": 0.4, 
+                  "color":  "w",
+                #   "label": "Histogram",
+                  "cumulative": True}
+    kde_kwargs = {'linewidth': 3,
+                  'color': 'r',
+                  "alpha": 0.7,
+                #   'label':'Kernel Density Estimation Plot',
+                  'cumulative': True}
+
+    sns.distplot(latency, hist_kws=hist_kwargs, kde_kws=kde_kwargs)
+#     plt.legend(labels=files,  title = "nHosts")
+    
+    # Add labels
+    plt.title('CDF of file latency')
+    plt.xlabel('Latency(ms)')
+    plt.ylabel('CDF')
+    
+    plt.savefig(logDir+"/"+"CDF.png",format='png', bbox_inches="tight")
 
 # Some basic spark set up
 spark = SparkSession.builder.appName("Latency Script").getOrCreate()
@@ -64,8 +95,8 @@ producerDF = producerDF.select(col('timestamp').alias('send_time'), split_result
 
 # producerDF.show(101,truncate=False)
 
-# split_result = split("value", "rrrr")
-split_result = split("value", "File: ")
+split_result = split("value", "rrrr")
+# split_result = split("value", "File: ")
 consumerDF = consumerDF.select(col('timestamp').alias('receive_time'), split_result.getItem(0).alias('message'), \
         split_result.getItem(1).alias('file'))
 
@@ -145,16 +176,18 @@ latency = [data[0] for data in resultDF.select('latency').collect()]
 res = [eval(i) for i in files]
 
 # sorting both list in ascending order of the file number
-tuple1, tuple2 = zip(*sorted(zip(res, latency)))
+# tuple1, tuple2 = zip(*sorted(zip(res, latency)))
+
+tuples = zip(*sorted(zip(res, latency)))
+sortedFiles, sortedLatency = [ list(tuple) for tuple in  tuples]
 # print("files after sorting: ")
-# print(*tuple1)
+# print(*sortedFiles)
 
 # print("latency after sorting by filenumber: ")
-# print(*tuple2)
-
+# print(*sortedLatency)
 # showing average as a horizontal line
-latencySum = p.sum(tuple2)
-averageLatency = float(latencySum/len(tuple1))
+latencySum = p.sum(sortedLatency)
+averageLatency = float(latencySum/len(sortedFiles))
 print('Average latency: '+str(averageLatency))
 plt.axhline(y=averageLatency, color='r', linestyle='-')
 
@@ -165,12 +198,21 @@ plt.title('Latency Per File')
 
 # plot X axis values at a interval
 plt.xticks(range(0,1005,100))
-plt.scatter(tuple1, tuple2)
+plt.scatter(sortedFiles, sortedLatency)
+
+print(*files)
+print(*latency)
+plt.scatter(files, latency)
 
 plotLink = 'varying-H2-S-link-only-noSleep'
 plotLinkLatency = '100ms'
 #plt.show()
 plt.savefig(logDir+'/'+ plotLinkLatency +'-latency.png')
+
+clearExistingPlot()
+
+# Plot CDF of latency
+plotUtilizationCDF(logDir, sortedFiles, sortedLatency)
 
 # time.sleep(5)
 

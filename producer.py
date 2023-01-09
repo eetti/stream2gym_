@@ -107,12 +107,13 @@ try:
 	batchSize = int(sys.argv[8])
 	linger = int(sys.argv[9])
 	requestTimeout = int(sys.argv[10])
-	brokerId = sys.argv[11]
-	directoryPath = sys.argv[12]  #it will hold the file path/directory path based on producer type SFST or MFST respectively
-	prodTopic = sys.argv[13] 
-	prodType = sys.argv[14] 
-	prodNumberOfFiles = int(sys.argv[15])
-	prodInstanceID = sys.argv[16]
+	bufferMemory = int(sys.argv[11])
+	brokerId = sys.argv[12]
+	directoryPath = sys.argv[13]  #it will hold the file path/directory path based on producer type SFST or MFST respectively
+	prodTopic = sys.argv[14] 
+	prodType = sys.argv[15] 
+	prodNumberOfFiles = int(sys.argv[16])
+	prodInstanceID = sys.argv[17]
 
 	seed(1)
 
@@ -137,9 +138,24 @@ try:
 
 	logging.info("**Configuring KafkaProducer** bootstrap_servers=" + str(bootstrapServers) + 
 		" acks=" + str(acks) + " compression_type=" + str(compression) + " batch_size=" + str(batchSize) + 
-		" linger_ms=" + str(linger) + " request_timeout_ms=" + str(requestTimeout))
+		" linger_ms=" + str(linger) + " request_timeout_ms=" + str(requestTimeout)  + " buffer_memory=" + str(bufferMemory))
 
-	producer = KafkaProducer(bootstrap_servers=bootstrapServers)
+	if(compression == 'None'):
+		producer = KafkaProducer(bootstrap_servers=bootstrapServers,
+			acks=acks,
+			batch_size=batchSize,
+			linger_ms=linger,
+			request_timeout_ms=requestTimeout,
+			buffer_memory=bufferMemory)
+	else:
+		producer = KafkaProducer(bootstrap_servers=bootstrapServers,
+			acks=acks,
+			compression_type=compression,
+			batch_size=batchSize,
+			linger_ms=linger,
+			request_timeout_ms=requestTimeout,
+			buffer_memory=bufferMemory)
+
 	i = 1
 	
 	if prodType == "MFST":

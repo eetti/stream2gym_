@@ -35,15 +35,29 @@ def readDisconnectionConfig(dcConfigPath):
 	print(*dcLinks)
 	return dcDuration, dcLinks
 
+def validateProducerParameters(prodConfig, nodeID, producerType, acks, compression):
+	if producerType == 'CUSTOM' and len(prodConfig[0]) != 2:
+		print("ERROR: required parameters for CUSTOM producer at producer on node "+str(nodeID)+": producer file path and number of producer instance")
+		sys.exit(1)
+	if producerType == 'STANDARD' and len(prodConfig[0]) < 2:
+		print("ERROR: required parameters for STANDARD producer at producer on node "+str(nodeID)+": name of the topic to produce and number of producer instances")
+		sys.exit(1)
+	if producerType != 'CUSTOM' and producerType != 'STANDARD' and len(prodConfig[0]) < 4:
+		print("ERROR: required parameters for "+str(producerType)+" producer at producer on node "+str(nodeID)+": file to produce, name of the topic to produce, number of files and number of producer instances")
+		sys.exit(1)
+
+	if acks < 0 or acks >= 3:
+		print("ERROR: acks value should be 0, 1 or 2 (which represents all) in producer at node "+str(nodeID))
+		sys.exit(1)
+	compressionList = ['gzip', 'snappy', 'lz4']
+	if not (compression in compressionList) and compression != 'None':
+		print("ERROR: at producer on node "+str(nodeID)+" compression should be None or one of the following:")
+		print(*compressionList, sep = ", ") 
+		sys.exit(1)
+
 # reading from producer YAML specification
 def readProdConfig(prodConfigPath, producerType, nodeID):
 	prodConfig = readYAMLConfig(prodConfigPath)
-	if producerType == 'CUSTOM' and len(prodConfig[0]) != 2:
-		print("ERROR: for CUSTOM producer please provide producer file path and number of producer instance on node "+str(nodeID))
-		sys.exit(1)
-	if producerType != 'CUSTOM' and len(prodConfig[0]) != 4:
-		print("ERROR: to use any standard producer please provide filePath, name of the topic to produce, number of files and number of producer instances in node "+str(nodeID))
-		sys.exit(1)
 
 	prodFile = "" if prodConfig[0].get("filePath", "") is None else prodConfig[0].get("filePath", "")
 	prodTopic = "" if prodConfig[0].get("topicName", "") is None else prodConfig[0].get("topicName", "")
@@ -51,13 +65,21 @@ def readProdConfig(prodConfigPath, producerType, nodeID):
 	nProducerInstances = "" if str(prodConfig[0].get("producerInstances", "")) is None else str(prodConfig[0].get("producerInstances", ""))
 	producerPath = "producer.py" if prodConfig[0].get("producerPath", "producer.py") is None else prodConfig[0].get("producerPath", "producer.py")
 
+	acks = 1 if prodConfig[0].get("acks", 1) is None else prodConfig[0].get("acks", 1)
+	compression = "None" if str(prodConfig[0].get("compression", "None")) is None else str(prodConfig[0].get("compression", "None"))
+	batchSize = 16384 if prodConfig[0].get("batchSize", 16384) is None else prodConfig[0].get("batchSize", 16384)
+	linger = 0 if prodConfig[0].get("linger", 0) is None else prodConfig[0].get("linger", 0)
+	requestTimeout = 30000 if prodConfig[0].get("requestTimeout", 30000) is None else prodConfig[0].get("requestTimeout", 30000)
+	bufferMemory = 33554432 if prodConfig[0].get("bufferMemory", 33554432) is None else prodConfig[0].get("bufferMemory", 33554432)
+
+	validateProducerParameters(prodConfig, nodeID, producerType, acks, compression)
+
 	prodDetails = {"nodeId": nodeID, "producerType": producerType,\
 					"produceFromFile":prodFile, "produceInTopic": prodTopic,\
 					"prodNumberOfFiles": prodNumberOfFiles, "nProducerInstances": nProducerInstances, \
-					"producerPath": producerPath}
-					# , "messageRate":messageRate, \
-					# "acks":acks, "compression":compression, "batchSize": batchSize, \
-					# "linger": linger, "requestTimeout": requestTimeout}
+					"producerPath": producerPath,\
+					"acks":acks, "compression":compression, "batchSize": batchSize, \
+					"linger": linger, "requestTimeout": requestTimeout, "bufferMemory": bufferMemory}
 
 	return prodDetails 
 
@@ -70,8 +92,6 @@ def readConsConfig(consConfigPath, consumerType, nodeID):
 	fetchMinBytes = 1 if int(consConfig[0].get("fetchMinBytes", 1)) is None else int(consConfig[0].get("fetchMinBytes", 1))
 	fetchMaxWait = 500 if int(consConfig[0].get("fetchMaxWait", 500)) is None else int(consConfig[0].get("fetchMaxWait", 500))
 	sessionTimeout = 10000 if int(consConfig[0].get("sessionTimeout", 10000)) is None else int(consConfig[0].get("sessionTimeout", 10000))
-	print(sessionTimeout)
-	print(type(sessionTimeout))
 
 	# Note that the value must be in the allowable range as configured in the broker configuration by group.min.session.timeout.ms and group.max.session.timeout.ms
 	if sessionTimeout < GROUP_MIN_SESSION_TIMEOUT_MS or sessionTimeout > GROUP_MAX_SESSION_TIMEOUT_MS:

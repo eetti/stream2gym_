@@ -119,16 +119,6 @@ def validateInput(args):
 		print("ERROR: Consumer rate should be between 0 and 100 checks/second")
 		sys.exit(1)
 
-	if args.acks < 0 or args.acks >= 3:
-		print("ERROR: Acks should be 0, 1 or 2 (which represents all)")
-		sys.exit(1)
-
-	compressionList = ['gzip', 'snappy', 'lz4']
-	if not (args.compression in compressionList) and args.compression != 'None':
-		print("ERROR: Compression should be None or one of the following:")
-		print(*compressionList, sep = ", ") 
-		sys.exit(1)
-
 	# This value should always be less than the replica.lag.time.max.ms at all times to prevent frequent shrinking of ISR for low throughput topics
 	if args.replicaMaxWait >= REPLICA_LAG_TIME_MAX_MS:
 		print("ERROR: replica.fetch.wait.max.ms must be less than the replica.lag.time.max.ms value of " +  str(REPLICA_LAG_TIME_MAX_MS) + " at all times")
@@ -148,12 +138,6 @@ if __name__ == '__main__':
 	parser.add_argument('--traffic-classes', dest='tClassString', type=str, default='1', help='Number of traffic classes')
 	parser.add_argument('--consumer-rate', dest='consumerRate', type=float, default=0.5, help='Rate consumers check for new messages in checks/second')
 	parser.add_argument('--time', dest='duration', type=int, default=10, help='Duration of the simulation (in seconds)')
-	
-	parser.add_argument('--acks', dest='acks', type=int, default=1, help='Controls how many replicas must receive the record before producer considers successful write')
-	parser.add_argument('--compression', dest='compression', type=str, default='None', help='Compression algorithm used to compress data sent to brokers')
-	parser.add_argument('--batch-size', dest='batchSize', type=int, default=16384, help='When multiple records are sent to the same partition, the producer will batch them together (bytes)')
-	parser.add_argument('--linger', dest='linger', type=int, default=0, help='Controls the amount of time (in ms) to wait for additional messages before sending the current batch')
-	parser.add_argument('--request-timeout', dest='requestTimeout', type=int, default=30000, help='Controls how long producer waits for a reply from server when sending data')
 	
 	parser.add_argument('--replica-max-wait', dest='replicaMaxWait', type=int, default=500, help='Max wait time for each fetcher request issued by follower replicas')
 	parser.add_argument('--replica-min-bytes', dest='replicaMinBytes', type=int, default=1, help='Minimum bytes expected for each fetch response')

@@ -58,14 +58,6 @@ def traceWireshark(hostsToCapture, f, logDir):
 		print(output)
 
 def spawnProducers(net, mSizeString, mRate, tClassString, nTopics, args, prodDetailsList, topicPlace):
-	acks = args.acks
-	compression = args.compression
-	batchSize = args.batchSize
-	linger = args.linger
-	requestTimeout = args.requestTimeout
-	brokers = args.nBroker
-	messageFilePath = args.messageFilePath   
-
 	tClasses = tClassString.split(',')
 	#print("Traffic classes: " + str(tClasses))
 
@@ -86,16 +78,24 @@ def spawnProducers(net, mSizeString, mRate, tClassString, nTopics, args, prodDet
 	for j in prodDetailsList:
 		j['tClasses'] = str(randint(1,len(tClasses)))
 	
-	for i in prodDetailsList:
-		nodeID = 'h' + i['nodeId']
+	for prod in prodDetailsList:
+		nodeID = 'h' + prod['nodeId']
 		
-		producerType = i["producerType"]
-		producerPath = i["producerPath"]
-		messageFilePath = i['produceFromFile']
-		tClasses = i['tClasses']
-		prodTopic = i['produceInTopic']
-		prodNumberOfFiles = i['prodNumberOfFiles']
-		nProducerInstances = i['nProducerInstances']
+		producerType = prod["producerType"]
+		producerPath = prod["producerPath"]
+		messageFilePath = prod['produceFromFile']
+		tClasses = prod['tClasses']
+		prodTopic = prod['produceInTopic']
+		prodNumberOfFiles = prod['prodNumberOfFiles']
+		nProducerInstances = prod['nProducerInstances']
+		
+		# Apache Kafka producer parameters
+		acks = prod['acks']
+		compression = prod['compression']
+		batchSize = prod['batchSize']
+		linger = prod['linger']
+		requestTimeout = prod['requestTimeout']
+		bufferMemory = prod['bufferMemory']
 
 		node = netNodes[nodeID]
 
@@ -113,8 +113,9 @@ def spawnProducers(net, mSizeString, mRate, tClassString, nTopics, args, prodDet
 					node.popen("python3 "+ producerPath +" " +nodeID+" "+str(prodInstance)+" &", shell=True)
 					
 				else:					
-					node.popen("python3 "+producerPath+" " +nodeID+" "+tClasses+" "+mSizeString+" "+str(mRate)+" "+str(nTopics)+" "+str(acks)+" "+str(compression)\
-					+" "+str(batchSize)+" "+str(linger)+" "+str(requestTimeout)+" "+str(brokerId)+" "+messageFilePath\
+					node.popen("python3 "+producerPath+" " +nodeID+" "+tClasses+" "+mSizeString+" "+str(mRate)\
+					+" "+str(nTopics)+" "+str(acks)+" "+str(compression)+" "+str(batchSize)+" "+str(linger)\
+					+" "+str(requestTimeout)+" "+str(bufferMemory)+" "+str(brokerId)+" "+messageFilePath\
 					+" "+topicName+" "+producerType+" "+prodNumberOfFiles+" "+str(prodInstance)+" &", shell=True)
 				
 				prodInstance += 1
