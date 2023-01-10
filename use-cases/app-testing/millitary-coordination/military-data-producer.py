@@ -69,8 +69,7 @@ def generateMessage(mSizeParams):
 			msgSize = 1
 		
 	payloadSize = msgSize - 4
-            
-
+	
 	if payloadSize < 0:
 		payloadSize = 0
 

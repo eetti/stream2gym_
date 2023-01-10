@@ -3,6 +3,9 @@
 from email.headerregistry import MessageIDHeader
 from kafka import KafkaProducer
 
+from queue import Queue
+from threading import Thread
+
 from random import seed, randint, gauss
 
 import time
@@ -13,6 +16,18 @@ import random
 import os
 
 msgID = 0
+
+def processProdMsg(q):
+	while True:
+		msgStatus = q.get()
+		kPointerKey = list(msgStatus.keys())
+		kPointerValue = list(msgStatus.values())
+
+		try:
+			logMsgStatus = kPointerValue[0].get(timeout=5000)
+			logging.info('Produced message ID: %s; Value: %s', str(kPointerKey[0]), logMsgStatus)
+		except Exception as e:
+			logging.info('Message not produced. ID: %s; Error: %s', str(kPointerKey[0]), e)
 
 def processXmlFileMessage(file):
 	lines = file.readlines()
@@ -97,9 +112,10 @@ def messageProductionELTT(messageFilePath, fileID):
 
 try:
 	node = sys.argv[1]
-	tClass = float(sys.argv[2])
+	# tClass = int(sys.argv[2])
 	mSizeString = sys.argv[3]
-	mRate = float(sys.argv[4])
+	prodInstanceID = sys.argv[2]
+	mRate = sys.argv[4]
 	nTopics = int(sys.argv[5])
 
 	acks = int(sys.argv[6])
@@ -113,11 +129,30 @@ try:
 	prodTopic = sys.argv[14] 
 	prodType = sys.argv[15] 
 	prodNumberOfFiles = int(sys.argv[16])
-	prodInstanceID = sys.argv[17]
+	# prodInstanceID = sys.argv[17]
+
+	# node = 'h1'
+	# tClass = 1.0
+	# mSizeString = 'fixed,10'
+	# mRate = 'None'   #1.0
+	# nTopics = 1
+	# acks = 1
+	# compression = 'gzip'   #'None'
+	# batchSize = 16384
+	# linger = 5000    #0
+	# requestTimeout = 100000  #30000
+	# bufferMemory = 33554432
+	# brokerId = '1'
+	# directoryPath = 'use-cases/disconnection/millitary-coordination/'
+	# prodTopic = 'topic-0'
+	# prodType = 'STANDARD'
+	# prodNumberOfFiles = 1
+	# prodInstanceID = 1
+	# messageFilePath = 'use-cases/disconnection/millitary-coordination/Cars103.xml'
 
 	seed(1)
 
-	mSizeParams = mSizeString.split(',')
+	# mSizeParams = mSizeString.split(',')
 	nodeID = node[1:]
 	logDir = 'logs/output'
                          
@@ -125,10 +160,31 @@ try:
 								"-instance"+str(prodInstanceID)+".log",
 								format='%(asctime)s %(levelname)s:%(message)s',
 								level=logging.INFO) 
-	
+	logging.info('here')
 	logging.info("node to initiate producer: "+nodeID)
 	logging.info("topic name: "+prodTopic)
 	logging.info("topic broker: "+brokerId)
+
+	logging.info('producer at node: '+str(nodeID))
+	logging.info(nodeID)
+	
+	logging.info(prodType)
+	# logging.info(tClass)
+	logging.info(prodTopic)
+	logging.info(prodNumberOfFiles)
+	logging.info(prodInstanceID)
+	
+	# Apache Kafka producer parameters
+	logging.info(acks)
+	logging.info(compression)
+	logging.info(batchSize)
+	logging.info(linger)
+	logging.info(requestTimeout)
+	logging.info(bufferMemory)
+
+	# S2G producer parameters
+	logging.info(mRate)
+
 
 	bootstrapServers="10.0.0."+brokerId+":9092"
 
@@ -176,6 +232,8 @@ try:
 					logging.info('Topic-name: %s; Message ID: %s; Message: %s', prodTopic, i, sentMessage.decode())
 					
 					i += 1
+					if mRate != "None":
+						time.sleep(1.0/float(mRate))
 
 			else:
 				continue
@@ -194,10 +252,11 @@ try:
 				logging.info('Topic-name: %s; Message ID: %s; Message: %s', prodTopic, i, sentMessage.decode())
 
 				i += 1
+				if mRate != "None":
+					time.sleep(1.0/float(mRate))
 	
 	elif prodType == "ELTT":
 		msgNo = 1
-		# while True:
 		while i <= prodNumberOfFiles:  
 			with open(directoryPath,'r') as file:
 				for count, line in enumerate(file):
@@ -210,8 +269,40 @@ try:
 					logging.info('Topic-name: %s; Message ID: %s; Message: %s', prodTopic, i, sentMessage.decode())
 
 					msgNo += 1
+					if mRate != "None":
+						time.sleep(1.0/float(mRate))
 
 			i += 1
+
+	elif prodType == "STANDARD":
+		msgID = 0
+		logging.info("mRate: "+mRate)
+		logging.info('producer type: ')
+		#Use a queue and a separate thread to log messages that were not produced properly
+		q = Queue(maxsize=0)
+		prodMsgThread = Thread(target=processProdMsg, args=(q,))
+		prodMsgThread.start()
+
+		while True:
+			message = generateMessage(mSizeParams)			
+			newMsgID = str(msgID).zfill(6)
+			bMsgID = bytes(newMsgID, 'utf-8')
+			newNodeID = nodeID.zfill(2)
+			bNodeID = bytes(newNodeID, 'utf-8')
+			bMsg = bNodeID + bMsgID + bytearray(message)
+
+			prodStatus = producer.send(prodTopic, bMsg)
+			logging.info('Topic-name: %s; Message ID: %s; Message: %s',\
+						prodTopic, newMsgID, message)
+
+			msgInfo = {}
+			msgInfo[newMsgID] = prodStatus
+			q.put(msgInfo)
+
+			logging.info('Topic: %s; Message ID: %s;', prodTopic, str(msgID).zfill(3))        
+			msgID += 1
+			if mRate != "None":
+				time.sleep(1.0/float(mRate))
 
 except Exception as e:
 	logging.error(e)

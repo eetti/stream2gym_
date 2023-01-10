@@ -57,26 +57,26 @@ def traceWireshark(hostsToCapture, f, logDir):
 		output = h.cmd("sudo tcpdump -i " + hostName +"-eth1 -w "+ filename +" &", shell=True)	
 		print(output)
 
-def spawnProducers(net, mSizeString, mRate, tClassString, nTopics, args, prodDetailsList, topicPlace):
-	tClasses = tClassString.split(',')
+def spawnProducers(net, mSizeString, tClassString, nTopics, args, prodDetailsList, topicPlace):
+	# tClasses = tClassString.split(',')
 	#print("Traffic classes: " + str(tClasses))
 
-	nodeClassification = {}
+	# nodeClassification = {}
 	netNodes = {}    
 
-	classID = 1
+	# classID = 1
 
-	for tClass in tClasses:
-		nodeClassification[classID] = []
-		classID += 1
+	# for tClass in tClasses:
+	# 	nodeClassification[classID] = []
+	# 	classID += 1
 	
 	#Distribute nodes among classes
 	for node in net.hosts:
 		netNodes[node.name] = node
 
-	j =0
-	for j in prodDetailsList:
-		j['tClasses'] = str(randint(1,len(tClasses)))
+	# j =0
+	# for j in prodDetailsList:
+	# 	j['tClasses'] = str(randint(1,len(tClasses)))
 	
 	for prod in prodDetailsList:
 		nodeID = 'h' + prod['nodeId']
@@ -84,7 +84,7 @@ def spawnProducers(net, mSizeString, mRate, tClassString, nTopics, args, prodDet
 		producerType = prod["producerType"]
 		producerPath = prod["producerPath"]
 		messageFilePath = prod['produceFromFile']
-		tClasses = prod['tClasses']
+		# tClasses = prod['tClasses']
 		prodTopic = prod['produceInTopic']
 		prodNumberOfFiles = prod['prodNumberOfFiles']
 		nProducerInstances = prod['nProducerInstances']
@@ -97,10 +97,12 @@ def spawnProducers(net, mSizeString, mRate, tClassString, nTopics, args, prodDet
 		requestTimeout = prod['requestTimeout']
 		bufferMemory = prod['bufferMemory']
 
+		# S2G producer parameters
+		mRate = prod['mRate']
+
 		node = netNodes[nodeID]
 
 		try:
-			print("Producer type: "+producerType)
 			if producerType != 'CUSTOM':
 				topicName = [x for x in topicPlace if x['topicName'] == prodTopic][0]["topicName"]
 				brokerId = [x for x in topicPlace if x['topicName'] == prodTopic][0]["topicBroker"] 
@@ -112,11 +114,51 @@ def spawnProducers(net, mSizeString, mRate, tClassString, nTopics, args, prodDet
 				if producerType == 'CUSTOM':
 					node.popen("python3 "+ producerPath +" " +nodeID+" "+str(prodInstance)+" &", shell=True)
 					
-				else:					
-					node.popen("python3 "+producerPath+" " +nodeID+" "+tClasses+" "+mSizeString+" "+str(mRate)\
-					+" "+str(nTopics)+" "+str(acks)+" "+str(compression)+" "+str(batchSize)+" "+str(linger)\
-					+" "+str(requestTimeout)+" "+str(bufferMemory)+" "+str(brokerId)+" "+messageFilePath\
-					+" "+topicName+" "+producerType+" "+prodNumberOfFiles+" "+str(prodInstance)+" &", shell=True)
+				else:		
+					try:
+						print('Initiating producer '+nodeID)
+						print('Producer type: '+producerType)
+						print('Producer path: '+producerPath)		
+						print('brokerID: '+str(brokerId))
+						print('topic name: '+topicName)	
+
+						print('producer at node: '+str(nodeID))
+						print('nodeID: '+str(nodeID)+' '+str(type(nodeID)))
+						print('mSizeString: '+str(mSizeString)+' '+str(type(mSizeString)))
+						print('nTopics: '+str(nTopics)+' '+str(type(nTopics)))
+						print('brokerId: '+str(brokerId)+' '+str(type(brokerId)))
+						
+						print('producerType: '+str(producerType)+' '+str(type(producerType)))
+						print('producerPath: '+str(producerPath)+' '+str(type(producerPath)))
+						print('messageFilePath: '+str(messageFilePath)+' '+str(type(messageFilePath)))
+						# print('tClasses: '+str(tClasses)+' '+str(type(tClasses)))
+						print('prodTopic: '+str(prodTopic)+' '+str(type(prodTopic)))
+						print('prodNumberOfFiles: '+str(prodNumberOfFiles)+' '+str(type(prodNumberOfFiles)))
+						print('prodInstance: '+str(prodInstance)+' '+str(type(prodInstance)))
+						
+						# Apache Kafka producer parameters
+						print('acks: '+str(acks)+' '+str(type(acks)))
+						print('compression: '+str(compression)+' '+str(type(compression)))
+						print('batchSize: '+str(batchSize)+' '+str(type(batchSize)))
+						print('linger: '+str(linger)+' '+str(type(linger)))
+						print('requestTimeout: '+str(requestTimeout)+' '+str(type(requestTimeout)))
+						print('bufferMemory: '+str(bufferMemory)+' '+str(type(bufferMemory)))
+
+						# S2G producer parameters
+						print('mRate: '+str(mRate)+' '+str(type(mRate)))
+
+						# node.popen("python3 "+producerPath+" "+nodeID+" "+tClasses+" "+mSizeString+" "+str(mRate)\
+						# +" "+str(nTopics)+" "+str(acks)+" "+str(compression)+" "+str(batchSize)+" "+str(linger)\
+						# +" "+str(requestTimeout)+" "+str(bufferMemory)+" "+str(brokerId)+" "+messageFilePath\
+						# +" "+topicName+" "+producerType+" "+prodNumberOfFiles+" "+str(prodInstance)+" &", shell=True)
+
+						node.popen("python3 "+producerPath+" "+nodeID+" "+str(prodInstance)+" "+mSizeString+" "+str(mRate)\
+						+" "+str(nTopics)+" "+str(acks)+" "+str(compression)+" "+str(batchSize)+" "+str(linger)\
+						+" "+str(requestTimeout)+" "+str(bufferMemory)+" "+str(brokerId)+" "+messageFilePath\
+						+" "+topicName+" "+producerType+" "+prodNumberOfFiles+" &", shell=True)
+
+					except Exception as e:
+						print('Error: '+str(e))
 				
 				prodInstance += 1
 
@@ -142,18 +184,13 @@ def spawnConsumers(net, consDetailsList, topicPlace):
 		fetchMinBytes = cons['fetchMinBytes']
 		fetchMaxWait  = cons['fetchMaxWait']
 		sessionTimeout = cons['sessionTimeout']
-		
-		print("consumer terminal input details: ")
-		print(fetchMinBytes)
-		print(fetchMaxWait)
-		print(sessionTimeout)
 
 		consID = "h"+consNode      
 		node = netNodes[consID]
 
-		print("consumer node: "+consNode)
-		print("topic: "+topicName)
-		print("Number of consumers for this topic: "+str(nConsumerInstances))
+		# print("consumer node: "+consNode)
+		# print("topic: "+topicName)
+		# print("Number of consumers for this topic: "+str(nConsumerInstances))
 
 		try:
 			print("Consumer type: "+consumerType)
@@ -226,7 +263,6 @@ def runLoad(net, args, topicPlace, prodDetailsList, consDetailsList, sparkDetail
 
 	nTopics = len(topicPlace)
 	mSizeString = args.mSizeString
-	mRate = args.mRate
 	tClassString = args.tClassString
 	consumerRate = args.consumerRate
 	duration = args.duration
@@ -282,7 +318,7 @@ def runLoad(net, args, topicPlace, prodDetailsList, consDetailsList, sparkDetail
 		time.sleep(30)
 		print("Spark Clients created")
 
-	spawnProducers(net, mSizeString, mRate, tClassString, nTopics, args, prodDetailsList, topicPlace)
+	spawnProducers(net, mSizeString, tClassString, nTopics, args, prodDetailsList, topicPlace)
 	# time.sleep(120)
 	print("Producers created")
 	

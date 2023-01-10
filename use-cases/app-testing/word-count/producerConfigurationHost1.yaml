@@ -4,10 +4,4 @@
   topicName: Greetings
   totalMessages: 1
   producerInstances: 1
-  acks : 1
-  compression: None
-  batchSize: 16384
-  linger: 0
-  requestTimeout: 30000
-  bufferMemory : 33554432
 ...

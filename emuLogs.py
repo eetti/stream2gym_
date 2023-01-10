@@ -7,7 +7,7 @@ from mininet.util import pmonitor
 
 ZOOKEEPER_LOG_FILE = "zk-log.txt"
 
-def configureLogDir(nSwitches, mSizeString, mRate, nTopics, captureAll):  
+def configureLogDir(nSwitches, nTopics, captureAll):  
 	logDir = "logs/output"
 
 	os.system("sudo rm -rf " + logDir + "/" + ZOOKEEPER_LOG_FILE)
