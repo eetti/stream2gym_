@@ -6,7 +6,6 @@ import logging
 from pyspark.sql import SparkSession
 from pyspark.sql.functions import *
 
-
 try:
     sparkInputFrom = "outTopic1"
     sparkOutputTo = "outTopic2"
@@ -15,7 +14,7 @@ try:
 		format='%(asctime)s %(levelname)s:%(message)s',\
 		level=logging.INFO)
     
-    nodeID = "2" #nodeName[1:]
+    nodeID = "2"
     host = "10.0.0."+nodeID
     kafkaNode = host + ":9092"
     logging.info("node: "+nodeID)
@@ -83,8 +82,6 @@ try:
     .start()
 
     output.awaitTermination()
-    # output.awaitTermination(80)
-    # output.stop()
 
 except Exception as e:
     logging.error(e)

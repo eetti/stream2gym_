@@ -1,5 +1,3 @@
-# to run this file sudo /home/monzurul/Desktop/amnis-data-sync/spark/pyspark/bin/spark-submit fraud_detection.py
-
 # This file trains a machine learning model on a portion of our fraud detection dataset. The trained model
 # is then saved, ready to be loaded and used to make predictions in the second file: fraud_predicting.py
 #
@@ -7,7 +5,6 @@
 #
 # 1 - Preparing the dataframe used for model training
 # 2 - Training model on dataframe
-
 
 import pyspark
 import argparse
@@ -20,11 +17,7 @@ from pyspark.ml.classification import LinearSVC
 
 import sys
 
-# nodeName = sys.argv[1]
-# sparkOutputTo = sys.argv[2]
 sparkOutputTo = 'use-cases/app-testing/fraud-detection/trainedmodel'
-
-
 dfpath =  "use-cases/app-testing/fraud-detection/training.csv"
 
 #Basic spark session construction and logging setting
@@ -49,14 +42,10 @@ myschema = StructType([
         StructField("isFlaggedFraud", IntegerType(), True)
         ])
 
-
-
 df2 = spark.read.schema(myschema).csv(dfpath)
 
 # Here we drop the columns we do not need and sanitize the dataframe
-
 df2 = df2.drop("isFlaggedFraud", "step")
-
 columnsToSanitize = ["isFraud","amount", "oldbalanceOrg", "newbalanceOrig", "oldbalanceDest", "newbalanceDest"]
 
 for column in columnsToSanitize:
@@ -67,7 +56,6 @@ for column in columnsToSanitize:
 # Here we try to make our dataframe more balanced in terms of the number of frauds and not frauds
 fraud = df2.filter(df2.isFraud == 1)
 not_fraud = df2.filter(df2.isFraud == 0)
-
 
 not_fraud = not_fraud.sample(False, 0.01, seed = 123)
 
@@ -83,17 +71,8 @@ df2 = not_fraud.union(fraud)
 vecAssembler = VectorAssembler(inputCols = ['amount','oldbalanceOrg', 'newbalanceOrig'\
         , 'oldbalanceDest', 'newbalanceDest'], outputCol = 'features')
 
-
-
 svc = LinearSVC(labelCol = 'isFraud', predictionCol = 'prediction')
-
 model = Pipeline(stages = [vecAssembler, svc]).fit(train)
-
 
 # We save the trained model and will use it to make predictions in the other file
 model.save(sparkOutputTo)
-
-
-
-
-

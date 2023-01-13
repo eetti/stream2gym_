@@ -23,7 +23,6 @@ try:
 	topicCheckInterval = 0.1
 
 	logDir = "logs/output"
-
 	logging.basicConfig(filename=logDir+"/cons/"+"cons-node"+nodeID+\
 		"-instance"+str(consInstance)+".log",\
 		format='%(asctime)s %(levelname)s:%(message)s',\
@@ -44,7 +43,6 @@ try:
 		" fetch_max_wait_ms=" + str(fetchMaxWait) + " session_timeout_ms=" + str(sessionTimeout))
 
 	consumer = KafkaConsumer(
-		#topicName,
 		bootstrap_servers=bootstrapServers,
 		auto_offset_reset='latest' if consumptionLag else 'earliest',
 		enable_auto_commit=True,
@@ -82,7 +80,6 @@ try:
 		if(topicCheckWait > 0):
 			logging.info('Sleeping for topicCheckWait: %s', str(topicCheckWait))
 			time.sleep(topicCheckWait)
-
 
 except Exception as e:
 	logging.error(e)	

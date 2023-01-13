@@ -52,8 +52,6 @@ def readMessageFromFile(filePath):
 
 	if(fileExt.lower() == '.xml'):
 		message = readXmlFileMessage(file)
-	#elif(fileExt.lower == '.svg'):
-	#	message = processSvgFile(file)
 	else:
 		message = processFileMessage(file)
 
@@ -83,25 +81,21 @@ try:
 	
 	tClass = 1.0
 	mSizeString = 'fixed,10'
-	mRate = 30   #1.0
+	mRate = 30 
 	nTopics = 2
-
 	acks = 1
-	compression = 'gzip'   #'None'
+	compression = 'gzip'
 	batchSize = 16384
-	linger = 5000    #0
-	requestTimeout = 100000  #30000
+	linger = 5000
+	requestTimeout = 100000
 	messageFilePath = 'use-cases/disconnection/millitary-coordination/Cars103.xml'
 
 	logDir = "logs/output"
-
 	logging.basicConfig(filename=logDir+"/prod/"+"prod-node"+nodeID+\
 								"-instance"+str(prodInstanceID)+".log",
 								format='%(asctime)s %(levelname)s:%(message)s',
 								level=logging.INFO) 
  
-	
-
 	seed(1)
 
 	mSizeParams = mSizeString.split(',')
@@ -166,8 +160,7 @@ try:
 		msgInfo = {}
 		msgInfo[newMsgID] = prodStatus
 		q.put(msgInfo)
-
-# 		logging.info('Topic: %s; Message ID: %s;', topicName, str(msgID).zfill(3))        
+   
 		msgID += 1
 		time.sleep(1.0/(mRate*tClass))
 

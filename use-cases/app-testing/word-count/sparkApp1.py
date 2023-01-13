@@ -7,9 +7,6 @@ from pyspark.sql import SparkSession
 from pyspark.sql.functions import *
 
 try:
-    # nodeName = sys.argv[1]
-    # sparkOutputTo = sys.argv[2]
-
     sparkInputFrom = "Greetings,Soccer"
     sparkOutputTo = "outTopic1"
 
@@ -17,7 +14,7 @@ try:
 		format='%(asctime)s %(levelname)s:%(message)s',\
 		level=logging.INFO)
     
-    nodeID = "2" #nodeName[1:]
+    nodeID = "2"
     host = "10.0.0."+nodeID
 
     logging.info("node: "+nodeID)
@@ -80,5 +77,3 @@ try:
 except Exception as e:
 	logging.error(e)
 	sys.exit(1)
-
-

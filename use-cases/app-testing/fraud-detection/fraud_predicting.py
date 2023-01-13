@@ -21,11 +21,9 @@ import logging
 
 try:
         sparkOutputTo = 'fraudOutput'
-
         nodeID = "1" 
         host = "10.0.0."+nodeID
         kafkaNode = host + ":9092"
-
         sparkInputFrom = "fraudInput"
 
         logging.basicConfig(filename="logs/output/fraudSpark.log",\
@@ -35,16 +33,12 @@ try:
         logging.info("input: "+sparkInputFrom)
         logging.info("output: "+sparkOutputTo)
 
-
         trainedModel = "use-cases/app-testing/fraud-detection/trainedmodel"
-
         predpath = "logs/output/fraud_detection/prediction_output"
         checkpath = "logs/output/fraud_detection/fraudCheckpoint"
 
         spark = SparkSession.builder.appName("Fraud Detections").getOrCreate()
-
         spark.sparkContext.setLogLevel("ERROR")
-
 
         # 3 - Constructing dataframe from data streamed from a Kafka topic
 
@@ -55,7 +49,6 @@ try:
 
         #Here we change the value and key columns to the schema we desire, which is the same as the original dataset
         newStream = stream.select(col("value").cast("string")).alias("csv").select("csv.*")
-
 
         df = newStream.selectExpr(\
                                 "split(value,',')[0] as step" \
@@ -71,11 +64,8 @@ try:
                                 ,"split(value,',')[10] as isFlaggedFraud" \
                                 )
 
-
         # Here we sanitize some columns and drop some columns we do not need.
         df = df.dropna()
-
-
         df = df.drop("isFlaggedFraud", "step")
 
         columnsToSanitize = ["isFraud","amount", "oldbalanceOrg", "newbalanceOrig", "oldbalanceDest", "newbalanceDest"]
@@ -83,7 +73,6 @@ try:
         for column in columnsToSanitize:
 
                 df = df.withColumn(column, col(column).cast("double"))
-
 
         # 4 - Making predictions on streaming dataframe using trained model
 
@@ -113,8 +102,6 @@ try:
         output.awaitTermination(30)                
         output.stop()
 
-
 except Exception as e:
 	logging.error(e)
 	sys.exit(1)
-

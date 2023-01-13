@@ -4,7 +4,7 @@ from ast import arg
 from re import I
 from mininet.net import Mininet
 from mininet.cli import CLI
-from mininet.node import OVSController, RemoteController
+from mininet.node import OVSController, RemoteController, CPULimitedHost
 from mininet.link import TCLink
 
 import os
@@ -158,7 +158,8 @@ if __name__ == '__main__':
 			link = TCLink,
 			autoSetMacs = True,
 			autoStaticArp = True,
-			build=False)
+			build=False,
+			host= CPULimitedHost)  # support for CPU limited host
 
 	net.topo = emulatedTopo
 	net.build()

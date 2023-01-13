@@ -86,7 +86,6 @@ try:
 
     # Convert the result of our query to json format
     query = query.select( to_json( struct("*")).alias("value") )
-
     
     #Here we create our required json schema
     def construct_json_string(columns):
@@ -121,14 +120,11 @@ try:
     class RowPrinter:
 
         # This part is just left as the default
-
         def open(self, partition_id, epoch_id):
             return True
 
         # This is where we format and send each row to the kafka topic
-
         def process(self, row):
-
             global i
             global jsonString
 
@@ -143,7 +139,6 @@ try:
                 producer.send(sparkOutputTo, jsonByte)
         
         # This part is also left as the default
-
         def close(self, error):
             print("Closed with error: %s" % str(error))
 
@@ -161,8 +156,6 @@ try:
             .foreach(RowPrinter())\
             .start()\
             .awaitTermination()
-    
-    # # output.stop()
 
 except Exception as e:
 	logging.error(e)

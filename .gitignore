@@ -18,6 +18,7 @@ use-cases/app-testing/millitary-coordination/logs/
 use-cases/app-testing/millitary-coordination/input-temp.graphml
 use-cases/app-testing/millitary-coordination/topicConfiguration-temp.yaml
 use-cases/app-testing/word-count/input-temp.graphml
+use-cases/app-testing/sentiment-analysis/input-temp.graphml
 use-cases/varying-networking-conditions/varying-link-latency/word-count/testbedResults
 use-cases/varying-networking-conditions/varying-link-latency/word-count/simulationResults
 ex1.py

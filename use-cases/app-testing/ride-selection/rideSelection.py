@@ -1,6 +1,3 @@
-'''
-sudo ~/.local/bin/spark-submit --packages org.apache.spark:spark-sql-kafka-0-10_2.12:3.2.1 rideSelection.py
-'''
 from pyspark.sql import SparkSession
 from pyspark.sql.types import *
 from pyspark.sql.functions import expr
@@ -32,9 +29,6 @@ def parse_data_from_kafka_message(sdf, schema):
     for idx, field in enumerate(schema): 
         sdf = sdf.withColumn(field.name, col.getItem(idx).cast(field.dataType))
     return sdf.select([field.name for field in schema])
-
-# nodeName = sys.argv[1]
-# sparkOutputTo = sys.argv[2]
 
 nodeID = "2"  #nodeName[1:]
 sparkOutputTo = "logs/output"

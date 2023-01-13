@@ -18,10 +18,17 @@ class CustomTopo(Topo):
 			print("ERROR: Could not read topo properly.")
 			print(str(e))
 			sys.exit(1)
-
-		for node in inputTopo.nodes:
+		
+		# for node in inputTopo.nodes:
+		for node, data in inputTopo.nodes(data=True):
 			if node[0] == 'h':
-				host = self.addHost(node, cls=Host)
+				# host = self.addHost(node, cls=Host)
+				# Support for CPU limite host
+				if 'cpuPercentage' in data:
+					cpuPercentage = float(data['cpuPercentage'])
+					host = self.addHost(node, cls=Host, cpu=cpuPercentage)
+				else:
+					host = self.addHost(node, cls=Host)
 			elif node[0] == 's':
 				switch = self.addSwitch(node,dpid=node[1], cls=OVSKernelSwitch, failMode='standalone')
 			else:
@@ -102,18 +109,3 @@ def configureNetwork(inputTopoFile):
 
 							#TODO: add error handler
 							subprocess.Popen("sudo ovs-ofctl add-flow "+srcSwitch+" ip,nw_dst=10.0.0."+targetIP+",actions=output:"+str(outPort), shell=True)
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

@@ -32,10 +32,7 @@ def text_classification(words):
     return words
 
 if __name__ == "__main__":
-    try:
-        # nodeName = sys.argv[1]
-        # sparkOutputTo = sys.argv[2]
-        
+    try:        
         nodeID = "2"
         sparkOutputTo = 'logs/output'
         host = "10.0.0."+nodeID
@@ -46,9 +43,6 @@ if __name__ == "__main__":
         # create Spark session
         spark = SparkSession.builder.appName("TwitterSentimentAnalysis").getOrCreate()
         spark.sparkContext.setLogLevel('ERROR')
-        
-        # read the tweet data from socket
-        # lines = spark.readStream.format("socket").option("host", host).option("port", port).load()
         
         # Create DataFrame representing the stream of input lines from connection to host:port
         lines = spark\
@@ -71,7 +65,6 @@ if __name__ == "__main__":
             .option("checkpointLocation", sparkOutputTo+"/sentiment-analysis-checkpoint")\
             .start()
             # .trigger(processingTime='60 seconds').start()
-        
         output.awaitTermination(50)
         output.stop()
 
