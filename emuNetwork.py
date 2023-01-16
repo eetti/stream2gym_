@@ -22,7 +22,6 @@ class CustomTopo(Topo):
 		# for node in inputTopo.nodes:
 		for node, data in inputTopo.nodes(data=True):
 			if node[0] == 'h':
-				# host = self.addHost(node, cls=Host)
 				# Support for CPU limite host
 				if 'cpuPercentage' in data:
 					cpuPercentage = float(data['cpuPercentage'])

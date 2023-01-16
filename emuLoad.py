@@ -116,42 +116,6 @@ def spawnProducers(net, mSizeString, tClassString, nTopics, args, prodDetailsLis
 					
 				else:		
 					try:
-						print('Initiating producer '+nodeID)
-						print('Producer type: '+producerType)
-						print('Producer path: '+producerPath)		
-						print('brokerID: '+str(brokerId))
-						print('topic name: '+topicName)	
-
-						print('producer at node: '+str(nodeID))
-						print('nodeID: '+str(nodeID)+' '+str(type(nodeID)))
-						print('mSizeString: '+str(mSizeString)+' '+str(type(mSizeString)))
-						print('nTopics: '+str(nTopics)+' '+str(type(nTopics)))
-						print('brokerId: '+str(brokerId)+' '+str(type(brokerId)))
-						
-						print('producerType: '+str(producerType)+' '+str(type(producerType)))
-						print('producerPath: '+str(producerPath)+' '+str(type(producerPath)))
-						print('messageFilePath: '+str(messageFilePath)+' '+str(type(messageFilePath)))
-						# print('tClasses: '+str(tClasses)+' '+str(type(tClasses)))
-						print('prodTopic: '+str(prodTopic)+' '+str(type(prodTopic)))
-						print('prodNumberOfFiles: '+str(prodNumberOfFiles)+' '+str(type(prodNumberOfFiles)))
-						print('prodInstance: '+str(prodInstance)+' '+str(type(prodInstance)))
-						
-						# Apache Kafka producer parameters
-						print('acks: '+str(acks)+' '+str(type(acks)))
-						print('compression: '+str(compression)+' '+str(type(compression)))
-						print('batchSize: '+str(batchSize)+' '+str(type(batchSize)))
-						print('linger: '+str(linger)+' '+str(type(linger)))
-						print('requestTimeout: '+str(requestTimeout)+' '+str(type(requestTimeout)))
-						print('bufferMemory: '+str(bufferMemory)+' '+str(type(bufferMemory)))
-
-						# S2G producer parameters
-						print('mRate: '+str(mRate)+' '+str(type(mRate)))
-
-						# node.popen("python3 "+producerPath+" "+nodeID+" "+tClasses+" "+mSizeString+" "+str(mRate)\
-						# +" "+str(nTopics)+" "+str(acks)+" "+str(compression)+" "+str(batchSize)+" "+str(linger)\
-						# +" "+str(requestTimeout)+" "+str(bufferMemory)+" "+str(brokerId)+" "+messageFilePath\
-						# +" "+topicName+" "+producerType+" "+prodNumberOfFiles+" "+str(prodInstance)+" &", shell=True)
-
 						node.popen("python3 "+producerPath+" "+nodeID+" "+str(prodInstance)+" "+mSizeString+" "+str(mRate)\
 						+" "+str(nTopics)+" "+str(acks)+" "+str(compression)+" "+str(batchSize)+" "+str(linger)\
 						+" "+str(requestTimeout)+" "+str(bufferMemory)+" "+str(brokerId)+" "+messageFilePath\
@@ -205,7 +169,7 @@ def spawnConsumers(net, consDetailsList, topicPlace):
 				else:
 					topicName = [x for x in topicPlace if x['topicName'] == topicName][0]["topicName"]
 					brokerId = [x for x in topicPlace if x['topicName'] == topicName][0]["topicBroker"] 
-					print("Consuming messages from topic "+topicName+" at broker "+str(brokerId))
+
 					node.popen("python3 "+consumerPath+" "+str(node.name)+" "+topicName+" "+str(brokerId)+" "+str(consInstance)\
 						+" "+str(fetchMinBytes)+" "+str(fetchMaxWait)+" "+str(sessionTimeout)+" &", shell=True)
 				
