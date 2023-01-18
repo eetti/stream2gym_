@@ -172,27 +172,31 @@ def readConfigParams(net, args):
 	#Read nodewise switch, host, broker, zookeeper, producer, consumer information
 	nSwitches = 0
 	nHosts = 0
-	for node, data in inputTopo.nodes(data=True):  
-		if node[0] == 'h':
-			nHosts += 1 
-			hostPlace.append(node[1:]) 
-			if 'zookeeper' in data: 
-				zkPlace.append(node[1:]) 
-			if 'broker' in data: 
-				brokerPlace.append(node[1:])
-			if 'producerType' in data: 
-				producerType = data["producerType"]
-				nodeID = node[1:]
-				prodDetails = readProdConfig(data["producerConfig"], producerType, nodeID)
-				prodDetailsList.append(prodDetails)
-			if 'consumerType' in data:
-				consumerType = data["consumerType"]
-				nodeID = node[1:]
-				consDetails = readConsConfig(data["consumerConfig"], consumerType, nodeID)
-				consDetailsList.append(consDetails)
-		elif node[0] == 's':
-			nSwitches += 1
-			switchPlace.append(node[1:]) 
+	try:
+		for node, data in inputTopo.nodes(data=True):  
+			if node[0] == 'h':
+				nHosts += 1 
+				hostPlace.append(node[1:]) 
+				if 'zookeeper' in data: 
+					zkPlace.append(node[1:]) 
+				if 'broker' in data: 
+					brokerPlace.append(node[1:])
+				if 'producerType' in data: 
+					producerType = data["producerType"]
+					nodeID = node[1:]
+					prodDetails = readProdConfig(data["producerConfig"], producerType, nodeID)
+					prodDetailsList.append(prodDetails)
+				if 'consumerType' in data:
+					consumerType = data["consumerType"]
+					nodeID = node[1:]
+					consDetails = readConsConfig(data["consumerConfig"], consumerType, nodeID)
+					consDetailsList.append(consDetails)
+			elif node[0] == 's':
+				nSwitches += 1
+				switchPlace.append(node[1:]) 
+	except KeyError as e:
+		print("Node attributes are not set properly: "+str(e))
+		sys.exit(1)
 
 	print("zookeepers:")
 	print(*zkPlace)

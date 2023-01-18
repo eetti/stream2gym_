@@ -36,17 +36,29 @@ def getStreamProcDetails(net, inputTopoFile):
 		print(str(e))
 		sys.exit(1)
 	
-	#Read nodewise streamProc information
-	for node, data in inputTopo.nodes(data=True):  
-		if node[0] == 'h':
-			if 'streamProcConfig' in data: 
-				streamProcApp, produceTo = readStreamProcConfig(data["streamProcConfig"])
-				streamProcDetails = {"nodeId": node[1:], "applicationPath": streamProcApp, "produceTo": produceTo}
+	try:
+		#Read nodewise streamProc information
+		for node, data in inputTopo.nodes(data=True):  
+			if node[0] == 'h':
+				if 'streamProcConfig' in data: 
+					streamProcType = ""
+					if 'streamProcType' in data: 
+						streamProcType = data['streamProcType']
+					streamProcApp, produceTo = readStreamProcConfig(data["streamProcConfig"])
+					streamProcDetails = {"nodeId": node[1:], 'streamProcType': streamProcType, \
+										"applicationPath": streamProcApp, "produceTo": produceTo}
+					
+					streamProcDetailsList.append(streamProcDetails)
 				
-				streamProcDetailsList.append(streamProcDetails)
-			
-			if 'storeConfig' in data:
-				storePath = storePath + data["storeConfig"]
+				if 'storeConfig' in data:
+					storeType = ""
+					if 'storeType' in data: 
+						storeType = data['storeType']
+					storePath = storePath + data["storeConfig"]
+
+	except KeyError as e:
+		print("Node attributes are not set properly: "+str(e))
+		sys.exit(1)
 
             
 	print("streamProc details")

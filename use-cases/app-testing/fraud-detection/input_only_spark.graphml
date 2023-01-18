@@ -5,6 +5,7 @@
      http://graphml.graphdrawing.org/xmlns/1.0/graphml.xsd">
   
   <!-- node attributes -->
+  <key id="streamProcType" for="node" attr.name="streamProcType" attr.type="string"/> <!-- Stream processing engine type (e.g., Spark, Flink, KStream) --> 
   <key id="streamProcCfg" for="node" attr.name="streamProcConfig" attr.type="string"/>    <!-- streamProcConfig will contain the stream processing application path and topic name(s)/output directory from where the SPE ingest its processed output --> 
 
   <!-- edge attributes -->
@@ -17,6 +18,7 @@
   <graph id="simple-topo" edgedefault="undirected">
 
     <node id="h1">
+      <data key="streamProcType">Spark</data>
       <data key="streamProcCfg">use-cases/app-testing/fraud-detection/fraud_detection.py,use-cases/app-testing/fraud-detection/trainedmodel</data>
 	  </node>            
     
