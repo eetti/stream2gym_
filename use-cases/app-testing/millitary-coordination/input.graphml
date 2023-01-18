@@ -9,7 +9,7 @@
   
   <!-- node attributes -->
   <key id="zk" for="node" attr.name="zookeeper" attr.type="int"/>
-  <key id="bk" for="node" attr.name="broker" attr.type="int"/>
+  <key id="brokerCfg" for="node" attr.name="brokerConfig" attr.type="string"/>
   <key id="prodType" for="node" attr.name="producerType" attr.type="string"/>   <!-- producer type can be SFST/MFST -->
   <key id="prodCfg" for="node" attr.name="producerConfig" attr.type="string"/>  <!-- for SFST: one pair of filePath, topicName; for MFMT: multiple pair of filePaths, topicNames; -->
   <key id="consType" for="node" attr.name="consumerType" attr.type="string"/>   <!-- consumer type can be STANDARD/CUSTOM;if it is CUSTOM, it will also contain the consumer script path -->
@@ -38,7 +38,7 @@
 
     <node id="h1">
       <data key="zk">1</data>
-      <data key="bk">1</data>
+      <data key="brokerCfg">use-cases/app-testing/millitary-coordination/broker.yaml</data>
       <data key="prodType">CUSTOM</data>
       <data key="prodCfg">use-cases/app-testing/millitary-coordination/producerConfiguration.yaml</data>
       <data key="consType">CUSTOM</data>
@@ -47,7 +47,7 @@
     
     <node id="h2">
       <data key="zk">1</data>
-      <data key="bk">1</data>
+      <data key="brokerCfg">use-cases/app-testing/millitary-coordination/broker.yaml</data>
       <data key="prodType">CUSTOM</data>
       <data key="prodCfg">use-cases/app-testing/millitary-coordination/producerConfiguration.yaml</data>
       <data key="consType">CUSTOM</data>
@@ -56,7 +56,7 @@
 
     <node id="h3">   
       <data key="zk">1</data>
-      <data key="bk">1</data>
+      <data key="brokerCfg">use-cases/app-testing/millitary-coordination/broker.yaml</data>
       <data key="prodType">CUSTOM</data>
       <data key="prodCfg">use-cases/app-testing/millitary-coordination/producerConfiguration.yaml</data>
       <data key="consType">CUSTOM</data>
@@ -65,7 +65,7 @@
 
     <node id="h4">   
       <data key="zk">1</data>
-      <data key="bk">1</data>
+      <data key="brokerCfg">use-cases/app-testing/millitary-coordination/broker.yaml</data>
       <data key="prodType">CUSTOM</data>
       <data key="prodCfg">use-cases/app-testing/millitary-coordination/producerConfiguration.yaml</data>
       <data key="consType">CUSTOM</data>
@@ -74,7 +74,7 @@
 
     <node id="h5">   
       <data key="zk">1</data>
-      <data key="bk">1</data>
+      <data key="brokerCfg">use-cases/app-testing/millitary-coordination/broker.yaml</data>
       <data key="prodType">CUSTOM</data>
       <data key="prodCfg">use-cases/app-testing/millitary-coordination/producerConfiguration.yaml</data>
       <data key="consType">CUSTOM</data>
@@ -83,7 +83,7 @@
 
     <node id="h6">   
       <data key="zk">1</data>
-      <data key="bk">1</data>
+      <data key="brokerCfg">use-cases/app-testing/millitary-coordination/broker.yaml</data>
       <data key="prodType">CUSTOM</data>
       <data key="prodCfg">use-cases/app-testing/millitary-coordination/producerConfiguration.yaml</data>
       <data key="consType">CUSTOM</data>
@@ -92,7 +92,7 @@
 
     <node id="h7">   
       <data key="zk">1</data>
-      <data key="bk">1</data>
+      <data key="brokerCfg">use-cases/app-testing/millitary-coordination/broker.yaml</data>
       <data key="prodType">CUSTOM</data>
       <data key="prodCfg">use-cases/app-testing/millitary-coordination/producerConfiguration.yaml</data>
       <data key="consType">CUSTOM</data>
@@ -101,7 +101,7 @@
 
     <node id="h8">
       <data key="zk">1</data>
-      <data key="bk">1</data>
+      <data key="brokerCfg">use-cases/app-testing/millitary-coordination/broker.yaml</data>
       <data key="prodType">CUSTOM</data>
       <data key="prodCfg">use-cases/app-testing/millitary-coordination/producerConfiguration.yaml</data>
       <data key="consType">CUSTOM</data>
@@ -110,7 +110,7 @@
 
     <node id="h9">   
       <data key="zk">1</data>
-      <data key="bk">1</data>
+      <data key="brokerCfg">use-cases/app-testing/millitary-coordination/broker.yaml</data>
       <data key="prodType">CUSTOM</data>
       <data key="prodCfg">use-cases/app-testing/millitary-coordination/producerConfiguration.yaml</data>
       <data key="consType">CUSTOM</data>
@@ -119,7 +119,7 @@
 
     <node id="h10">
       <data key="zk">1</data>
-      <data key="bk">1</data>
+      <data key="brokerCfg">use-cases/app-testing/millitary-coordination/broker.yaml</data>
       <data key="prodType">CUSTOM</data>
       <data key="prodCfg">use-cases/app-testing/millitary-coordination/producerConfiguration.yaml</data>
       <data key="consType">CUSTOM</data>

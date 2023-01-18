@@ -7,6 +7,7 @@ import networkx as nx
 
 GROUP_MIN_SESSION_TIMEOUT_MS = 6000
 GROUP_MAX_SESSION_TIMEOUT_MS = 1800000
+REPLICA_LAG_TIME_MAX_MS = 30000
 
 def readYAMLConfig(configPath):
 	data = []
@@ -20,44 +21,31 @@ def readYAMLConfig(configPath):
 
 	return data
 
-def readDisconnectionConfig(dcConfigPath):
-	dcLinks  = []
-	f = open(dcConfigPath, "r")
-	for line in f:
-		if 'duration: ' in line:
-			dcDuration = int(line.split('duration: ')[1].strip())
-		elif 'links: ' in line:
-			allLinks = line.split('links: ')[1].strip()
-			dcLinks = allLinks.split(',')
 
-	print("read DC config:")
-	print(dcDuration)
-	print(*dcLinks)
-	return dcDuration, dcLinks
+def validateBrokerParameters(brokerConfig, nodeID, replicaMaxWait, replicaMinBytes):
+	# This value should always be less than the replica.lag.time.max.ms at all times to prevent frequent shrinking of ISR for low throughput topics
+	if replicaMaxWait >= REPLICA_LAG_TIME_MAX_MS:
+		print("ERROR in producer at node "+str(nodeID)+": replica.fetch.wait.max.ms must be less than the replica.lag.time.max.ms value of " +  str(REPLICA_LAG_TIME_MAX_MS) + " at all times.")
+		sys.exit(1)
+	
+def readBrokerConfig(brokerConfigPath, nodeID):
+	brokerConfig = readYAMLConfig(brokerConfigPath)
 
-def validateProducerParameters(prodConfig, nodeID, producerType, acks, compression, mRate):
-	if producerType == 'CUSTOM' and len(prodConfig[0]) != 2:
-		print("ERROR: required parameters for CUSTOM producer at producer on node "+str(nodeID)+": producer file path and number of producer instance")
-		sys.exit(1)
-	if producerType == 'STANDARD' and len(prodConfig[0]) < 2:
-		print("ERROR: required parameters for STANDARD producer at producer on node "+str(nodeID)+": name of the topic to produce and number of producer instances")
-		sys.exit(1)
-	if producerType != 'CUSTOM' and producerType != 'STANDARD' and len(prodConfig[0]) < 4:
-		print("ERROR: required parameters for "+str(producerType)+" producer at producer on node "+str(nodeID)+": file to produce, name of the topic to produce, number of files and number of producer instances")
-		sys.exit(1)
+	# Apache Kafka broker parameters
+	if len(brokerConfig) == 0:
+		replicaMaxWait = 500
+		replicaMinBytes = 1
+	else:
+		replicaMaxWait = 500 if brokerConfig[0].get("replicaMaxWait", 500) is None else brokerConfig[0].get("replicaMaxWait", 500)
+		replicaMinBytes = 1 if brokerConfig[0].get("replicaMinBytes", 1) is None else brokerConfig[0].get("replicaMinBytes", 1)
 
-	if acks < 0 or acks >= 3:
-		print("ERROR: acks value should be 0, 1 or 2 (which represents all) in producer at node "+str(nodeID))
-		sys.exit(1)
+	validateBrokerParameters(brokerConfig, nodeID, replicaMaxWait, replicaMinBytes)
 
-	compressionList = ['gzip', 'snappy', 'lz4']
-	if not (compression in compressionList) and compression != 'None':
-		print("ERROR: at producer on node "+str(nodeID)+" compression should be None or one of the following:")
-		print(*compressionList, sep = ", ") 
-		sys.exit(1)
-	if mRate != "None" and float(mRate) > 100:
-		print("ERROR: Message rate on producer at node "+str(nodeID)+" should be less than 100 msg/second.")
-		sys.exit(1)
+	brokerDetails = {"nodeId": nodeID, "replicaMaxWait": replicaMaxWait, 'replicaMinBytes': replicaMinBytes}
+	print("Broker details at node "+str(nodeID)+":")
+	print(brokerDetails)
+
+	return brokerDetails 
 
 # reading from producer YAML specification
 def readProdConfig(prodConfigPath, producerType, nodeID):
@@ -124,6 +112,46 @@ def readConsConfig(consConfigPath, consumerType, nodeID):
 
 	return consDetails 
 
+def readDisconnectionConfig(dcConfigPath):
+	dcLinks  = []
+	f = open(dcConfigPath, "r")
+	for line in f:
+		if 'duration: ' in line:
+			dcDuration = int(line.split('duration: ')[1].strip())
+		elif 'links: ' in line:
+			allLinks = line.split('links: ')[1].strip()
+			dcLinks = allLinks.split(',')
+
+	print("read DC config:")
+	print(dcDuration)
+	print(*dcLinks)
+	return dcDuration, dcLinks
+
+def validateProducerParameters(prodConfig, nodeID, producerType, acks, compression, mRate):
+	if producerType == 'CUSTOM' and len(prodConfig[0]) != 2:
+		print("ERROR: required parameters for CUSTOM producer at producer on node "+str(nodeID)+": producer file path and number of producer instance")
+		sys.exit(1)
+	if producerType == 'STANDARD' and len(prodConfig[0]) < 2:
+		print("ERROR: required parameters for STANDARD producer at producer on node "+str(nodeID)+": name of the topic to produce and number of producer instances")
+		sys.exit(1)
+	if producerType != 'CUSTOM' and producerType != 'STANDARD' and len(prodConfig[0]) < 4:
+		print("ERROR: required parameters for "+str(producerType)+" producer at producer on node "+str(nodeID)+": file to produce, name of the topic to produce, number of files and number of producer instances")
+		sys.exit(1)
+
+	if acks < 0 or acks >= 3:
+		print("ERROR: acks value should be 0, 1 or 2 (which represents all) in producer at node "+str(nodeID))
+		sys.exit(1)
+
+	compressionList = ['gzip', 'snappy', 'lz4']
+	if not (compression in compressionList) and compression != 'None':
+		print("ERROR: at producer on node "+str(nodeID)+" compression should be None or one of the following:")
+		print(*compressionList, sep = ", ") 
+		sys.exit(1)
+	if mRate != "None" and float(mRate) > 100:
+		print("ERROR: Message rate on producer at node "+str(nodeID)+" should be less than 100 msg/second.")
+		sys.exit(1)
+
+
 def readConfigParams(net, args):
 	inputTopoFile = args.topo
 	onlySpark =  args.onlySpark
@@ -179,8 +207,14 @@ def readConfigParams(net, args):
 				hostPlace.append(node[1:]) 
 				if 'zookeeper' in data: 
 					zkPlace.append(node[1:]) 
-				if 'broker' in data: 
-					brokerPlace.append(node[1:])
+				# old broker config with boolean value
+				# if 'broker' in data: 
+				# 	brokerPlace.append(node[1:])
+				# new broker yaml config implementation
+				if 'brokerConfig' in data: 
+					nodeID = node[1:]
+					brokerDetails = readBrokerConfig(data["brokerConfig"], nodeID)
+					brokerPlace.append(brokerDetails)
 				if 'producerType' in data: 
 					producerType = data["producerType"]
 					nodeID = node[1:]

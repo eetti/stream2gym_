@@ -8,13 +8,16 @@ import subprocess
 import time
 import networkx as nx
 
-def configureKafkaCluster(brokerPlace, zkPlace, args):
+def configureKafkaCluster(brokerPlace, zkPlace):
 	print("Configure kafka cluster")
 
 	propertyFile = open("kafka/config/server.properties", "r")
 	serverProperties = propertyFile.read()
 
-	for bID in brokerPlace:
+	for bk in brokerPlace:
+		bID = bk["nodeId"]
+		replicaMaxWait = bk["replicaMaxWait"]
+		replicaMinBytes = bk["replicaMinBytes"]
 		os.system("sudo mkdir kafka/kafka" + str(bID) + "/")
 
 		bProperties = serverProperties
@@ -25,8 +28,8 @@ def configureKafkaCluster(brokerPlace, zkPlace, args):
 		bProperties = bProperties.replace("log.dirs=/tmp/kafka-logs",
 			"log.dirs=./kafka/kafka" + str(bID))
 
-		bProperties = bProperties.replace("#replica.fetch.wait.max.ms=500", "replica.fetch.wait.max.ms="+str(args.replicaMaxWait))
-		bProperties = bProperties.replace("#replica.fetch.min.bytes=1", "replica.fetch.min.bytes="+str(args.replicaMinBytes))
+		bProperties = bProperties.replace("#replica.fetch.wait.max.ms=500", "replica.fetch.wait.max.ms="+str(replicaMaxWait))
+		bProperties = bProperties.replace("#replica.fetch.min.bytes=1", "replica.fetch.min.bytes="+str(replicaMinBytes))
 
 		bProperties = bProperties.replace(
             "offsets.topic.replication.factor=1", "offsets.topic.replication.factor=2")
@@ -67,7 +70,8 @@ def runKafka(net, brokerPlace, brokerWaitTime=200):
 		
 	startTime = time.time()
 	popens = {}
-	for bNode in brokerPlace:
+	for bk in brokerPlace:
+		bNode = bk["nodeId"]
 		bID = "h"+str(bNode)
 
 		startingHost = netNodes[bID]
@@ -83,7 +87,8 @@ def runKafka(net, brokerPlace, brokerWaitTime=200):
 	brokerWait = True
 	totalTime = 0
 	brokerCount = 0
-	for bNode in brokerPlace:
+	for bk in brokerPlace:
+		bNode = bk["nodeId"]
 		while brokerWait:
 			print("Testing Connection to Broker " + str(bNode) + "...")
 			out, err, exitCode = startingHost.pexec(
@@ -103,7 +108,8 @@ def runKafka(net, brokerPlace, brokerWaitTime=200):
 	print("Successfully Created "+str(brokerCount)+" Kafka Brokers in " + str(totalTime) + " seconds")
 
 def cleanKafkaState(brokerPlace):
-	for bID in brokerPlace:
+	for bk in brokerPlace:
+		bID = bk["nodeId"]
 		os.system("sudo rm -rf kafka/kafka" + str(bID) + "/")
 		os.system("sudo rm -f kafka/config/server" + str(bID) + ".properties")
 

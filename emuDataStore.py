@@ -14,8 +14,8 @@ def configureKafkaDataStoreConnection(brokerPlace):
 	brokerAddresses = ""
 	brokerPort = 9092
 	for i in range(len(brokerPlace)-1):
-		brokerAddresses += "10.0.0." + str(brokerPlace[i]) + ":" +str(brokerPort)+","
-	brokerAddresses += "10.0.0."+str(brokerPlace[-1])+ ":" +str(brokerPort)
+		brokerAddresses += "10.0.0." + str(brokerPlace[i]["nodeId"]) + ":" +str(brokerPort)+","
+	brokerAddresses += "10.0.0."+str(brokerPlace[-1]["nodeId"])+ ":" +str(brokerPort)
 
 	bProperties = bProperties.replace("bootstrap.servers=localhost:9092", \
 		"bootstrap.servers="+brokerAddresses)

@@ -9,7 +9,7 @@
   
   <!-- node attributes -->
   <key id="zk" for="node" attr.name="zookeeper" attr.type="int"/>
-  <key id="bk" for="node" attr.name="broker" attr.type="int"/>
+  <key id="brokerCfg" for="node" attr.name="brokerConfig" attr.type="string"/>
   <key id="prodType" for="node" attr.name="producerType" attr.type="string"/>   <!-- producer type can be SFST/MFMT/RND; MFMT,RND not supported right now. -->
   <key id="prodCfg" for="node" attr.name="producerConfig" attr.type="string"/>  <!-- for SFST: one pair of filePath, topicName; for MFMT: multiple pair of filePaths, topicNames; -->
   <key id="consType" for="node" attr.name="consumerType" attr.type="string"/>   <!-- consumer type can be STANDARD/CUSTOM;if it is CUSTOM, it will also contain the consumer script path -->
@@ -31,7 +31,7 @@
 
     <node id="h1">
       <data key="zk">1</data>
-      <data key="bk">1</data>
+      <data key="brokerCfg">use-cases/app-testing/maritime-monitoring/broker.yaml</data>
       <data key="prodType">SFST</data>
       <data key="prodCfg">use-cases/app-testing/maritime-monitoring/producerConfiguration.yaml</data>
       <data key="consType">STANDARD</data>
@@ -42,7 +42,7 @@
     <node id="s2"/>
 
     <node id="h2">
-      <data key="bk">1</data>
+      <data key="brokerCfg">use-cases/app-testing/maritime-monitoring/broker.yaml</data>
       <data key="consType">STANDARD</data>
       <data key="consCfg">use-cases/app-testing/maritime-monitoring/consumerConfigurationHost2.yaml</data>
       <data key="streamProcType">Spark</data>

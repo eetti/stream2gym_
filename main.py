@@ -27,8 +27,6 @@ import configParser
 pID=0
 popens = {}
 
-REPLICA_LAG_TIME_MAX_MS = 30000
-
 # Kill all subprocesses
 def killSubprocs(brokerPlace, zkPlace, prodDetailsList, streamProcDetailsList, consDetailsList):	
 	os.system("sudo pkill -9 -f bandwidth-monitor.py")
@@ -50,7 +48,8 @@ def killSubprocs(brokerPlace, zkPlace, prodDetailsList, streamProcDetailsList, c
 		consScript = cons["consumerPath"]
 		consKillStatus = os.system("sudo pkill -9 -f "+consScript)
 
-	for bID in brokerPlace:
+	for bk in brokerPlace:
+		bID = bk["nodeId"]
 		os.system("sudo pkill -9 -f server"+str(bID)+".properties") 
 
 	os.system("sudo pkill -9 -f zookeeper") 
@@ -112,11 +111,6 @@ def validateInput(args):
 		print("ERROR: Consumer rate should be between 0 and 100 checks/second")
 		sys.exit(1)
 
-	# This value should always be less than the replica.lag.time.max.ms at all times to prevent frequent shrinking of ISR for low throughput topics
-	if args.replicaMaxWait >= REPLICA_LAG_TIME_MAX_MS:
-		print("ERROR: replica.fetch.wait.max.ms must be less than the replica.lag.time.max.ms value of " +  str(REPLICA_LAG_TIME_MAX_MS) + " at all times")
-		sys.exit(1)
-
 if __name__ == '__main__': 
 
 	parser = argparse.ArgumentParser(description='Emulate data sync in mission critical networks.')
@@ -131,9 +125,6 @@ if __name__ == '__main__':
 	parser.add_argument('--consumer-rate', dest='consumerRate', type=float, default=0.5, help='Rate consumers check for new messages in checks/second')
 	parser.add_argument('--time', dest='duration', type=int, default=10, help='Duration of the simulation (in seconds)')
 	
-	parser.add_argument('--replica-max-wait', dest='replicaMaxWait', type=int, default=500, help='Max wait time for each fetcher request issued by follower replicas')
-	parser.add_argument('--replica-min-bytes', dest='replicaMinBytes', type=int, default=1, help='Minimum bytes expected for each fetch response')
-
 	parser.add_argument('--create-plots', dest='createPlots', action='store_true')
 
 	parser.add_argument('--message-file', dest='messageFilePath', type=str, default='None', help='Path to a file containing the message to be sent by producers')
@@ -201,7 +192,7 @@ if __name__ == '__main__':
 
 	logDir = emuLogs.configureLogDir(nSwitches, nTopics, args.captureAll)
 	emuZk.configureZkCluster(zkPlace)
-	emuKafka.configureKafkaCluster(brokerPlace, zkPlace, args)
+	emuKafka.configureKafkaCluster(brokerPlace, zkPlace)
 
 	#Start network
 	net.start()
@@ -225,7 +216,7 @@ if __name__ == '__main__':
 	emuKafka.runKafka(net, brokerPlace)
     
 	emuLoad.runLoad(net, args, topicPlace, prodDetailsList, consDetailsList, streamProcDetailsList,\
-		 storePath, brokerPlace, isDisconnect, dcDuration, dcLinks, logDir)
+		 storePath, isDisconnect, dcDuration, dcLinks, logDir)
 
 	# CLI(net)
 	print("Simulation complete")

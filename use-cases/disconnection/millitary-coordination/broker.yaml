@@ -1,0 +1,5 @@
+# broker configuration file
+---
+  replicaMaxWait : 5000
+  replicaMinBytes : 200000
+...

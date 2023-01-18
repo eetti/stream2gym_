@@ -222,7 +222,7 @@ def spawnKafkaDataStoreConnector(net, prodDetailsList, storePath):
 	node.popen("sudo kafka/bin/connect-standalone.sh kafka/config/connect-standalone-new.properties "+ storePath +" > logs/connectorOutput.txt &", shell=True)
 
 def runLoad(net, args, topicPlace, prodDetailsList, consDetailsList, streamProcDetailsList, \
-	storePath, brokerPlace, isDisconnect, dcDuration, dcLinks, logDir, topicWaitTime=100):
+	storePath, isDisconnect, dcDuration, dcLinks, logDir, topicWaitTime=100):
 
 	nTopics = len(topicPlace)
 	mSizeString = args.mSizeString
