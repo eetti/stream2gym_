@@ -112,20 +112,18 @@ def readConsConfig(consConfigPath, consumerType, nodeID):
 
 	return consDetails 
 
-def readDisconnectionConfig(dcConfigPath):
-	dcLinks  = []
-	f = open(dcConfigPath, "r")
-	for line in f:
-		if 'duration: ' in line:
-			dcDuration = int(line.split('duration: ')[1].strip())
-		elif 'links: ' in line:
-			allLinks = line.split('links: ')[1].strip()
-			dcLinks = allLinks.split(',')
+def readFaultConfig(faultConfigPath):
+	faultyLinks  = []
+	faultConfig = readYAMLConfig(faultConfigPath)
+	faultDuration = 60 if int(faultConfig[0].get("duration", 60)) is None else int(faultConfig[0].get("duration", 60))
+	links = "" if faultConfig[0].get("links", "") is None else faultConfig[0].get("links", "")
+	faultyLinks = links.split(',')
 
-	print("read DC config:")
-	print(dcDuration)
-	print(*dcLinks)
-	return dcDuration, dcLinks
+	print("read fault config:")
+	print(faultDuration)
+	print(*faultyLinks)
+	return faultDuration, faultyLinks
+
 
 def validateProducerParameters(prodConfig, nodeID, producerType, acks, compression, mRate):
 	if producerType == 'CUSTOM' and len(prodConfig[0]) != 2:
@@ -182,17 +180,16 @@ def readConfigParams(net, args):
 	if onlySpark == 0: 
 		topicConfigPath = inputTopo.graph["topicConfig"]
 		print("topic config directory: " + topicConfigPath)
-		#topicPlace = readTopicConfig(topicConfigPath, nBroker) 
 		topicPlace = readYAMLConfig(topicConfigPath)
 
-	# reading disconnection config
+	# reading fault config
 	try:
-		dcPath = inputTopo.graph["disconnectionConfig"]
+		dcPath = inputTopo.graph["faultConfig"]
 		isDisconnect = 1
-		print("Disconnection config directory: " + dcPath)
-		dcDuration, dcLinks = readDisconnectionConfig(dcPath)
+		print("Fault config directory: " + dcPath)
+		dcDuration, dcLinks = readFaultConfig(dcPath)
 	except KeyError:
-		print("No disconnection is set")
+		print("No fault is set")
 		isDisconnect = 0
 		dcDuration = 0
 		dcLinks = []

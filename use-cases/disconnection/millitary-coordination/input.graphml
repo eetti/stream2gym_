@@ -6,7 +6,7 @@
 
   <!-- graph attributes -->
   <key id="topicCfg" for="graph" attr.name="topicConfig" attr.type="string"/>
-  <key id="dcCfg" for="graph" attr.name="disconnectionConfig" attr.type="string"/> 
+  <key id="faultCfg" for="graph" attr.name="faultConfig" attr.type="string"/> 
   
   <!-- node attributes -->
   <key id="zk" for="node" attr.name="zookeeper" attr.type="int"/>
@@ -25,7 +25,7 @@
    
   <graph id="simple-topo" edgedefault="undirected">
     <data key="topicCfg">use-cases/disconnection/millitary-coordination/topicConfiguration.yaml</data>
-    <data key="dcCfg">use-cases/disconnection/millitary-coordination/disconnectionConfiguration.txt</data>
+    <data key="faultCfg">use-cases/disconnection/millitary-coordination/disconnectionConfiguration.yaml</data>
 
     <node id="s1"/>
     <node id="s2"/>
@@ -41,8 +41,8 @@
     <node id="h1">
       <data key="zk">1</data>
       <data key="brokerCfg">use-cases/disconnection/millitary-coordination/broker.yaml</data>
-      <data key="prodType">CUSTOM,use-cases/disconnection/millitary-coordination/military-data-producer.py</data>
-      <data key="prodCfg">topic-0,1</data>
+      <data key="prodType">CUSTOM</data>
+      <data key="prodCfg">use-cases/disconnection/millitary-coordination/producerConfiguration.yaml</data>
       <data key="consType">CUSTOM</data>
       <data key="consCfg">use-cases/disconnection/millitary-coordination/consumerConfiguration.yaml</data>
 	  </node>
@@ -50,8 +50,8 @@
     <node id="h2">
       <data key="zk">1</data>
       <data key="brokerCfg">use-cases/disconnection/millitary-coordination/broker.yaml</data>
-      <data key="prodType">CUSTOM,use-cases/disconnection/millitary-coordination/military-data-producer.py</data>
-      <data key="prodCfg">topic-0,1</data>
+      <data key="prodType">CUSTOM</data>
+      <data key="prodCfg">use-cases/disconnection/millitary-coordination/producerConfiguration.yaml</data>
       <data key="consType">CUSTOM</data>
       <data key="consCfg">use-cases/disconnection/millitary-coordination/consumerConfiguration.yaml</data>
 	  </node>   
@@ -59,8 +59,8 @@
     <node id="h3">   
       <data key="zk">1</data>
       <data key="brokerCfg">use-cases/disconnection/millitary-coordination/broker.yaml</data>
-      <data key="prodType">CUSTOM,use-cases/disconnection/millitary-coordination/military-data-producer.py</data>
-      <data key="prodCfg">topic-0,1</data>
+      <data key="prodType">CUSTOM</data>
+      <data key="prodCfg">use-cases/disconnection/millitary-coordination/producerConfiguration.yaml</data>
       <data key="consType">CUSTOM</data>
       <data key="consCfg">use-cases/disconnection/millitary-coordination/consumerConfiguration.yaml</data>
 	  </node>
@@ -68,8 +68,8 @@
     <node id="h4">   
       <data key="zk">1</data>
       <data key="brokerCfg">use-cases/disconnection/millitary-coordination/broker.yaml</data>
-      <data key="prodType">CUSTOM,use-cases/disconnection/millitary-coordination/military-data-producer.py</data>
-      <data key="prodCfg">topic-0,1</data>
+      <data key="prodType">CUSTOM</data>
+      <data key="prodCfg">use-cases/disconnection/millitary-coordination/producerConfiguration.yaml</data>
       <data key="consType">CUSTOM</data>
       <data key="consCfg">use-cases/disconnection/millitary-coordination/consumerConfiguration.yaml</data>
 	  </node>
@@ -77,8 +77,8 @@
     <node id="h5">   
       <data key="zk">1</data>
       <data key="brokerCfg">use-cases/disconnection/millitary-coordination/broker.yaml</data>
-      <data key="prodType">CUSTOM,use-cases/disconnection/millitary-coordination/military-data-producer.py</data>
-      <data key="prodCfg">topic-0,1</data>
+      <data key="prodType">CUSTOM</data>
+      <data key="prodCfg">use-cases/disconnection/millitary-coordination/producerConfiguration.yaml</data>
       <data key="consType">CUSTOM</data>
       <data key="consCfg">use-cases/disconnection/millitary-coordination/consumerConfiguration.yaml</data>
 	  </node>
@@ -86,8 +86,8 @@
     <node id="h6">   
       <data key="zk">1</data>
       <data key="brokerCfg">use-cases/disconnection/millitary-coordination/broker.yaml</data>
-      <data key="prodType">CUSTOM,use-cases/disconnection/millitary-coordination/military-data-producer.py</data>
-      <data key="prodCfg">topic-0,1</data>
+      <data key="prodType">CUSTOM</data>
+      <data key="prodCfg">use-cases/disconnection/millitary-coordination/producerConfiguration.yaml</data>
       <data key="consType">CUSTOM</data>
       <data key="consCfg">use-cases/disconnection/millitary-coordination/consumerConfiguration.yaml</data>
 	  </node>
@@ -95,8 +95,8 @@
     <node id="h7">   
       <data key="zk">1</data>
       <data key="brokerCfg">use-cases/disconnection/millitary-coordination/broker.yaml</data>
-      <data key="prodType">CUSTOM,use-cases/disconnection/millitary-coordination/military-data-producer.py</data>
-      <data key="prodCfg">topic-0,1</data>
+      <data key="prodType">CUSTOM</data>
+      <data key="prodCfg">use-cases/disconnection/millitary-coordination/producerConfiguration.yaml</data>
       <data key="consType">CUSTOM</data>
       <data key="consCfg">use-cases/disconnection/millitary-coordination/consumerConfiguration.yaml</data>
 	  </node>
@@ -104,8 +104,8 @@
     <node id="h8">
       <data key="zk">1</data>
       <data key="brokerCfg">use-cases/disconnection/millitary-coordination/broker.yaml</data>
-      <data key="prodType">CUSTOM,use-cases/disconnection/millitary-coordination/military-data-producer.py</data>
-      <data key="prodCfg">topic-0,1</data>
+      <data key="prodType">CUSTOM</data>
+      <data key="prodCfg">use-cases/disconnection/millitary-coordination/producerConfiguration.yaml</data>
       <data key="consType">CUSTOM</data>
       <data key="consCfg">use-cases/disconnection/millitary-coordination/consumerConfiguration.yaml</data>
 	  </node>
@@ -113,8 +113,8 @@
     <node id="h9">   
       <data key="zk">1</data>
       <data key="brokerCfg">use-cases/disconnection/millitary-coordination/broker.yaml</data>
-      <data key="prodType">CUSTOM,use-cases/disconnection/millitary-coordination/military-data-producer.py</data>
-      <data key="prodCfg">topic-0,1</data>
+      <data key="prodType">CUSTOM</data>
+      <data key="prodCfg">use-cases/disconnection/millitary-coordination/producerConfiguration.yaml</data>
       <data key="consType">CUSTOM</data>
       <data key="consCfg">use-cases/disconnection/millitary-coordination/consumerConfiguration.yaml</data>
 	  </node>
@@ -122,8 +122,8 @@
     <node id="h10">
       <data key="zk">1</data>
       <data key="brokerCfg">use-cases/disconnection/millitary-coordination/broker.yaml</data>
-      <data key="prodType">CUSTOM,use-cases/disconnection/millitary-coordination/military-data-producer.py</data>
-      <data key="prodCfg">topic-0,1</data>
+      <data key="prodType">CUSTOM</data>
+      <data key="prodCfg">use-cases/disconnection/millitary-coordination/producerConfiguration.yaml</data>
       <data key="consType">CUSTOM</data>
       <data key="consCfg">use-cases/disconnection/millitary-coordination/consumerConfiguration.yaml</data>
 	  </node>
