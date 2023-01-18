@@ -14,8 +14,8 @@
   <key id="prodCfg" for="node" attr.name="producerConfig" attr.type="string"/>  <!-- for SFST: one pair of filePath, topicName; for MFMT: multiple pair of filePaths, topicNames; -->
   <key id="consType" for="node" attr.name="consumerType" attr.type="string"/>   <!-- consumer type can be STANDARD/CUSTOM;if it is CUSTOM, it will also contain the consumer script path -->
   <key id="consCfg" for="node" attr.name="consumerConfig" attr.type="string"/>  <!-- consConfig will contain the topic name(s) from where the consumer will consume --> 
-  <key id="sparkCfg" for="node" attr.name="sparkConfig" attr.type="string"/>    <!-- sparkConfig will contain the spark application path and topic name(s)/output directory from where the spark ingest its processed output --> 
-  <key id="mysqlCfg" for="node" attr.name="mysqlConfig" attr.type="string"/>    <!-- mysqlConfig provides the file path of the MySQL configuration --> 
+  <key id="streamProcCfg" for="node" attr.name="streamProcConfig" attr.type="string"/>    <!-- streamProcConfig will contain the stream processing application path and topic name(s)/output directory from where the SPE ingest its processed output --> 
+  <key id="storeCfg" for="node" attr.name="storeConfig" attr.type="string"/>    <!-- storeConfig provides the file path of the data store configuration --> 
 
   <!-- edge attributes -->
   <key id="bw" for="edge" attr.name="bandwidth" attr.type="int"/>
@@ -43,8 +43,8 @@
       <data key="bk">1</data>
       <data key="consType">STANDARD</data>
       <data key="consCfg">use-cases/app-testing/maritime-monitoring/consumerConfigurationHost2.yaml</data>
-      <data key="sparkCfg">use-cases/app-testing/maritime-monitoring/maritime.py,maritimeOutput</data>
-      <!-- <data key="mysqlCfg">use-cases/app-testing/maritime-monitoring/maritime-mysql-bulk-sink.properties</data> -->
+      <data key="streamProcCfg">use-cases/app-testing/maritime-monitoring/maritime.py,maritimeOutput</data>
+      <!-- <data key="storeCfg">use-cases/app-testing/maritime-monitoring/maritime-mysql-bulk-sink.properties</data> -->
 	  </node>            
 
     <edge source="h1" target="s1">

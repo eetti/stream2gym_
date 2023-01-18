@@ -70,6 +70,8 @@ plt.bar(br2, avgPeakMemUsage2, color ='b', width = barWidth,edgecolor ='grey', l
 # Adding Xticks
 plt.xlabel('Number of hosts', fontweight ='bold', fontsize = 15)
 plt.ylabel('Peak Memory usage(%)', fontweight ='bold', fontsize = 15)
-plt.xticks([r + (barWidth/2) for r in range(len(hostList))],hostList)
+plt.xticks([r + (barWidth/2) for r in range(len(hostList))],hostList,fontsize=18)
+plt.yticks(np.arange(0, 76, 15),fontsize=18)
 plt.legend(title='Buffer Memory')
-plt.savefig("use-cases/app-testing/millitary-coordination/logs/cpu-mem/MemoryUsage.png",format='png', bbox_inches="tight")
+
+plt.savefig("use-cases/app-testing/millitary-coordination/logs/cpu-mem/MemoryUsage.pdf", bbox_inches="tight")

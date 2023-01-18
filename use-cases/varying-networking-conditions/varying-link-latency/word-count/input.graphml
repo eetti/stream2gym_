@@ -14,7 +14,7 @@
   <key id="prodCfg" for="node" attr.name="producerConfig" attr.type="string"/>  <!-- for SFST: one pair of filePath, topicName; for MFMT: multiple pair of filePaths, topicNames; -->
   <key id="consType" for="node" attr.name="consumerType" attr.type="string"/>   <!-- consumer type can be STANDARD/CUSTOM;if it is CUSTOM, it will also contain the consumer script path -->
   <key id="consCfg" for="node" attr.name="consumerConfig" attr.type="string"/>  <!-- consConfig will contain the topic name(s) from where the consumer will consumer --> 
-  <key id="sparkCfg" for="node" attr.name="sparkConfig" attr.type="string"/>    <!-- sparkConfig will contain the spark application path and topic name(s)/output directory from where the spark ingest its processed output --> 
+  <key id="streamProcCfg" for="node" attr.name="streamProcConfig" attr.type="string"/>    <!-- streamProcConfig will contain the stream processing application path and topic name(s)/output directory from where the SPE ingest its processed output --> 
 
   <!-- edge attributes -->
   <key id="bw" for="edge" attr.name="bandwidth" attr.type="int"/>  <!-- unit in Mbps -->
@@ -39,7 +39,7 @@
 	  </node>   
 
     <node id="h3">   
-      <data key="sparkCfg">use-cases/varying-networking-conditions/varying-link-latency/word-count/wordCount.py,outTopic</data>
+      <data key="streamProcCfg">use-cases/varying-networking-conditions/varying-link-latency/word-count/wordCount.py,outTopic</data>
 	  </node>
 
     <node id="h4">

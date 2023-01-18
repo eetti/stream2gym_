@@ -179,35 +179,34 @@ def spawnConsumers(net, consDetailsList, topicPlace):
 			print("Error: Consume topic name not matched with the already created topics")
 			sys.exit(1)
 
-def spawnSparkClients(net, sparkDetailsList):
+def spawnSPEClients(net, streamProcDetailsList):
 	netNodes = {}
 
 	for node in net.hosts:
 		netNodes[node.name] = node
 
-	for sprk in sparkDetailsList:
+	for spe in streamProcDetailsList:
 		time.sleep(30)
 		
-		sparkNode = sprk["nodeId"]
-		# sparkInputFrom = sprk["topicsToConsume"]
-		sparkApp = sprk["applicationPath"]
-		sparkOutputTo = sprk["produceTo"]
-		print("spark node: "+sparkNode)
-		print("spark App: "+sparkApp)
-		print("spark output to: "+sparkOutputTo)
+		speNode = spe["nodeId"]
+		speApp = spe["applicationPath"]
+		speOutputTo = spe["produceTo"]
+		print("spe node: "+speNode)
+		print("spe App: "+speApp)
+		print("spe output to: "+speOutputTo)
 		print("*************************")
 
-		sprkID = "h"+sparkNode
-		node = netNodes[sprkID]
+		speID = "h"+speNode
+		node = netNodes[speID]
 
 		# node.popen("sudo spark/pyspark/bin/spark-submit --packages org.apache.spark:spark-sql-kafka-0-10_2.12:3.2.1 "+sparkApp\
 		# 			+" "+str(node.name)+" "+sparkOutputTo+" &", shell=True)
 
-		node.popen("sudo spark/pyspark/bin/spark-submit --packages org.apache.spark:spark-sql-kafka-0-10_2.12:3.2.1 "+sparkApp\
+		node.popen("sudo spark/pyspark/bin/spark-submit --packages org.apache.spark:spark-sql-kafka-0-10_2.12:3.2.1 "+speApp\
 					+" &", shell=True)
 
 
-def spawnKafkaMySQLConnector(net, prodDetailsList, mysqlPath):
+def spawnKafkaDataStoreConnector(net, prodDetailsList, storePath):
 	netNodes = {}
 
 	for node in net.hosts:
@@ -220,10 +219,10 @@ def spawnKafkaMySQLConnector(net, prodDetailsList, mysqlPath):
 	print("=========")
 	print("connector starts on node: "+connID)
 	
-	node.popen("sudo kafka/bin/connect-standalone.sh kafka/config/connect-standalone-new.properties "+ mysqlPath +" > logs/connectorOutput.txt &", shell=True)
+	node.popen("sudo kafka/bin/connect-standalone.sh kafka/config/connect-standalone-new.properties "+ storePath +" > logs/connectorOutput.txt &", shell=True)
 
-def runLoad(net, args, topicPlace, prodDetailsList, consDetailsList, sparkDetailsList, \
-	mysqlPath, brokerPlace, isDisconnect, dcDuration, dcLinks, logDir, topicWaitTime=100):
+def runLoad(net, args, topicPlace, prodDetailsList, consDetailsList, streamProcDetailsList, \
+	storePath, brokerPlace, isDisconnect, dcDuration, dcLinks, logDir, topicWaitTime=100):
 
 	nTopics = len(topicPlace)
 	mSizeString = args.mSizeString
@@ -272,15 +271,15 @@ def runLoad(net, args, topicPlace, prodDetailsList, consDetailsList, sparkDetail
 	totalTime = stopTime - startTime
 	print("Successfully Created " + str(len(topicPlace)) + " Topics in " + str(totalTime) + " seconds")
 	
-	#starting Kafka-MySQL connector
-	if mysqlPath != "":
-		spawnKafkaMySQLConnector(net, prodDetailsList, mysqlPath)
-		print("Kafka-MySQL connector instance created")
+	#starting Kafka-data store connector
+	if storePath != "":
+		spawnKafkaDataStoreConnector(net, prodDetailsList, storePath)
+		print("Kafka-data-store connector instance created")
 
 	if args.onlyKafka == 0:
-		spawnSparkClients(net, sparkDetailsList)
+		spawnSPEClients(net, streamProcDetailsList)
 		time.sleep(30)
-		print("Spark Clients created")
+		print("SPE Clients created")
 
 	spawnProducers(net, mSizeString, tClassString, nTopics, args, prodDetailsList, topicPlace)
 	# time.sleep(120)

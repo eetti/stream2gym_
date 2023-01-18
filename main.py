@@ -20,8 +20,8 @@ import emuKafka
 import emuZk
 import emuLoad
 import emuLogs
-import emuSpark
-import emuMySQL
+import emuStreamProc
+import emuDataStore
 import configParser
 
 pID=0
@@ -30,7 +30,7 @@ popens = {}
 REPLICA_LAG_TIME_MAX_MS = 30000
 
 # Kill all subprocesses
-def killSubprocs(brokerPlace, zkPlace, prodDetailsList, sparkDetailsList, consDetailsList):	
+def killSubprocs(brokerPlace, zkPlace, prodDetailsList, streamProcDetailsList, consDetailsList):	
 	os.system("sudo pkill -9 -f bandwidth-monitor.py")
 	os.system("sudo pkill -9 -f producer.py")
 	os.system("sudo pkill -9 -f consumer.py")
@@ -41,9 +41,9 @@ def killSubprocs(brokerPlace, zkPlace, prodDetailsList, sparkDetailsList, consDe
 		prodKillStatus = os.system("sudo pkill -9 -f "+producerScript)
 	
 	# killing spark processes
-	for sprk in sparkDetailsList:
-		sprkScript = sprk["applicationPath"]
-		sprkKillStatus = os.system("sudo pkill -9 -f "+sprkScript)
+	for spe in streamProcDetailsList:
+		speScript = spe["applicationPath"]
+		speKillStatus = os.system("sudo pkill -9 -f "+speScript)
 
 	# killing consumer processes
 	for cons in consDetailsList:
@@ -178,24 +178,24 @@ if __name__ == '__main__':
 	validateInput(args)
 	
 	# checking whether the application is only kafka or kafka-spark
-	sparkDetailsList, mysqlPath = emuSpark.getSparkDetails(net, args.topo)
-	if not sparkDetailsList:   # if there is no configuration for spark
+	streamProcDetailsList, storePath = emuStreamProc.getStreamProcDetails(net, args.topo)
+	if not streamProcDetailsList:   # if there is no configuration for spark
 		args.onlyKafka = 1
 	else:
 		args.onlyKafka = 0
 		#Add dependency to connect kafka & Spark
-		emuSpark.addSparkDependency()
+		emuStreamProc.addStreamProcDependency()
 
-	killSubprocs(brokerPlace, zkPlace, prodDetailsList, sparkDetailsList, consDetailsList)
+	killSubprocs(brokerPlace, zkPlace, prodDetailsList, streamProcDetailsList, consDetailsList)
 	
 	emuLogs.cleanLogs()
-	emuMySQL.cleanMysqlState()
+	emuDataStore.cleanDataStoreState()
 	emuKafka.cleanKafkaState(brokerPlace)
 	emuZk.cleanZkState(zkPlace)
         
-	if mysqlPath != "":
-		print("MySQL path: "+mysqlPath)
-		emuMySQL.configureKafkaMysqlConnection(brokerPlace)
+	if storePath != "":
+		print("Data store path: "+storePath)
+		emuDataStore.configureKafkaDataStoreConnection(brokerPlace)
 		# Add NAT connectivity
 		net.addNAT().configDefault()  
 
@@ -224,25 +224,25 @@ if __name__ == '__main__':
 	emuZk.runZk(net, zkPlace, logDir)
 	emuKafka.runKafka(net, brokerPlace)
     
-	emuLoad.runLoad(net, args, topicPlace, prodDetailsList, consDetailsList, sparkDetailsList,\
-		 mysqlPath, brokerPlace, isDisconnect, dcDuration, dcLinks, logDir)
+	emuLoad.runLoad(net, args, topicPlace, prodDetailsList, consDetailsList, streamProcDetailsList,\
+		 storePath, brokerPlace, isDisconnect, dcDuration, dcLinks, logDir)
 
 	# CLI(net)
 	print("Simulation complete")
 
 	# to kill all the running subprocesses
-	killSubprocs(brokerPlace, zkPlace, prodDetailsList, sparkDetailsList, consDetailsList)
+	killSubprocs(brokerPlace, zkPlace, prodDetailsList, streamProcDetailsList, consDetailsList)
 
 	net.stop()
 	logging.info('Network stopped')
 
 	# Clean kafka-MySQL connection state before new simulation
-	if mysqlPath != "":
-		emuMySQL.cleanMysqlState()
+	if storePath != "":
+		emuDataStore.cleanDataStoreState()
 
 	#Need to clean both kafka and zookeeper state before a new simulation
 	emuKafka.cleanKafkaState(brokerPlace)
 	emuZk.cleanZkState(zkPlace)
 
 	#Need to clean spark dependency before a new simulation
-	emuSpark.cleanSparkDependency()
+	emuStreamProc.cleanStreamProcDependency()

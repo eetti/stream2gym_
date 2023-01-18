@@ -3,8 +3,8 @@
 import sys
 import os
 
-def configureKafkaMysqlConnection(brokerPlace):
-	print("Configure kafka MySQL connection")
+def configureKafkaDataStoreConnection(brokerPlace):
+	print("Configure kafka and data store connection")
 
 	propertyFile = open("kafka/config/connect-standalone.properties", "r")
 	serverProperties = propertyFile.read()
@@ -31,5 +31,5 @@ def configureKafkaMysqlConnection(brokerPlace):
 
 	propertyFile.close()
 
-def cleanMysqlState():
+def cleanDataStoreState():
 	os.system("sudo rm -rf kafka/config/connect-standalone-new.properties")

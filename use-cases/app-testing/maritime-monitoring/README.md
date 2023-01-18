@@ -3,7 +3,7 @@ This application uses AIS data to determine the types of ships heading to each d
 
 Our aim is to use AIS data to get insights that can be useful for maritime monitoring. We wanted to see if Kafka and Spark Structured Streaming can be used to get such insights, especially in real-time. Hence, we developed this application.
 
-We start out by feeding real-time AIS data from a JSON file to a Kafka topic. Next, we have the application read this data from the Kafka topic using Spark Structured Streaming. Using this data, the application determines the types of ships heading towards each destination in every minute, along with the names and numbers of such ships. Finally, the application then gets the results of this query, changes it into our required JSON format, and feeds this result to a Kafka topic. Specifying Kafka-MySQL connector configurations, query result can also be inserted from Kafka topilike external datastore table.
+We start out by feeding real-time AIS data from a JSON file to a Kafka topic. Next, we have the application read this data from the Kafka topic using Spark Structured Streaming. Using this data, the application determines the types of ships heading towards each destination in every minute, along with the names and numbers of such ships. Finally, the application then gets the results of this query, changes it into our required JSON format, and feeds this result to a Kafka topic. Specifying Kafka-data store connector configurations, query result can also be inserted from Kafka topic tp external datastore table. We test our data-store connection and data ingestion using MySQL.
 
 ## Dataset
 Our dataset is a collection of records obtained by collecting live AIS data. This is live data broadcast from ships.
@@ -72,7 +72,7 @@ We let this command run for 3 minutes. After that, we opened data.json and delet
          - for STNDARD consumer, specify the topic name where the consumer will consumer from and number of consumer instances in this node.
          - for CUSTOM consumer, specify the consumer script path and number of consumer instances in this node.
      - sparkConfig: sparkConfig will contain the spark application path and output sink. Output sink can be kafka topic/a file directory.
-     - myslqConfig: mysqlConfig contains the file path of the MySQL configuration.
+     - storeConfig: contains the file path of the data store configuration.
 
 ## Running
 ```sudo python3 main.py use-cases/app-testing/maritime-monitoring/input.graphml --nzk 1 --nbroker 2```
