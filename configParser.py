@@ -206,11 +206,13 @@ def readConfigParams(net, args):
 				nHosts += 1 
 				hostPlace.append(node[1:]) 
 				if 'zookeeper' in data: 
-					zkPlace.append(node[1:]) 
-				# old broker config with boolean value
-				# if 'broker' in data: 
-				# 	brokerPlace.append(node[1:])
-				# new broker yaml config implementation
+					if data["zookeeper"] == 1:
+						zkPlace.append(node[1:]) 
+					elif data["zookeeper"] == 0:
+						pass
+					else:
+						print("ERROR: zookeeper attribute only supports boolean input. Please check zookeeper attribute seting in node "+str(node))
+						sys.exit(1)
 				if 'brokerConfig' in data: 
 					nodeID = node[1:]
 					brokerDetails = readBrokerConfig(data["brokerConfig"], nodeID)
