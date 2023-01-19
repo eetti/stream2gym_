@@ -1,0 +1,4 @@
+# Stream processing engine configuration
+---
+  app : use-cases/app-testing/word-count/sparkApp2.py
+...

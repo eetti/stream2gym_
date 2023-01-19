@@ -190,10 +190,8 @@ def spawnSPEClients(net, streamProcDetailsList):
 		
 		speNode = spe["nodeId"]
 		speApp = spe["applicationPath"]
-		speOutputTo = spe["produceTo"]
 		print("spe node: "+speNode)
 		print("spe App: "+speApp)
-		print("spe output to: "+speOutputTo)
 		print("*************************")
 
 		speID = "h"+speNode

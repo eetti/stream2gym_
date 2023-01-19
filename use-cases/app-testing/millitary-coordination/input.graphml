@@ -23,7 +23,7 @@
   
    
   <graph id="simple-topo" edgedefault="undirected">
-    <data key="topicCfg">use-cases/app-testing/millitary-coordination/topicConfiguration.yaml</data>
+    <data key="topicCfg">use-cases/app-testing/millitary-coordination/yamlConfig/topicConfiguration.yaml</data>
 
     <node id="s1"/>
     <node id="s2"/>
@@ -38,92 +38,92 @@
 
     <node id="h1">
       <data key="zk">1</data>
-      <data key="brokerCfg">use-cases/app-testing/millitary-coordination/broker.yaml</data>
+      <data key="brokerCfg">use-cases/app-testing/millitary-coordination/yamlConfig/broker.yaml</data>
       <data key="prodType">CUSTOM</data>
-      <data key="prodCfg">use-cases/app-testing/millitary-coordination/producerConfiguration.yaml</data>
+      <data key="prodCfg">use-cases/app-testing/millitary-coordination/yamlConfig/producerConfiguration.yaml</data>
       <data key="consType">CUSTOM</data>
-      <data key="consCfg">use-cases/app-testing/millitary-coordination/consumerConfiguration.yaml</data>
+      <data key="consCfg">use-cases/app-testing/millitary-coordination/yamlConfig/consumerConfiguration.yaml</data>
 	  </node>
     
     <node id="h2">
       <data key="zk">1</data>
-      <data key="brokerCfg">use-cases/app-testing/millitary-coordination/broker.yaml</data>
+      <data key="brokerCfg">use-cases/app-testing/millitary-coordination/yamlConfig/broker.yaml</data>
       <data key="prodType">CUSTOM</data>
-      <data key="prodCfg">use-cases/app-testing/millitary-coordination/producerConfiguration.yaml</data>
+      <data key="prodCfg">use-cases/app-testing/millitary-coordination/yamlConfig/producerConfiguration.yaml</data>
       <data key="consType">CUSTOM</data>
-      <data key="consCfg">use-cases/app-testing/millitary-coordination/consumerConfiguration.yaml</data>
+      <data key="consCfg">use-cases/app-testing/millitary-coordination/yamlConfig/consumerConfiguration.yaml</data>
 	  </node>   
 
     <node id="h3">   
       <data key="zk">1</data>
-      <data key="brokerCfg">use-cases/app-testing/millitary-coordination/broker.yaml</data>
+      <data key="brokerCfg">use-cases/app-testing/millitary-coordination/yamlConfig/broker.yaml</data>
       <data key="prodType">CUSTOM</data>
-      <data key="prodCfg">use-cases/app-testing/millitary-coordination/producerConfiguration.yaml</data>
+      <data key="prodCfg">use-cases/app-testing/millitary-coordination/yamlConfig/producerConfiguration.yaml</data>
       <data key="consType">CUSTOM</data>
-      <data key="consCfg">use-cases/app-testing/millitary-coordination/consumerConfiguration.yaml</data>
+      <data key="consCfg">use-cases/app-testing/millitary-coordination/yamlConfig/consumerConfiguration.yaml</data>
 	  </node>
 
     <node id="h4">   
       <data key="zk">1</data>
-      <data key="brokerCfg">use-cases/app-testing/millitary-coordination/broker.yaml</data>
+      <data key="brokerCfg">use-cases/app-testing/millitary-coordination/yamlConfig/broker.yaml</data>
       <data key="prodType">CUSTOM</data>
-      <data key="prodCfg">use-cases/app-testing/millitary-coordination/producerConfiguration.yaml</data>
+      <data key="prodCfg">use-cases/app-testing/millitary-coordination/yamlConfig/producerConfiguration.yaml</data>
       <data key="consType">CUSTOM</data>
-      <data key="consCfg">use-cases/app-testing/millitary-coordination/consumerConfiguration.yaml</data>
+      <data key="consCfg">use-cases/app-testing/millitary-coordination/yamlConfig/consumerConfiguration.yaml</data>
 	  </node>
 
     <node id="h5">   
       <data key="zk">1</data>
-      <data key="brokerCfg">use-cases/app-testing/millitary-coordination/broker.yaml</data>
+      <data key="brokerCfg">use-cases/app-testing/millitary-coordination/yamlConfig/broker.yaml</data>
       <data key="prodType">CUSTOM</data>
-      <data key="prodCfg">use-cases/app-testing/millitary-coordination/producerConfiguration.yaml</data>
+      <data key="prodCfg">use-cases/app-testing/millitary-coordination/yamlConfig/producerConfiguration.yaml</data>
       <data key="consType">CUSTOM</data>
-      <data key="consCfg">use-cases/app-testing/millitary-coordination/consumerConfiguration.yaml</data>
+      <data key="consCfg">use-cases/app-testing/millitary-coordination/yamlConfig/consumerConfiguration.yaml</data>
 	  </node>
 
     <node id="h6">   
       <data key="zk">1</data>
-      <data key="brokerCfg">use-cases/app-testing/millitary-coordination/broker.yaml</data>
+      <data key="brokerCfg">use-cases/app-testing/millitary-coordination/yamlConfig/broker.yaml</data>
       <data key="prodType">CUSTOM</data>
-      <data key="prodCfg">use-cases/app-testing/millitary-coordination/producerConfiguration.yaml</data>
+      <data key="prodCfg">use-cases/app-testing/millitary-coordination/yamlConfig/producerConfiguration.yaml</data>
       <data key="consType">CUSTOM</data>
-      <data key="consCfg">use-cases/app-testing/millitary-coordination/consumerConfiguration.yaml</data>
+      <data key="consCfg">use-cases/app-testing/millitary-coordination/yamlConfig/consumerConfiguration.yaml</data>
 	  </node>
 
     <node id="h7">   
       <data key="zk">1</data>
-      <data key="brokerCfg">use-cases/app-testing/millitary-coordination/broker.yaml</data>
+      <data key="brokerCfg">use-cases/app-testing/millitary-coordination/yamlConfig/broker.yaml</data>
       <data key="prodType">CUSTOM</data>
-      <data key="prodCfg">use-cases/app-testing/millitary-coordination/producerConfiguration.yaml</data>
+      <data key="prodCfg">use-cases/app-testing/millitary-coordination/yamlConfig/producerConfiguration.yaml</data>
       <data key="consType">CUSTOM</data>
-      <data key="consCfg">use-cases/app-testing/millitary-coordination/consumerConfiguration.yaml</data>
+      <data key="consCfg">use-cases/app-testing/millitary-coordination/yamlConfig/consumerConfiguration.yaml</data>
 	  </node>
 
     <node id="h8">
       <data key="zk">1</data>
-      <data key="brokerCfg">use-cases/app-testing/millitary-coordination/broker.yaml</data>
+      <data key="brokerCfg">use-cases/app-testing/millitary-coordination/yamlConfig/broker.yaml</data>
       <data key="prodType">CUSTOM</data>
-      <data key="prodCfg">use-cases/app-testing/millitary-coordination/producerConfiguration.yaml</data>
+      <data key="prodCfg">use-cases/app-testing/millitary-coordination/yamlConfig/producerConfiguration.yaml</data>
       <data key="consType">CUSTOM</data>
-      <data key="consCfg">use-cases/app-testing/millitary-coordination/consumerConfiguration.yaml</data>
+      <data key="consCfg">use-cases/app-testing/millitary-coordination/yamlConfig/consumerConfiguration.yaml</data>
 	  </node>
 
     <node id="h9">   
       <data key="zk">1</data>
-      <data key="brokerCfg">use-cases/app-testing/millitary-coordination/broker.yaml</data>
+      <data key="brokerCfg">use-cases/app-testing/millitary-coordination/yamlConfig/broker.yaml</data>
       <data key="prodType">CUSTOM</data>
-      <data key="prodCfg">use-cases/app-testing/millitary-coordination/producerConfiguration.yaml</data>
+      <data key="prodCfg">use-cases/app-testing/millitary-coordination/yamlConfig/producerConfiguration.yaml</data>
       <data key="consType">CUSTOM</data>
-      <data key="consCfg">use-cases/app-testing/millitary-coordination/consumerConfiguration.yaml</data>
+      <data key="consCfg">use-cases/app-testing/millitary-coordination/yamlConfig/consumerConfiguration.yaml</data>
 	  </node>
 
     <node id="h10">
       <data key="zk">1</data>
-      <data key="brokerCfg">use-cases/app-testing/millitary-coordination/broker.yaml</data>
+      <data key="brokerCfg">use-cases/app-testing/millitary-coordination/yamlConfig/broker.yaml</data>
       <data key="prodType">CUSTOM</data>
-      <data key="prodCfg">use-cases/app-testing/millitary-coordination/producerConfiguration.yaml</data>
+      <data key="prodCfg">use-cases/app-testing/millitary-coordination/yamlConfig/producerConfiguration.yaml</data>
       <data key="consType">CUSTOM</data>
-      <data key="consCfg">use-cases/app-testing/millitary-coordination/consumerConfiguration.yaml</data>
+      <data key="consCfg">use-cases/app-testing/millitary-coordination/yamlConfig/consumerConfiguration.yaml</data>
 	  </node>
   
 

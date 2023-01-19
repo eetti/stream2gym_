@@ -19,7 +19,7 @@
 
     <node id="h1">
       <data key="streamProcType">Spark</data>
-      <data key="streamProcCfg">use-cases/app-testing/fraud-detection/fraud_detection.py,use-cases/app-testing/fraud-detection/trainedmodel</data>
+      <data key="streamProcCfg">use-cases/app-testing/fraud-detection/yamlConfig/spe-fraud-detection.yaml</data>
 	  </node>            
     
     <node id="s1"/>

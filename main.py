@@ -156,7 +156,7 @@ if __name__ == '__main__':
 	net.build()
 
 	brokerPlace, zkPlace, topicPlace, prodDetailsList, consDetailsList, isDisconnect, \
-		dcDuration, dcLinks, switchPlace, hostPlace = configParser.readConfigParams(net, args)
+		dcDuration, dcLinks, switchPlace, hostPlace, streamProcDetailsList = configParser.readConfigParams(net, args)
 	nTopics = len(topicPlace)
 	nSwitches = len(switchPlace)
 	nHosts = len(hostPlace)
@@ -169,7 +169,7 @@ if __name__ == '__main__':
 	validateInput(args)
 	
 	# checking whether the application is only kafka or kafka-spark
-	streamProcDetailsList, storePath = emuStreamProc.getStreamProcDetails(net, args.topo)
+	storePath = emuStreamProc.getStreamProcDetails(net, args.topo)
 	if not streamProcDetailsList:   # if there is no configuration for spark
 		args.onlyKafka = 1
 	else:

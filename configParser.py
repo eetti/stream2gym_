@@ -149,6 +149,13 @@ def validateProducerParameters(prodConfig, nodeID, producerType, acks, compressi
 		print("ERROR: Message rate on producer at node "+str(nodeID)+" should be less than 100 msg/second.")
 		sys.exit(1)
 
+def readStreamProcConfig(streamProcConfigPath, nodeID):
+	streamProcConfig = readYAMLConfig(streamProcConfigPath)
+	speApp = "" if streamProcConfig[0].get("app", "") is None else streamProcConfig[0].get("app", "")
+	if speApp == "" or speApp == None:
+		print('ERROR: stream processing application path not specified correctly in node '+str(nodeID))
+	
+	return speApp
 
 def readConfigParams(net, args):
 	inputTopoFile = args.topo
@@ -163,10 +170,8 @@ def readConfigParams(net, args):
 	topicPlace = []
 
 	prodDetailsList = []
-	prodDetails = {}
-
 	consDetailsList = []
-	consDetails = {}
+	streamProcDetailsList = []
 
 	#Read topo information
 	try:
@@ -200,6 +205,7 @@ def readConfigParams(net, args):
 	try:
 		for node, data in inputTopo.nodes(data=True):  
 			if node[0] == 'h':
+				nodeID = node[1:]
 				nHosts += 1 
 				hostPlace.append(node[1:]) 
 				if 'zookeeper' in data: 
@@ -211,19 +217,24 @@ def readConfigParams(net, args):
 						print("ERROR: zookeeper attribute only supports boolean input. Please check zookeeper attribute seting in node "+str(node))
 						sys.exit(1)
 				if 'brokerConfig' in data: 
-					nodeID = node[1:]
 					brokerDetails = readBrokerConfig(data["brokerConfig"], nodeID)
 					brokerPlace.append(brokerDetails)
 				if 'producerType' in data: 
 					producerType = data["producerType"]
-					nodeID = node[1:]
 					prodDetails = readProdConfig(data["producerConfig"], producerType, nodeID)
 					prodDetailsList.append(prodDetails)
 				if 'consumerType' in data:
 					consumerType = data["consumerType"]
-					nodeID = node[1:]
 					consDetails = readConsConfig(data["consumerConfig"], consumerType, nodeID)
 					consDetailsList.append(consDetails)
+				if 'streamProcConfig' in data: 
+					streamProcType = ""
+					if 'streamProcType' in data: 
+						streamProcType = data['streamProcType']
+					streamProcApp = readStreamProcConfig(data["streamProcConfig"], nodeID)
+					streamProcDetails = {"nodeId": nodeID, 'streamProcType': streamProcType, \
+										"applicationPath": streamProcApp}
+					streamProcDetailsList.append(streamProcDetails)
 			elif node[0] == 's':
 				nSwitches += 1
 				switchPlace.append(node[1:]) 
@@ -243,4 +254,4 @@ def readConfigParams(net, args):
 	# print(*consDetailsList)
 
 	return brokerPlace, zkPlace, topicPlace, prodDetailsList, consDetailsList, \
-		isDisconnect, dcDuration, dcLinks, switchPlace, hostPlace
+		isDisconnect, dcDuration, dcLinks, switchPlace, hostPlace, streamProcDetailsList

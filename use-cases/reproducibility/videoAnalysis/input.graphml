@@ -23,17 +23,17 @@
   
    
   <graph id="simple-topo" edgedefault="undirected">
-    <data key="topicCfg">use-cases/reproducibility/videoAnalysis/topicConfiguration.yaml</data>
+    <data key="topicCfg">use-cases/reproducibility/videoAnalysis/yamlConfig/topicConfiguration.yaml</data>
 
     <node id="s1"/>
 
     <node id="h1">
       <data key="zk">1</data>
-      <data key="brokerCfg">use-cases/reproducibility/videoAnalysis/broker.yaml</data>
+      <data key="brokerCfg">use-cases/reproducibility/videoAnalysis/yamlConfig/broker.yaml</data>
       <data key="prodType">ELTT</data>
-      <data key="prodCfg">use-cases/reproducibility/videoAnalysis/producerConfiguration.yaml</data>
+      <data key="prodCfg">use-cases/reproducibility/videoAnalysis/yamlConfig/producerConfiguration.yaml</data>
       <data key="consType">STANDARD</data>
-      <data key="consCfg">use-cases/reproducibility/videoAnalysis/consumerConfiguration.yaml</data>
+      <data key="consCfg">use-cases/reproducibility/videoAnalysis/yamlConfig/consumerConfiguration.yaml</data>
 	  </node>            
 
     <edge source="s1" target="h1">

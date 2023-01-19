@@ -22,9 +22,9 @@ def readStreamProcConfig(streamProcConfig):
     
 def getStreamProcDetails(net, inputTopoFile):
 
-	streamProcDetailsList = []
-	streamProcDetails = {}
-	streamProcDetailsKeys = {"nodeId", "applicationPath", "produceTo"}
+	# streamProcDetailsList = []
+	# streamProcDetails = {}
+	# streamProcDetailsKeys = {"nodeId", "applicationPath", "produceTo"}
 
 	storePath = ''
 
@@ -40,15 +40,15 @@ def getStreamProcDetails(net, inputTopoFile):
 		#Read nodewise streamProc information
 		for node, data in inputTopo.nodes(data=True):  
 			if node[0] == 'h':
-				if 'streamProcConfig' in data: 
-					streamProcType = ""
-					if 'streamProcType' in data: 
-						streamProcType = data['streamProcType']
-					streamProcApp, produceTo = readStreamProcConfig(data["streamProcConfig"])
-					streamProcDetails = {"nodeId": node[1:], 'streamProcType': streamProcType, \
-										"applicationPath": streamProcApp, "produceTo": produceTo}
+				# if 'streamProcConfig' in data: 
+				# 	streamProcType = ""
+				# 	if 'streamProcType' in data: 
+				# 		streamProcType = data['streamProcType']
+				# 	streamProcApp, produceTo = readStreamProcConfig(data["streamProcConfig"])
+				# 	streamProcDetails = {"nodeId": node[1:], 'streamProcType': streamProcType, \
+				# 						"applicationPath": streamProcApp, "produceTo": produceTo}
 					
-					streamProcDetailsList.append(streamProcDetails)
+				# 	streamProcDetailsList.append(streamProcDetails)
 				
 				if 'storeConfig' in data:
 					storeType = ""
@@ -59,14 +59,13 @@ def getStreamProcDetails(net, inputTopoFile):
 	except KeyError as e:
 		print("Node attributes are not set properly: "+str(e))
 		sys.exit(1)
-
-            
-	print("streamProc details")
-	print(*streamProcDetailsList)
+	# print("streamProc details")
+	# print(*streamProcDetailsList)
 
 	print("store config path: "+storePath)
 
-	return streamProcDetailsList,storePath
+	# return streamProcDetailsList,storePath
+	return storePath
 
 def cleanStreamProcDependency():
 # 	os.system("sudo rm -rf logs/kafka/")

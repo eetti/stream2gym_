@@ -25,28 +25,27 @@
   
    
   <graph id="simple-topo" edgedefault="undirected">
-    <data key="topicCfg">use-cases/reproducibility/networkTrafficAnalysis/topicConfiguration.yaml</data>
+    <data key="topicCfg">use-cases/reproducibility/networkTrafficAnalysis/yamlConfig/topicConfiguration.yaml</data>
 
     <node id="s1"/>
 
     <node id="h1">
       <data key="zk">1</data>
-      <data key="brokerCfg">use-cases/reproducibility/networkTrafficAnalysis/broker.yaml</data>
+      <data key="brokerCfg">use-cases/reproducibility/networkTrafficAnalysis/yamlConfig/broker.yaml</data>
       <data key="prodType">CUSTOM</data>
-      <data key="prodCfg">use-cases/reproducibility/networkTrafficAnalysis/producerConfiguration.yaml</data>
+      <data key="prodCfg">use-cases/reproducibility/networkTrafficAnalysis/yamlConfig/producerConfiguration.yaml</data>
 	  </node>   
 
     <node id="h2">
       <data key="streamProcType">Spark</data>
-      <data key="streamProcCfg">use-cases/reproducibility/networkTrafficAnalysis/spark-port-statistics.py,outputTopic</data>
-      <!-- <data key="streamProcCfg">use-cases/reproducibility/networkTrafficAnalysis/topicDuplicate.py,outputTopic</data> -->
+      <data key="streamProcCfg">use-cases/reproducibility/networkTrafficAnalysis/yamlConfig/spe-1.yaml</data>
       <data key="consType">STANDARD</data>
-      <data key="consCfg">use-cases/reproducibility/networkTrafficAnalysis/consumerConfigurationHost2.yaml</data>
+      <data key="consCfg">use-cases/reproducibility/networkTrafficAnalysis/yamlConfig/consumerConfigurationHost2.yaml</data>
 	  </node> 
 
     <node id="h3">
       <data key="consType">STANDARD</data>
-      <data key="consCfg">use-cases/reproducibility/networkTrafficAnalysis/consumerConfigurationHost3.yaml</data>
+      <data key="consCfg">use-cases/reproducibility/networkTrafficAnalysis/yamlConfig/consumerConfigurationHost3.yaml</data>
 	  </node>         
 
     <edge source="s1" target="h1">
