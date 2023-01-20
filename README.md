@@ -39,7 +39,7 @@ The tool was tested on Ubuntu 20.04.4 and is based on Python 3.8.10, Kafka 2.13-
   
   1) Navigate through the ```use-cases/``` directory to explore the diverse applications we tested using stream2gym.  Details of the applications including the exact data processing pipeline, topology, executed queries, and platform configurations can be found inside respective application directory. Example command to test a streaming data analytics application in a small network: 
   
-  ```sudo python3 main.py use-cases/app-testing/word-count/input.graphml```
+  ```sudo python3 main.py use-cases/app-testing/document-analytics/input.graphml```
   
   2) Log  production, consumption history and metrics of interest (e.g., bandwidth consumption) automatically for STANDARD producer and consumer. Look over the logs in `logs/output/` directory once the simulation ends.
     

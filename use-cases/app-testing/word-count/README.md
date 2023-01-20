@@ -56,8 +56,4 @@ stream of files, splits it into words, and stores word fre-quencies into another
  
 ## Running
    
- ```sudo python3 main.py use-cases/varying-networking-conditions/varying-link-latency/word-count/input.graphml```
-
-
-<!-- to run the temporary configuration:
-sudo python3 main.py use-cases/varying-networking-conditions/varying-link-latency/word-count/input-temp.graphml -->
+ ```sudo python3 main.py use-cases/app-testing/word-count/input.graphml```
