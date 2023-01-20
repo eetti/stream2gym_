@@ -28,6 +28,7 @@ use-cases/varying-networking-conditions/varying-link-latency/word-count/testbedR
 use-cases/varying-networking-conditions/varying-link-latency/word-count/testbedScripts/
 use-cases/varying-networking-conditions/varying-link-latency/word-count/simulationResults/
 use-cases/varying-networking-conditions/varying-link-latency/word-count/simulationScripts/
+use-cases/varying-networking-conditions/varying-link-latency/word-count/MFSTDataDir/
 use-cases/varying-networking-conditions/varying-link-latency/word-count/input-temp.graphml
 use-cases/varying-networking-conditions/varying-link-latency/word-count/yamlConfig/producerConfiguration-temp.yaml
 tempScript.py
