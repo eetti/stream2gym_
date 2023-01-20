@@ -51,8 +51,8 @@ The tool was tested on Ubuntu 20.04.4 and is based on Python 3.8.10, Kafka 2.13-
 
   ```sudo python3 main.py use-cases/app-testing/millitary-coordination/input.graphml --capture-all```
 
-  4) Run event streaming and stream processing engine jointly or individually. Default setup is running event streaming (Apache Kafka) and stream processing engine (Apache Spark) as a sequential pipeline.
+  5) Run event streaming and stream processing engine jointly or individually. Default setup is running event streaming (Apache Kafka) and stream processing engine (Apache Spark) as a sequential pipeline.
 
   ```sudo python3 main.py use-cases/reproducibility/input.graphml --only-spark 1```
 
-  5) Explore the stream2gym supported configuration parameters in ```config-parameters.pdf```. Setup parameters as you need and quickly test your prototype in a distributed emulated environment.
+  6) Explore the stream2gym supported configuration parameters in ```config-parameters.pdf```. Setup parameters as you need and quickly test your prototype in a distributed emulated environment.
