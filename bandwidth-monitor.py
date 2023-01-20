@@ -10,7 +10,6 @@ interval = 5
 nSwitches = int(sys.argv[1])
 
 while True:
-
 	for i in range(nSwitches):
 		logDir = "logs/output/"
 		bandwidthLog = open(logDir+"/bandwidth/bandwidth-log" + str(i+1) + ".txt", "a")

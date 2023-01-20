@@ -24,7 +24,7 @@ The tool was tested on Ubuntu 20.04.4 and is based on Python 3.8.10, Kafka 2.13-
   - Seaborn 0.12.1
   - PyYAML 5.3.1
 
-  Most dependencies can be installed using `apt install`:
+  Most dependencies can be installed using `apt install` and `pip3 install`:
   
   ```bash
   $ sudo apt install python3-pip mininet default-jdk xterm netcat
@@ -37,40 +37,18 @@ The tool was tested on Ubuntu 20.04.4 and is based on Python 3.8.10, Kafka 2.13-
   
   ## Sample command lines
   
-  1) Emulate and sync data in a small network.
+  1) Navigate through the ```use-cases/``` directory to explore the diverse applications we tested using stream2gym.  Details of the applications including the exact data processing pipeline, topology, executed queries, and platform configurations can be found inside respective application directory. Example command to test a streaming data analytics application in a small network: 
   
-  ```sudo python3 main.py tests/input/simple.graphml --nbroker 2 --nzk 2```
+  ```sudo python3 main.py use-cases/app-testing/word-count/input.graphml```
   
-  2) Create plots for metrics of interest (e.g., bandwidth consumption). Navigate through the `logs/` folder after the simulation finishes to check them.
+  2) Log  production, consumption history and metrics of interest (e.g., bandwidth consumption) automatically for STANDARD producer and consumer. Look over the logs in `logs/output/` directory once the simulation ends.
+    
+  3) Set a duration for the simulation (OBS.: this is the time the workload will run, not the total simulation time.)
 
-  ```sudo python3 main.py tests/input/simple.graphml --nbroker 2 --nzk 2 --create-plots```
-  
-  3) Create custom load. This example assumes a Gaussian distribution for the message sizes and two traffic classes (one sending messages at half the specified rate, i.e., 0.4, and another at twice).
+  ```sudo python3 main.py tests/input/simple.graphml --time 60```
 
-  ```sudo python3 main.py tests/input/simple.graphml --nbroker 2 --nzk 2 --create-plots --message-size gaussian,2,5 --message-rate 0.4 --traffic-classes 0.5,2```
-  
-  4) Create custom load with fixed message sizes.
+  4) Run event streaming and stream processing engine jointly or individually. Default setup is running event streaming (Apache Kafka) and stream processing engine (Apache Spark) as a sequential pipeline.
 
-  ```sudo python3 main.py tests/input/simple.graphml --nbroker 2 --nzk 2 --create-plots --message-size fixed,50 --message-rate 0.4 --traffic-classes 0.5,2```
-  
-  5) Set the number of topics
-
-  ```sudo python3 main.py tests/input/simple.graphml --nbroker 2 --nzk 2 --create-plots --ntopics 4```
-  
-  6) Set a replication factor for each topic (e.g., store two copies of each message)
-  
-  ```sudo python3 main.py tests/input/simple.graphml --nbroker 2 --nzk 2 --create-plots --ntopics 4 --replication 2```
-  
-  7) Set the consumer rate (e.g., check new messages every 2 seconds)
-
-  ```sudo python3 main.py tests/input/simple.graphml --nbroker 2 --nzk 2 --create-plots --consumer-rate 0.5```
-  
-  8) Set a duration for the simulation. OBS.: this is the time the workload will run, not the total simulation time
-
-  ```sudo python3 main.py tests/input/simple.graphml --nbroker 2 --nzk 2 --create-plots --time 60```
-
-  9) Run only Kafka/Spark application (default setup is running Kafka and Spark applications along side)
-
-  ```sudo python3 main.py use-cases/reproducibility/input.graphml --nzk 1 --nbroker 1 --only-kafka 1```
   ```sudo python3 main.py use-cases/reproducibility/input.graphml --nzk 1 --nbroker 1 --only-spark 1```
 
+  5) Explore the stream2gym supported configuration parameters in ```config-parameters.pdf```. Setup parameters as you need and quickly test your prototype in a distributed emulated environment.
