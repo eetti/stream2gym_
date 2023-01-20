@@ -9,14 +9,14 @@ In this application, we facilated a document analytics application scenario. It 
 
 ### Application Chain
 
-![image](https://user-images.githubusercontent.com/6629591/213770684-4472f133-d9e4-4441-805a-5290a43ccfed.png)
+![image](https://user-images.githubusercontent.com/6629591/213771032-9ab50f05-6627-4317-b4d9-e08b14f111c5.png)
 
 <!-- ![image](https://user-images.githubusercontent.com/6629591/185228018-2c9f9701-ff7e-42e0-9df2-d5042b49a8bb.png) -->
 
 
 ### Topology
 
-![image](https://user-images.githubusercontent.com/6629591/213770903-2b4ad633-8683-4fd1-9e67-7879643f5f40.png)
+![image](https://user-images.githubusercontent.com/6629591/213771113-24a20d62-a61a-45d7-a3d7-285de2c608dc.png)
 
 <!-- ![image](https://user-images.githubusercontent.com/6629591/185228142-f6256cf9-4e13-4e1c-a1b6-2c137382ea83.png) -->
 
