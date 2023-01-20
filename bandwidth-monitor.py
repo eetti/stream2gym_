@@ -20,13 +20,3 @@ while True:
 		bandwidthLog.close()
 
 	time.sleep(interval)
-
-
-
-
-
-
-
-
-
-

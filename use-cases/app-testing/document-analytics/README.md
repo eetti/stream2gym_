@@ -1,18 +1,20 @@
 # Document Analytics
 
-In this application, we facilated the running word-count application using a two Spark structured streaming(SS) applications chain. We use two Kafka topic respectively for input source and output sink. In the first application, textual data is ingested from one kafka topic to another via spark structured stream. The second application splits each line into words, generates running word count on those words and lastly, store the calculated value at a local file.
+In this application, we facilated a document analytics application scenario. It comprises a data source, which can read information from a file system or data base, two stream processing applications, and a data sink. The two stream processing applications are responsible for counting the number of distinct words in a document and calculating the average document length based on their topic, respectively. The pipeline uses a message broker to stream data between processing and storage nodes, and each data migration happens on a different topic.
+
+<!-- In this application, we facilated the running word-count application using a two Spark structured streaming(SS) applications chain. We use two Kafka topic respectively for input source and output sink. In the first application, textual data is ingested from one kafka topic to another via spark structured stream. The second application splits each line into words, generates running word count on those words and lastly, store the calculated value at a local file. -->
 
 
 ## Architecture
 
 ### Application Chain
 
-![image](https://user-images.githubusercontent.com/6629591/185228018-2c9f9701-ff7e-42e0-9df2-d5042b49a8bb.png)
+<!-- ![image](https://user-images.githubusercontent.com/6629591/185228018-2c9f9701-ff7e-42e0-9df2-d5042b49a8bb.png) -->
 
 
 ### Topology
 
-![image](https://user-images.githubusercontent.com/6629591/185228142-f6256cf9-4e13-4e1c-a1b6-2c137382ea83.png)
+<!-- ![image](https://user-images.githubusercontent.com/6629591/185228142-f6256cf9-4e13-4e1c-a1b6-2c137382ea83.png) -->
 
 
 ## Queries  
@@ -20,6 +22,9 @@ In this application, we facilated the running word-count application using a two
       lines.select(explode(split(lines.value, ' ')).alias('word'))
       
       words.groupBy('word').count()
+
+      lines.groupBy('topic')\
+        .agg( (sum('frequency')/approx_count_distinct('file')).alias('avgNumberOfFiles'))
   
 ## Operations
   
@@ -58,8 +63,8 @@ In this application, we facilated the running word-count application using a two
  
 ## Running
    
- ```sudo python3 main.py use-cases/app-testing/word-count/input.graphml```
+ ```sudo python3 main.py use-cases/app-testing/document-analytics/input.graphml```
 
 
 <!-- command to run the temporary configuration:
-sudo python3 main.py use-cases/app-testing/word-count/input-temp.graphml-->
+sudo python3 main.py use-cases/app-testing/document-analytics/input-temp.graphml-->

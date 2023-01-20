@@ -2,7 +2,7 @@
 
 Tool for fast prototyping of distributed stream processing applications.
 
-The tool was tested on Ubuntu 20.04.4 and is based on Python 3.8.10, Kafka 2.13-2.8.0 and PySpark 3.2.1.
+The tool was tested on Ubuntu 20.04.4 and is based on Python 3.8.10, Kafka 2.13-2.8.0, PySpark 3.2.1 and MySQL 8.0.30.
 
 ## Getting started
 

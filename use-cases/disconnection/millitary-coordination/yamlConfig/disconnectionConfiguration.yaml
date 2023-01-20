@@ -1,5 +1,5 @@
 # disconnection configuration file
 ---
-  duration : 60
+  duration : 120
   links: s1-h1
 ...

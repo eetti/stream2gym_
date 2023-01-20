@@ -112,12 +112,3 @@ def cleanKafkaState(brokerPlace):
 		bID = bk["nodeId"]
 		os.system("sudo rm -rf kafka/kafka" + str(bID) + "/")
 		os.system("sudo rm -f kafka/config/server" + str(bID) + ".properties")
-
-
-
-
-
-
-
-
-
