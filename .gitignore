@@ -7,6 +7,8 @@ kafka/kafka?/
 kafka/zookeeper?/
 use-cases/app-testing/fraud-detection/training.csv
 use-cases/app-testing/maritime-monitoring/Kafka-MySQL-user-manual.odt
+use-cases/app-testing/maritime-monitoring/maritime-mysql-bulk-sink.properties
+use-cases/app-testing/maritime-monitoring/Kafka-MySQL user manual.pdf
 use-cases/app-testing/word-count/input-chain.graphml
 use-cases/reproducibility/networkTrafficAnalysis/__pycache__/
 use-cases/reproducibility/networkTrafficAnalysis/logs/

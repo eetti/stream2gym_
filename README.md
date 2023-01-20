@@ -1,16 +1,16 @@
-# amnis-data-sync
+# stream2gym
 
-Tool for emulating data synchronization in mission critical networks.
+Tool for fast prototyping of distributed stream processing applications.
 
-The tool was tested on Ubuntu 18.04.1 and is based on Python 3.6, Kafka 2.13-2.8.0 and PySpark 3.2.1.
+The tool was tested on Ubuntu 20.04.4 and is based on Python 3.8.10, Kafka 2.13-2.8.0 and PySpark 3.2.1.
 
 ## Getting started
 
 1. Clone the repository, then enter into it.
 
-```git clone https://github.com/PINetDalhousie/amnis-data-sync```
+```git clone https://github.com/PINetDalhousie/stream2gym.git```
 
-```cd amnis-data-sync```
+```cd stream2gym```
 
 2. Install dependencies. Our tool depends on the following software:
 
@@ -22,13 +22,14 @@ The tool was tested on Ubuntu 18.04.1 and is based on Python 3.6, Kafka 2.13-2.8
   - Kafka-python 2.0.2
   - Matplotlib 3.3.4
   - Seaborn 0.12.1
+  - PyYAML 5.3.1
 
   Most dependencies can be installed using `apt install`:
   
   ```bash
   $ sudo apt install python3-pip mininet default-jdk xterm netcat
   
-  $ sudo pip3 install mininet networkx kafka-python matplotlib python-snappy lz4 seaborn
+  $ sudo pip3 install mininet networkx kafka-python matplotlib python-snappy lz4 seaborn pyyaml seaborn
   ```
   3. You are ready to go! Should be able to get help using:
 

@@ -54,9 +54,9 @@ We let this command run for 3 minutes. After that, we opened data.json and delet
      - number of partition(s) in this topic ('topicPartition')
      - number of replica(s) in this topic ('topicReplica')
 3. maritime.py : Spark SS application
-4. maritime-mysql-bulk-sink.properties: contains detailed MySQL configurations and topic name where MySQL will connect to.
-5. Kafka-MySQL-user manual.odt: Configurations manual for setting up Kafka-MySQL connection.
-6. input.graphml:
+<!-- 4. maritime-mysql-bulk-sink.properties: contains detailed MySQL configurations and topic name where MySQL will connect to. -->
+<!-- 5. Kafka-MySQL-user manual.pdf: Configurations manual for setting up Kafka-MySQL connection. -->
+4. input.graphml:
    - contains topology description
      - node details (switch, host)
      - edge details (bandwidth, latency, source port, destination port)
