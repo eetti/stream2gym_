@@ -1,5 +1,0 @@
-# producer configuration file
----
-  producerPath: use-cases/app-testing/millitary-coordination/military-data-producer.py
-  producerInstances: 1
-...

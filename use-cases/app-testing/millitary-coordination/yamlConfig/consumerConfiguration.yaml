@@ -1,5 +1,0 @@
-# consumer configuration file
----
-  consumerPath : use-cases/app-testing/millitary-coordination/military-consumerSingle.py
-  consumerInstances : 1
-...
