@@ -57,81 +57,11 @@ def killSubprocs(brokerPlace, zkPlace, prodDetailsList, streamProcDetailsList, c
 	# killing the topic duplicate python script
 	os.system("sudo pkill -9 -f topicDuplicate.py") 
 
-
-def validateInput(args):
-
-	#Check duration
-	if (args.duration < 1):
-		print("ERROR: Time should be greater than zero.")
-		sys.exit(1)
-
-	if(args.topicCheckInterval < 0):
-		print("ERROR: Topic check interval should be greater than zero.")
-		sys.exit(1)
-
-	# Check traffic classes
-	tClassString = args.tClassString
-	tClasses = tClassString.split(',')
-
-	for tClass in tClasses:
-		if(float(tClass) <= 0.1):
-			print("ERROR: All traffic classes should have a weight greater than 0.1.")
-			sys.exit(1)
-
-	#Check message size
-	mSizeString = args.mSizeString
-	mSizeParams = mSizeString.split(',')
-
-	mSizeDistList = ['fixed', 'gaussian']
-
-	if not( mSizeParams[0] in mSizeDistList ):
-		print("ERROR: Message size distribution not allowed.")
-		sys.exit(1)
-
-	if mSizeParams[0] == 'fixed':
-		if len(mSizeParams) != 2:
-			print("ERROR: Should specify a size for fixed size messages.")
-			sys.exit(1)
-		elif int(mSizeParams[1]) < 1:
-			print("ERROR: Message size should be equal to or greater than 1.")
-			sys.exit(1)
-	elif mSizeParams[0] == 'gaussian':
-		if len(mSizeParams) != 3:
-			print("ERROR: Should specify mean and standard deviation for gaussian-sized messages.")
-			sys.exit(1)
-		elif float(mSizeParams[1]) < 1.0:
-			print("ERROR: Mean message size should be equal to or greater than 1.0.")
-			sys.exit(1)
-		elif int(mSizeParams[2]) < 0.0:
-			print("ERROR: Standard deviation for message size should be greater than zero.")
-			sys.exit(1)
-
-	#Check consumer rate
-	if args.consumerRate <= 0.0 or args.consumerRate > 100.0:
-		print("ERROR: Consumer rate should be between 0 and 100 checks/second")
-		sys.exit(1)
-
 if __name__ == '__main__': 
-
 	parser = argparse.ArgumentParser(description='Emulate data sync in mission critical networks.')
 	parser.add_argument('topo', type=str, help='Network topology')
-	parser.add_argument('--nbroker', dest='nBroker', type=int, default=0,
-                    help='Number of brokers')
-	parser.add_argument('--nzk', dest='nZk', type=int, default=0, help='Number of Zookeeper instances')
-	parser.add_argument('--ntopics', dest='nTopics', type=int, default=1, help='Number of topics')
-	parser.add_argument('--replication', dest='replication', type=int, default=1, help='Replication factor')
-	parser.add_argument('--message-size', dest='mSizeString', type=str, default='fixed,10', help='Message size distribution (fixed, gaussian)')
-	parser.add_argument('--traffic-classes', dest='tClassString', type=str, default='1', help='Number of traffic classes')
-	parser.add_argument('--consumer-rate', dest='consumerRate', type=float, default=0.5, help='Rate consumers check for new messages in checks/second')
 	parser.add_argument('--time', dest='duration', type=int, default=10, help='Duration of the simulation (in seconds)')
-	
-	parser.add_argument('--create-plots', dest='createPlots', action='store_true')
-
-	parser.add_argument('--message-file', dest='messageFilePath', type=str, default='None', help='Path to a file containing the message to be sent by producers')
-	parser.add_argument('--topic-check', dest='topicCheckInterval', type=float, default=1.0, help='Minimum amount of time (in seconds) the consumer will wait between checking topics')
-
 	parser.add_argument('--only-spark', dest='onlySpark', type=int, default=0, help='To run Spark application only')
-	
 	parser.add_argument('--capture-all', dest='captureAll', action='store_true', help='Capture the traffic of all the hosts')
 	  
 	args = parser.parse_args()
@@ -165,8 +95,6 @@ if __name__ == '__main__':
 	print("Number of zookeepers in the topology: "+str(len(zkPlace)))
 	print("Number of brokers in the topology: "+str(len(brokerPlace)))
 	print("Number of topics: "+str(nTopics))
-
-	validateInput(args)
 	
 	# checking whether the application is only kafka or kafka-spark
 	storePath = emuStreamProc.getStreamProcDetails(net, args.topo)

@@ -57,26 +57,16 @@ def traceWireshark(hostsToCapture, f, logDir):
 		output = h.cmd("sudo tcpdump -i " + hostName +"-eth1 -w "+ filename +" &", shell=True)	
 		print(output)
 
-def spawnProducers(net, mSizeString, tClassString, nTopics, args, prodDetailsList, topicPlace):
+def spawnProducers(net, nTopics, args, prodDetailsList, topicPlace):
 	# tClasses = tClassString.split(',')
 	#print("Traffic classes: " + str(tClasses))
 
 	# nodeClassification = {}
 	netNodes = {}    
-
-	# classID = 1
-
-	# for tClass in tClasses:
-	# 	nodeClassification[classID] = []
-	# 	classID += 1
 	
 	#Distribute nodes among classes
 	for node in net.hosts:
 		netNodes[node.name] = node
-
-	# j =0
-	# for j in prodDetailsList:
-	# 	j['tClasses'] = str(randint(1,len(tClasses)))
 	
 	for prod in prodDetailsList:
 		nodeID = 'h' + prod['nodeId']
@@ -116,10 +106,10 @@ def spawnProducers(net, mSizeString, tClassString, nTopics, args, prodDetailsLis
 					
 				else:		
 					try:
-						node.popen("python3 "+producerPath+" "+nodeID+" "+str(prodInstance)+" "+mSizeString+" "+str(mRate)\
+						node.popen("python3 "+producerPath+" "+nodeID+" "+str(prodInstance)+" "+prodNumberOfFiles+" "+str(mRate)\
 						+" "+str(nTopics)+" "+str(acks)+" "+str(compression)+" "+str(batchSize)+" "+str(linger)\
 						+" "+str(requestTimeout)+" "+str(bufferMemory)+" "+str(brokerId)+" "+messageFilePath\
-						+" "+topicName+" "+producerType+" "+prodNumberOfFiles+" &", shell=True)
+						+" "+topicName+" "+producerType+" &", shell=True)
 
 					except Exception as e:
 						print('Error: '+str(e))
@@ -220,12 +210,9 @@ def spawnKafkaDataStoreConnector(net, prodDetailsList, storePath):
 	node.popen("sudo kafka/bin/connect-standalone.sh kafka/config/connect-standalone-new.properties "+ storePath +" > logs/connectorOutput.txt &", shell=True)
 
 def runLoad(net, args, topicPlace, prodDetailsList, consDetailsList, streamProcDetailsList, \
-	storePath, isDisconnect, dcDuration, dcLinks, logDir, topicWaitTime=100):
+	storePath, isDisconnect, dcDuration, dcLinks, logDir):
 
 	nTopics = len(topicPlace)
-	mSizeString = args.mSizeString
-	tClassString = args.tClassString
-	consumerRate = args.consumerRate
 	duration = args.duration
 
 	# give some time to warm up the brokers
@@ -279,7 +266,7 @@ def runLoad(net, args, topicPlace, prodDetailsList, consDetailsList, streamProcD
 		time.sleep(30)
 		print("SPE Clients created")
 
-	spawnProducers(net, mSizeString, tClassString, nTopics, args, prodDetailsList, topicPlace)
+	spawnProducers(net, nTopics, args, prodDetailsList, topicPlace)
 	# time.sleep(120)
 	print("Producers created")
 	

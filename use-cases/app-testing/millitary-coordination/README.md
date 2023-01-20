@@ -47,7 +47,7 @@
  
 ## Running
    
- ```sudo python3 main.py use-cases/app-testing/millitary-coordination/input.graphml --nzk 10 --nbroker 10 --capture-all --time 300``
+ ```sudo python3 main.py use-cases/app-testing/millitary-coordination/input.graphml --capture-all --time 300``
 
 <!-- Command to run the temporary topology:
-sudo python3 main.py use-cases/app-testing/millitary-coordination/input-temp.graphml --nzk 10 --nbroker 10 --time 300 -->
+sudo python3 main.py use-cases/app-testing/millitary-coordination/input-temp.graphml --time 300 -->

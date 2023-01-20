@@ -56,8 +56,8 @@ In this application, we facilated the running word-count application using a two
  
 ## Running
    
- ```sudo python3 main.py use-cases/varying-networking-conditions/varying-link-latency/word-count/input.graphml --nzk 1 --nbroker 1```
+ ```sudo python3 main.py use-cases/varying-networking-conditions/varying-link-latency/word-count/input.graphml```
 
 
 <!-- to run the temporary configuration:
-sudo python3 main.py use-cases/varying-networking-conditions/varying-link-latency/word-count/input-temp.graphml --nzk 1 --nbroker 2 -->
+sudo python3 main.py use-cases/varying-networking-conditions/varying-link-latency/word-count/input-temp.graphml -->

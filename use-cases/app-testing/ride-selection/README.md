@@ -70,4 +70,4 @@ In this application, we present a use-case where the taxi driver can yield highe
  
 ## Running
    
- ```sudo python3 main.py use-cases/app-testing/ride-selection/input.graphml --nzk 1 --nbroker 2```
+ ```sudo python3 main.py use-cases/app-testing/ride-selection/input.graphml```

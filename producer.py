@@ -112,12 +112,10 @@ def messageProductionELTT(messageFilePath, fileID):
 
 try:
 	node = sys.argv[1]
-	# tClass = int(sys.argv[2])
-	mSizeString = sys.argv[3]
 	prodInstanceID = sys.argv[2]
+	prodNumberOfFiles = int(sys.argv[3])
 	mRate = sys.argv[4]
 	nTopics = int(sys.argv[5])
-
 	acks = int(sys.argv[6])
 	compression = sys.argv[7]
 	batchSize = int(sys.argv[8])
@@ -128,31 +126,11 @@ try:
 	directoryPath = sys.argv[13]  #it will hold the file path/directory path based on producer type SFST or MFST respectively
 	prodTopic = sys.argv[14] 
 	prodType = sys.argv[15] 
-	prodNumberOfFiles = int(sys.argv[16])
-	# prodInstanceID = sys.argv[17]
-
-	# node = 'h1'
-	# tClass = 1.0
-	# mSizeString = 'fixed,10'
-	# mRate = 'None'   #1.0
-	# nTopics = 1
-	# acks = 1
-	# compression = 'gzip'   #'None'
-	# batchSize = 16384
-	# linger = 5000    #0
-	# requestTimeout = 100000  #30000
-	# bufferMemory = 33554432
-	# brokerId = '1'
-	# directoryPath = 'use-cases/disconnection/millitary-coordination/'
-	# prodTopic = 'topic-0'
-	# prodType = 'STANDARD'
-	# prodNumberOfFiles = 1
-	# prodInstanceID = 1
-	# messageFilePath = 'use-cases/disconnection/millitary-coordination/Cars103.xml'
-
+	
 	seed(1)
 
-	# mSizeParams = mSizeString.split(',')
+	mSizeString = 'fixed,10'
+	mSizeParams = mSizeString.split(',')
 	nodeID = node[1:]
 	logDir = 'logs/output'
                          
@@ -184,7 +162,6 @@ try:
 
 	# S2G producer parameters
 	logging.info(mRate)
-
 
 	bootstrapServers="10.0.0."+brokerId+":9092"
 

@@ -87,6 +87,6 @@ To train the model:
  ```sudo python3 main.py use-cases/app-testing/fraud-detection/input_only_spark.graphml --only-spark 1```
 
  To predict on testing data:
-  ```sudo python3 main.py use-cases/app-testing/fraud-detection/input.graphml --nzk 1 --nbroker 1```
+  ```sudo python3 main.py use-cases/app-testing/fraud-detection/input.graphml```
    
-<!-- command to run the temporary script: sudo python3 main.py use-cases/app-testing/fraud-detection/input-temp.graphml --nzk 1 --nbroker 2 -->
+<!-- command to run the temporary script: sudo python3 main.py use-cases/app-testing/fraud-detection/input-temp.graphml-->

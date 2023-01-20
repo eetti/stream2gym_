@@ -160,7 +160,6 @@ def readStreamProcConfig(streamProcConfigPath, nodeID):
 def readConfigParams(net, args):
 	inputTopoFile = args.topo
 	onlySpark =  args.onlySpark
-	nBroker = int(args.nBroker)
 
 	brokerPlace = []
 	zkPlace = []

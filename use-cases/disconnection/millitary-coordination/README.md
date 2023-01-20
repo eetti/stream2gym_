@@ -47,4 +47,4 @@
  
 ## Running
    
- ```sudo python3 main.py use-cases/disconnection/millitary-coordination/input.graphml --nzk 10 --nbroker 10 --capture-all --time 300``
+ ```sudo python3 main.py use-cases/disconnection/millitary-coordination/input.graphml --capture-all --time 300``

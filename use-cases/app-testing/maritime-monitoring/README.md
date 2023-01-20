@@ -75,4 +75,4 @@ We let this command run for 3 minutes. After that, we opened data.json and delet
      - storeConfig: contains the file path of the data store configuration.
 
 ## Running
-```sudo python3 main.py use-cases/app-testing/maritime-monitoring/input.graphml --nzk 1 --nbroker 2```
+```sudo python3 main.py use-cases/app-testing/maritime-monitoring/input.graphml```

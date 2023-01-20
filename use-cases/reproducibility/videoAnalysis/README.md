@@ -25,4 +25,4 @@
 
 ## Running
    
- ```sudo python3 main.py use-cases/reproducibility/videoAnalysis/input.graphml --nzk 1 --nbroker 1 --time 50```
+ ```sudo python3 main.py use-cases/reproducibility/videoAnalysis/input.graphml --time 50```
