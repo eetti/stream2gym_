@@ -259,16 +259,9 @@ def plotIndividualPortBandwidth():
         
     clearExistingPlot()
 
-
-
 #getting leader data from file
 def getLeaderList():
     leaderReplicaList = []
-#     if args.nZk == 0:
-#         folderPath = 'amnis-data-sync/logs/kraft/bandwidth/'
-#     else:
-#         folderPath = 'amnis-data-sync/logs/kafka/bandwidth/'
-#     leaderFilePath = folderPath+"nodes:" +str(args.switches)+ "_mSize:"+ args.mSizeString+ "_mRate:"+ str(args.mRate)+ "_topics:"+str(args.nTopics) +"_replication:"+str(args.replication)+"/leader-list.txt"
     leaderFilePath = logDirectory+"/leader-list.txt"
     with open(leaderFilePath, "r") as f:
         for line in f:
@@ -278,26 +271,26 @@ def getLeaderList():
 
 # def createHist():
 
-    new_list = range(math.floor(min(leaderReplicaList)), math.ceil(max(leaderReplicaList))+1)
-    plt.figure(figsize=(3,3))
-    plt.hist(leaderReplicaList, args.nTopics)
-#     plt.xticks(new_list)
-#     plt.title('Leader Frequency Histogram for '+str(args.nTopics)+' topics')    
+#     new_list = range(math.floor(min(leaderReplicaList)), math.ceil(max(leaderReplicaList))+1)
+#     plt.figure(figsize=(3,3))
+#     plt.hist(leaderReplicaList, args.nTopics)
+# #     plt.xticks(new_list)
+# #     plt.title('Leader Frequency Histogram for '+str(args.nTopics)+' topics')    
     
-    plt.xlabel('Broker ID', fontproperties=font)
-    plt.ylabel('Frequency', fontproperties=font)
+#     plt.xlabel('Broker ID', fontproperties=font)
+#     plt.ylabel('Frequency', fontproperties=font)
     
-    plt.xticks(range(0,int(max(new_list)+5), 5))
-    plt.xticks(fontproperties=font)
+#     plt.xticks(range(0,int(max(new_list)+5), 5))
+#     plt.xticks(fontproperties=font)
     
-    plt.yticks(range(0,10, 1))
-    plt.yticks(fontproperties=font)
-    
-    
-    plt.axhline(y=(args.nTopics/args.switches), color='r', linestyle='-')
+#     plt.yticks(range(0,10, 1))
+#     plt.yticks(fontproperties=font)
     
     
-    plt.savefig(logDirectory+"leader-frequency-histogram("+str(args.switches)+" nodes "+str(args.nTopics)+" topics "+str(args.replication)+" replication).pdf",bbox_inches="tight") 
+#     plt.axhline(y=(args.nTopics/args.switches), color='r', linestyle='-')
+    
+    
+#     plt.savefig(logDirectory+"leader-frequency-histogram("+str(args.switches)+" nodes "+str(args.nTopics)+" topics "+str(args.replication)+" replication).pdf",bbox_inches="tight") 
     
 # if __name__ == '__main__': 
 parser = argparse.ArgumentParser(description='Script for plotting individual port log.')
@@ -307,7 +300,6 @@ parser.add_argument('--switch-ports', dest='switchPorts', type=str, help='Plot b
 parser.add_argument('--port-type', dest='portType', default="access-port", type=str, help='Plot bandwidth for access/trunc ports')
 parser.add_argument('--message-size', dest='mSizeString', type=str, default='fixed,10', help='Message size distribution (fixed, gaussian)')
 parser.add_argument('--message-rate', dest='mRate', type=float, default=1.0, help='Message rate in msgs/second')
-# parser.add_argument('--folder-path', dest='path', type=str, default='amnis-data-sync/logs/bandwidth/', help='Switch bandwidth log directory')   
 parser.add_argument('--ntopics', dest='nTopics', type=int, default=1, help='Number of topics')
 parser.add_argument('--replication', dest='replication', type=int, default=1, help='Replication factor')
 parser.add_argument('--nzk', dest='nZk', type=int, default=0, help='Kafka/Kraft')
@@ -315,12 +307,6 @@ parser.add_argument('--log-dir', dest='logDir', type=str, help='Producer log dir
 
 args = parser.parse_args()
 
-# if args.nZk == 0:                      # for KRaft
-#     folderPath = 'amnis-data-sync/logs/kraft/'
-# else:
-#     folderPath = 'amnis-data-sync/logs/kafka/'
-    
-# logDirectory = folderPath+"nodes:" +str(args.switches)+ "_mSize:"+ args.mSizeString+ "_mRate:"+ str(args.mRate)+ "_topics:"+str(args.nTopics) +"_replication:"+str(args.replication)+"/bandwidth/" 
 logDirectory = args.logDir + "/bandwidth/"
 
 # leaderReplicaList = getLeaderList()

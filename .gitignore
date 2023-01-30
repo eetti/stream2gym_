@@ -5,6 +5,7 @@ data/
 analyses/
 kafka/kafka?/
 kafka/zookeeper?/
+tests/input/
 use-cases/app-testing/fraud-detection/training.csv
 use-cases/app-testing/maritime-monitoring/Kafka-MySQL-user-manual.odt
 use-cases/app-testing/maritime-monitoring/maritime-mysql-bulk-sink.properties
@@ -15,7 +16,7 @@ use-cases/reproducibility/networkTrafficAnalysis/logs/
 use-cases/disconnection/millitary-coordination/logs
 use-cases/disconnection/millitary-coordination/scripts/
 use-cases/reproducibility/networkTrafficAnalysis/input-temporary.graphml
-use-cases/app-testing/millitary-coordination/3-node-scenario/
+use-cases/app-testing/millitary-coordination/
 use-cases/app-testing/millitary-coordination/logs/
 use-cases/app-testing/millitary-coordination/input-temp.graphml
 use-cases/app-testing/millitary-coordination/topicConfiguration-temp.yaml

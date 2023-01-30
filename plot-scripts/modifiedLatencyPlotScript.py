@@ -186,10 +186,6 @@ def plotLatencyScatter():
             lineXAxis.append(lineNum)
             if "Latency of this message: " in line:
                 firstSplit = line.split("Latency of this message: 0:")
-                #print(str(firstSplit[1]))
-                #print(str(firstSplit[1][0:2]))
-                #print(str(firstSplit[1][3:5]))
-                #print(float(firstSplit[1][0:2])*60.0 + float(firstSplit[1][3:5]))
                 latencyYAxis.append(float(firstSplit[1][0:2])*60.0 + float(firstSplit[1][3:5]))
 
     plt.scatter(lineXAxis, latencyYAxis)
@@ -382,7 +378,7 @@ prodDetails = [{'prodNodeID':1, 'prodInstID':1}, {'prodNodeID':2, 'prodInstID':1
 consDetails = [{'consNodeID':1, 'consInstID':1}, {'consNodeID':2, 'consInstID':1}, {'consNodeID':3, 'consInstID':1}]
 nProducer = len(prodDetails)
 nConsumer = len(consDetails)
-logDir = '/home/monzurul/Desktop/stream2gym/logs/output/'
+logDir = 'stream2gym/logs/output/'
 nTopic = 1
 print(nProducer)
 
