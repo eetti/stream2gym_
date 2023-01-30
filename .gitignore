@@ -7,23 +7,17 @@ kafka/kafka?/
 kafka/zookeeper?/
 tests/input/
 use-cases/app-testing/fraud-detection/training.csv
-use-cases/app-testing/maritime-monitoring/Kafka-MySQL-user-manual.odt
 use-cases/app-testing/maritime-monitoring/maritime-mysql-bulk-sink.properties
-use-cases/app-testing/maritime-monitoring/Kafka-MySQL user manual.pdf
-use-cases/app-testing/word-count/input-chain.graphml
 use-cases/reproducibility/networkTrafficAnalysis/__pycache__/
 use-cases/reproducibility/networkTrafficAnalysis/logs/
 use-cases/disconnection/millitary-coordination/logs
 use-cases/disconnection/millitary-coordination/scripts/
 use-cases/reproducibility/networkTrafficAnalysis/input-temporary.graphml
 use-cases/app-testing/millitary-coordination/
-use-cases/app-testing/millitary-coordination/logs/
-use-cases/app-testing/millitary-coordination/input-temp.graphml
-use-cases/app-testing/millitary-coordination/topicConfiguration-temp.yaml
-use-cases/app-testing/word-count/input-temp.graphml
-use-cases/app-testing/word-count/consumerConfigurationHost1.yaml
-use-cases/app-testing/word-count/consumerConfigurationHost2.yaml
-use-cases/app-testing/word-count/consumerConfigurationHost3.yaml
+use-cases/app-testing/document-analytics/input-temp.graphml
+use-cases/app-testing/document-analytics/yamlConfig/consumerConfigurationHost1.yaml
+use-cases/app-testing/document-analytics/yamlConfig/consumerConfigurationHost2.yaml
+use-cases/app-testing/document-analytics/yamlConfig/consumerConfigurationHost3.yaml
 use-cases/app-testing/sentiment-analysis/input-temp.graphml
 use-cases/varying-networking-conditions/varying-link-latency/word-count/testbedResults/
 use-cases/varying-networking-conditions/varying-link-latency/word-count/testbedScripts/
