@@ -1,7 +1,0 @@
-# producer configuration file h1
----
-  filePath: use-cases/app-testing/word-count/inputTopic1/
-  topicName: Greetings
-  totalMessages: 1
-  producerInstances: 1
-...

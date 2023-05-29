@@ -1,5 +1,0 @@
-# consumer configuration file for host4
----
-  topicName : outTopic2
-  consumerInstances : 1
-...
