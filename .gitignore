@@ -27,4 +27,4 @@ use-cases/varying-networking-conditions/varying-link-latency/word-count/MFSTData
 use-cases/varying-networking-conditions/varying-link-latency/word-count/input-temp.graphml
 use-cases/varying-networking-conditions/varying-link-latency/word-count/yamlConfig/producerConfiguration-temp.yaml
 tempScript.py
-use-cases/app-testing/document-analytics/demo
+use-cases/app-testing/document-analytics/demo/
