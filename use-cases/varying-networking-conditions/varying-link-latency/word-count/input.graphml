@@ -30,8 +30,9 @@
     <node id="s1"/>
 
     <node id="h1">
-      <data key="prodType">SFST</data>
-      <data key="prodCfg">use-cases/varying-networking-conditions/varying-link-latency/word-count/yamlConfig/producerConfiguration.yaml</data>
+      <!-- <data key="prodType">SFST</data> -->
+      <data key="prodType">MFST</data>
+      <data key="prodCfg">use-cases/varying-networking-conditions/varying-link-latency/word-count/yamlConfig/producerConfiguration-temp.yaml</data>
 	  </node>            
     
     <node id="h2">
@@ -40,13 +41,17 @@
 	  </node>   
 
     <node id="h3">   
+      <!-- <data key="brokerCfg">use-cases/varying-networking-conditions/varying-link-latency/word-count/yamlConfig/broker.yaml</data> -->
       <data key="streamProcType">Spark</data>
       <data key="streamProcCfg">use-cases/varying-networking-conditions/varying-link-latency/word-count/yamlConfig/spe-1.yaml</data>
+      <!-- <data key="consType">STANDARD</data>
+      <data key="consCfg">use-cases/varying-networking-conditions/varying-link-latency/word-count/yamlConfig/consumerConfigurationHost3.yaml</data> -->
 	  </node>
 
     <node id="h4">
+      <data key="brokerCfg">use-cases/varying-networking-conditions/varying-link-latency/word-count/yamlConfig/broker.yaml</data>
       <data key="consType">STANDARD</data>
-      <data key="consCfg">use-cases/varying-networking-conditions/varying-link-latency/word-count/yamlConfig/consumerConfiguration.yaml</data>  
+      <data key="consCfg">use-cases/varying-networking-conditions/varying-link-latency/word-count/yamlConfig/consumerConfigurationHost4.yaml</data>  
 	  </node>         
 
     <edge source="s1" target="h1">
@@ -58,7 +63,7 @@
 
     <edge source="s1" target="h2">
       <data key="bw">1000</data>
-      <data key="lat">1</data>
+      <data key="lat">100</data>
       <data key="st">2</data>
       <data key="dt">1</data>
     </edge>
@@ -72,7 +77,7 @@
 
     <edge source="s1" target="h4">
       <data key="bw">1000</data>
-      <data key="lat">75</data>
+      <data key="lat">1</data>
       <data key="st">4</data>
       <data key="dt">1</data>
     </edge>

@@ -70,5 +70,5 @@ In this application, we facilated a document analytics application scenario. It 
  ```sudo python3 main.py use-cases/app-testing/document-analytics/input.graphml```
 
 
-<!-- command to run the temporary configuration:
-sudo python3 main.py use-cases/app-testing/document-analytics/input-temp.graphml-->
+<!-- command to run the original configuration:
+sudo python3 main.py use-cases/app-testing/document-analytics/input-original.graphml-->

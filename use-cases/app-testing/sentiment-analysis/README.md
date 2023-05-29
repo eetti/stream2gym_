@@ -58,4 +58,4 @@ This is a python library supports various operation for Natural language process
      
 ## Running
    
- ```sudo python3 main.py use-cases/app-testing/sentiment-analysis/input.graphm```
+ ```sudo python3 main.py use-cases/app-testing/sentiment-analysis/input.graphml```

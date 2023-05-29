@@ -30,8 +30,11 @@
     <node id="s1"/>
 
     <node id="h1">
+      <data key="brokerCfg">use-cases/app-testing/document-analytics/yamlConfig/broker.yaml</data>
       <data key="prodType">MFST</data>
-      <data key="prodCfg">use-cases/app-testing/document-analytics/yamlConfig/producerConfigurationHost1.yaml</data> 
+      <data key="prodCfg">use-cases/app-testing/document-analytics/yamlConfig/producerConfigurationHost1.yaml</data>
+      <data key="consType">STANDARD</data>
+      <data key="consCfg">use-cases/app-testing/document-analytics/yamlConfig/consumerConfigurationHost1.yaml</data> 
 	  </node>            
     
     <node id="h2">
@@ -39,14 +42,20 @@
       <data key="brokerCfg">use-cases/app-testing/document-analytics/yamlConfig/broker.yaml</data>
       <data key="prodType">MFST</data>
       <data key="prodCfg">use-cases/app-testing/document-analytics/yamlConfig/producerConfigurationHost2.yaml</data>
+      <data key="consType">STANDARD</data>
+      <data key="consCfg">use-cases/app-testing/document-analytics/yamlConfig/consumerConfigurationHost2.yaml</data>  
 	  </node>   
 
     <node id="h3">   
+      <data key="brokerCfg">use-cases/app-testing/document-analytics/yamlConfig/broker.yaml</data>
       <data key="streamProcType">Spark</data>
       <data key="streamProcCfg">use-cases/app-testing/document-analytics/yamlConfig/spe-1.yaml</data>
+      <data key="consType">STANDARD</data>
+      <data key="consCfg">use-cases/app-testing/document-analytics/yamlConfig/consumerConfigurationHost3.yaml</data>        
 	  </node>
 
     <node id="h4"> 
+      <data key="brokerCfg">use-cases/app-testing/document-analytics/yamlConfig/broker.yaml</data>
       <data key="streamProcType">Spark</data>
       <data key="streamProcCfg">use-cases/app-testing/document-analytics/yamlConfig/spe-2.yaml</data>            
       <data key="consType">STANDARD</data>
