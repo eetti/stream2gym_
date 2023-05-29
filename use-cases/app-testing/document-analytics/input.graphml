@@ -36,9 +36,9 @@
     
     <node id="h2">
       <data key="zk">1</data>
-      <data key="brokerCfg">use-cases/app-testing/document-analytics/yamlConfig/yamlConfig/broker.yaml</data>
+      <data key="brokerCfg">use-cases/app-testing/document-analytics/yamlConfig/broker.yaml</data>
       <data key="prodType">MFST</data>
-      <data key="prodCfg">use-cases/app-testing/document-analytics/yamlConfig/yamlConfig/producerConfigurationHost2.yaml</data>
+      <data key="prodCfg">use-cases/app-testing/document-analytics/yamlConfig/producerConfigurationHost2.yaml</data>
 	  </node>   
 
     <node id="h3">   

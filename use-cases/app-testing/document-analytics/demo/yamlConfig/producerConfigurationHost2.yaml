@@ -1,0 +1,7 @@
+# producer configuration file h2
+---
+  filePath: use-cases/app-testing/document-analytics/inputTopic2/
+  topicName: Soccer
+  totalMessages: 1
+  producerInstances: 1
+...

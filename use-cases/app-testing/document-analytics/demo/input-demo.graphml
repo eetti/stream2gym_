@@ -24,11 +24,11 @@
   <key id="dt" for="edge" attr.name="dport" attr.type="int"/>
   
    
+  <!-- Data processing pipeline -->
   <graph id="simple-topo" edgedefault="undirected">
     <data key="topicCfg">use-cases/app-testing/document-analytics/yamlConfig/topicConfiguration.yaml</data>
-
     <node id="s1"/>
-
+    <!-- Cluster allocation -->
     <node id="h1">
       <data key="brokerCfg">use-cases/app-testing/document-analytics/yamlConfig/broker.yaml</data>
       <data key="prodType">MFST</data>
@@ -36,7 +36,6 @@
       <data key="consType">STANDARD</data>
       <data key="consCfg">use-cases/app-testing/document-analytics/yamlConfig/consumerConfigurationHost1.yaml</data> 
 	  </node>            
-    
     <node id="h2">
       <data key="zk">1</data>
       <data key="brokerCfg">use-cases/app-testing/document-analytics/yamlConfig/broker.yaml</data>
@@ -45,7 +44,6 @@
       <data key="consType">STANDARD</data>
       <data key="consCfg">use-cases/app-testing/document-analytics/yamlConfig/consumerConfigurationHost2.yaml</data>  
 	  </node>   
-
     <node id="h3">   
       <data key="brokerCfg">use-cases/app-testing/document-analytics/yamlConfig/broker.yaml</data>
       <data key="streamProcType">Spark</data>
@@ -53,15 +51,21 @@
       <data key="consType">STANDARD</data>
       <data key="consCfg">use-cases/app-testing/document-analytics/yamlConfig/consumerConfigurationHost3.yaml</data>        
 	  </node>
-
     <node id="h4"> 
       <data key="brokerCfg">use-cases/app-testing/document-analytics/yamlConfig/broker.yaml</data>
       <data key="streamProcType">Spark</data>
       <data key="streamProcCfg">use-cases/app-testing/document-analytics/yamlConfig/spe-2.yaml</data>            
       <data key="consType">STANDARD</data>
       <data key="consCfg">use-cases/app-testing/document-analytics/yamlConfig/consumerConfigurationHost4.yaml</data> 
+	  </node>  
+    <node id="h5"> 
+      <data key="brokerCfg">use-cases/app-testing/document-analytics/yamlConfig/broker.yaml</data>
+      <data key="streamProcType">Spark</data>
+      <data key="streamProcCfg">use-cases/app-testing/document-analytics/yamlConfig/spe-2.yaml</data>            
+      <data key="consType">STANDARD</data>
+      <data key="consCfg">use-cases/app-testing/document-analytics/yamlConfig/consumerConfigurationHost4.yaml</data> 
 	  </node>         
-
+    <!-- Network setup -->
     <edge source="s1" target="h1">
       <data key="bw">1</data>
       <data key="lat">20</data>
@@ -90,5 +94,11 @@
       <data key="dt">1</data>
     </edge>
 
+    <edge source="s1" target="h5">
+      <data key="bw">1</data>
+      <data key="lat">20</data>
+      <data key="st">5</data>
+      <data key="dt">1</data>
+    </edge>
   </graph>
 </graphml>

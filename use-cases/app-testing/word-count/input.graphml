@@ -46,7 +46,7 @@
 
     <node id="h4">
       <data key="consType">STANDARD</data>
-      <data key="consCfg">use-cases/app-testing/word-count/yamlConfig/consumerConfiguration.yaml</data>  
+      <data key="consCfg">use-cases/app-testing/word-count/yamlConfig/consumerConfigurationHost4.yaml</data>  
 	  </node>         
 
     <edge source="s1" target="h1">
