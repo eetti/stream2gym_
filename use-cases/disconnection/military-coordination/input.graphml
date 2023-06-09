@@ -24,8 +24,8 @@
   
    
   <graph id="simple-topo" edgedefault="undirected">
-    <data key="topicCfg">use-cases/disconnection/millitary-coordination/yamlConfig/topicConfiguration.yaml</data>
-    <data key="faultCfg">use-cases/disconnection/millitary-coordination/yamlConfig/disconnectionConfiguration.yaml</data>
+    <data key="topicCfg">use-cases/disconnection/military-coordination/yamlConfig/topicConfiguration.yaml</data>
+    <data key="faultCfg">use-cases/disconnection/military-coordination/yamlConfig/disconnectionConfiguration.yaml</data>
 
     <node id="s1"/>
     <node id="s2"/>
@@ -40,92 +40,92 @@
 
     <node id="h1">
       <data key="zk">1</data>
-      <data key="brokerCfg">use-cases/disconnection/millitary-coordination/yamlConfig/broker.yaml</data>
+      <data key="brokerCfg">use-cases/disconnection/military-coordination/yamlConfig/broker.yaml</data>
       <data key="prodType">CUSTOM</data>
-      <data key="prodCfg">use-cases/disconnection/millitary-coordination/yamlConfig/producerConfiguration.yaml</data>
+      <data key="prodCfg">use-cases/disconnection/military-coordination/yamlConfig/producerConfiguration.yaml</data>
       <data key="consType">CUSTOM</data>
-      <data key="consCfg">use-cases/disconnection/millitary-coordination/yamlConfig/consumerConfiguration.yaml</data>
+      <data key="consCfg">use-cases/disconnection/military-coordination/yamlConfig/consumerConfiguration.yaml</data>
 	  </node>
     
     <node id="h2">
       <data key="zk">1</data>
-      <data key="brokerCfg">use-cases/disconnection/millitary-coordination/yamlConfig/broker.yaml</data>
+      <data key="brokerCfg">use-cases/disconnection/military-coordination/yamlConfig/broker.yaml</data>
       <data key="prodType">CUSTOM</data>
-      <data key="prodCfg">use-cases/disconnection/millitary-coordination/yamlConfig/producerConfiguration.yaml</data>
+      <data key="prodCfg">use-cases/disconnection/military-coordination/yamlConfig/producerConfiguration.yaml</data>
       <data key="consType">CUSTOM</data>
-      <data key="consCfg">use-cases/disconnection/millitary-coordination/yamlConfig/consumerConfiguration.yaml</data>
+      <data key="consCfg">use-cases/disconnection/military-coordination/yamlConfig/consumerConfiguration.yaml</data>
 	  </node>   
 
     <node id="h3">   
       <data key="zk">1</data>
-      <data key="brokerCfg">use-cases/disconnection/millitary-coordination/yamlConfig/broker.yaml</data>
+      <data key="brokerCfg">use-cases/disconnection/military-coordination/yamlConfig/broker.yaml</data>
       <data key="prodType">CUSTOM</data>
-      <data key="prodCfg">use-cases/disconnection/millitary-coordination/yamlConfig/producerConfiguration.yaml</data>
+      <data key="prodCfg">use-cases/disconnection/military-coordination/yamlConfig/producerConfiguration.yaml</data>
       <data key="consType">CUSTOM</data>
-      <data key="consCfg">use-cases/disconnection/millitary-coordination/yamlConfig/consumerConfiguration.yaml</data>
+      <data key="consCfg">use-cases/disconnection/military-coordination/yamlConfig/consumerConfiguration.yaml</data>
 	  </node>
 
     <node id="h4">   
       <data key="zk">1</data>
-      <data key="brokerCfg">use-cases/disconnection/millitary-coordination/yamlConfig/broker.yaml</data>
+      <data key="brokerCfg">use-cases/disconnection/military-coordination/yamlConfig/broker.yaml</data>
       <data key="prodType">CUSTOM</data>
-      <data key="prodCfg">use-cases/disconnection/millitary-coordination/yamlConfig/producerConfiguration.yaml</data>
+      <data key="prodCfg">use-cases/disconnection/military-coordination/yamlConfig/producerConfiguration.yaml</data>
       <data key="consType">CUSTOM</data>
-      <data key="consCfg">use-cases/disconnection/millitary-coordination/yamlConfig/consumerConfiguration.yaml</data>
+      <data key="consCfg">use-cases/disconnection/military-coordination/yamlConfig/consumerConfiguration.yaml</data>
 	  </node>
 
     <node id="h5">   
       <data key="zk">1</data>
-      <data key="brokerCfg">use-cases/disconnection/millitary-coordination/yamlConfig/broker.yaml</data>
+      <data key="brokerCfg">use-cases/disconnection/military-coordination/yamlConfig/broker.yaml</data>
       <data key="prodType">CUSTOM</data>
-      <data key="prodCfg">use-cases/disconnection/millitary-coordination/yamlConfig/producerConfiguration.yaml</data>
+      <data key="prodCfg">use-cases/disconnection/military-coordination/yamlConfig/producerConfiguration.yaml</data>
       <data key="consType">CUSTOM</data>
-      <data key="consCfg">use-cases/disconnection/millitary-coordination/yamlConfig/consumerConfiguration.yaml</data>
+      <data key="consCfg">use-cases/disconnection/military-coordination/yamlConfig/consumerConfiguration.yaml</data>
 	  </node>
 
     <node id="h6">   
       <data key="zk">1</data>
-      <data key="brokerCfg">use-cases/disconnection/millitary-coordination/yamlConfig/broker.yaml</data>
+      <data key="brokerCfg">use-cases/disconnection/military-coordination/yamlConfig/broker.yaml</data>
       <data key="prodType">CUSTOM</data>
-      <data key="prodCfg">use-cases/disconnection/millitary-coordination/yamlConfig/producerConfiguration.yaml</data>
+      <data key="prodCfg">use-cases/disconnection/military-coordination/yamlConfig/producerConfiguration.yaml</data>
       <data key="consType">CUSTOM</data>
-      <data key="consCfg">use-cases/disconnection/millitary-coordination/yamlConfig/consumerConfiguration.yaml</data>
+      <data key="consCfg">use-cases/disconnection/military-coordination/yamlConfig/consumerConfiguration.yaml</data>
 	  </node>
 
     <node id="h7">   
       <data key="zk">1</data>
-      <data key="brokerCfg">use-cases/disconnection/millitary-coordination/yamlConfig/broker.yaml</data>
+      <data key="brokerCfg">use-cases/disconnection/military-coordination/yamlConfig/broker.yaml</data>
       <data key="prodType">CUSTOM</data>
-      <data key="prodCfg">use-cases/disconnection/millitary-coordination/yamlConfig/producerConfiguration.yaml</data>
+      <data key="prodCfg">use-cases/disconnection/military-coordination/yamlConfig/producerConfiguration.yaml</data>
       <data key="consType">CUSTOM</data>
-      <data key="consCfg">use-cases/disconnection/millitary-coordination/yamlConfig/consumerConfiguration.yaml</data>
+      <data key="consCfg">use-cases/disconnection/military-coordination/yamlConfig/consumerConfiguration.yaml</data>
 	  </node>
 
     <node id="h8">
       <data key="zk">1</data>
-      <data key="brokerCfg">use-cases/disconnection/millitary-coordination/yamlConfig/broker.yaml</data>
+      <data key="brokerCfg">use-cases/disconnection/military-coordination/yamlConfig/broker.yaml</data>
       <data key="prodType">CUSTOM</data>
-      <data key="prodCfg">use-cases/disconnection/millitary-coordination/yamlConfig/producerConfiguration.yaml</data>
+      <data key="prodCfg">use-cases/disconnection/military-coordination/yamlConfig/producerConfiguration.yaml</data>
       <data key="consType">CUSTOM</data>
-      <data key="consCfg">use-cases/disconnection/millitary-coordination/yamlConfig/consumerConfiguration.yaml</data>
+      <data key="consCfg">use-cases/disconnection/military-coordination/yamlConfig/consumerConfiguration.yaml</data>
 	  </node>
 
     <node id="h9">   
       <data key="zk">1</data>
-      <data key="brokerCfg">use-cases/disconnection/millitary-coordination/yamlConfig/broker.yaml</data>
+      <data key="brokerCfg">use-cases/disconnection/military-coordination/yamlConfig/broker.yaml</data>
       <data key="prodType">CUSTOM</data>
-      <data key="prodCfg">use-cases/disconnection/millitary-coordination/yamlConfig/producerConfiguration.yaml</data>
+      <data key="prodCfg">use-cases/disconnection/military-coordination/yamlConfig/producerConfiguration.yaml</data>
       <data key="consType">CUSTOM</data>
-      <data key="consCfg">use-cases/disconnection/millitary-coordination/yamlConfig/consumerConfiguration.yaml</data>
+      <data key="consCfg">use-cases/disconnection/military-coordination/yamlConfig/consumerConfiguration.yaml</data>
 	  </node>
 
     <node id="h10">
       <data key="zk">1</data>
-      <data key="brokerCfg">use-cases/disconnection/millitary-coordination/yamlConfig/broker.yaml</data>
+      <data key="brokerCfg">use-cases/disconnection/military-coordination/yamlConfig/broker.yaml</data>
       <data key="prodType">CUSTOM</data>
-      <data key="prodCfg">use-cases/disconnection/millitary-coordination/yamlConfig/producerConfiguration.yaml</data>
+      <data key="prodCfg">use-cases/disconnection/military-coordination/yamlConfig/producerConfiguration.yaml</data>
       <data key="consType">CUSTOM</data>
-      <data key="consCfg">use-cases/disconnection/millitary-coordination/yamlConfig/consumerConfiguration.yaml</data>
+      <data key="consCfg">use-cases/disconnection/military-coordination/yamlConfig/consumerConfiguration.yaml</data>
 	  </node>
   
 
