@@ -93,7 +93,7 @@ try:
 	linger = 5000    #0
 	requestTimeout = 100000  #30000
 	brokers = 10
-	messageFilePath = 'use-cases/disconnection/millitary-coordination/Cars103.xml'
+	messageFilePath = 'use-cases/disconnection/military-coordination/Cars103.xml'
 	nSwitches = 10
 
 	logDir = "logs/output"
