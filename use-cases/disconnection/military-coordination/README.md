@@ -1,4 +1,4 @@
-# Document Analytics
+# Military Coordination
 
 
 ## Architecture
@@ -47,4 +47,4 @@
  
 ## Running
    
- ```sudo python3 main.py use-cases/disconnection/millitary-coordination/input.graphml --capture-all --time 300``
+ ```sudo python3 main.py use-cases/disconnection/military-coordination/input.graphml --capture-all --time 300``
