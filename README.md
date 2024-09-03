@@ -56,3 +56,24 @@ The tool was tested on Ubuntu 20.04.4 and is based on Python 3.8.10, Kafka 2.13-
   ```sudo python3 main.py use-cases/reproducibility/input.graphml --only-spark 1```
 
   6) Explore the stream2gym supported configuration parameters in ```documentation/config-parameters.pdf```. Setup parameters as you need and quickly test your prototype in a distributed emulated environment.
+
+## Research
+If you find our work relevant to your research, please consider citing:
+
+```bibtex
+@INPROCEEDINGS{10272479,
+  author={Amin Ifath, Md. Monzurul and Neves, Miguel and Haque, Israat},
+  booktitle={2023 IEEE 43rd International Conference on Distributed Computing Systems (ICDCS)}, 
+  title={Fast Prototyping of Distributed Stream Processing Applications with stream2gym}, 
+  year={2023},
+  volume={},
+  number={},
+  pages={395-405},
+  keywords={Portable computers;Visual analytics;Emulation;Telecommunication traffic;Production;Hardware;Reproducibility of results},
+  doi={10.1109/ICDCS57875.2023.00034}
+  }
+```
+
+## Contact
+
+Md. Monzurul Amin Ifath (monzurul.amin@dal.ca)
