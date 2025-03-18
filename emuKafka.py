@@ -76,12 +76,29 @@ def runKafka(net, brokerPlace, brokerWaitTime=200):
 
 		startingHost = netNodes[bID]
 		
-		print("Creating Kafka broker at node "+str(bNode))
+		print("Creating Kafka broker at node "+str(bNode)+" on host "+str(startingHost))
 
-		# startingHost.popen("kafka/bin/kafka-server-start.sh kafka/config/server"+str(bNode)+".properties &", shell=True)
-		popens[startingHost] = startingHost.popen(
-            "kafka/bin/kafka-server-start.sh kafka/config/server"+str(bNode)+".properties &", shell=True)
-		
+		# Calculate unique JMX port for this broker
+		jmx_port = 9999 + int(bNode)  # e.g., 9999 for h1, 10000 for h2
+		jmx_port = 9999  # e.g., 9999 for h1, 10000 for h2
+		ip = startingHost.IP()  # e.g., 10.0.0.1
+		print(f"IP address of broker {bNode}: {ip}")
+		# Use JAVA_OPTS to pass JMX properties
+		# cmd = (
+		# 	f"JAVA_OPTS=\"-Dcom.sun.management.jmxremote "
+		# 	f"-Dcom.sun.management.jmxremote.port={jmx_port} "
+		# 	f"-Dcom.sun.management.jmxremote.rmi.port={jmx_port} "
+		# 	f"-Dcom.sun.management.jmxremote.authenticate=false "
+		# 	f"-Dcom.sun.management.jmxremote.ssl=false "
+		# 	f"-Djava.rmi.server.hostname={ip}\" "
+		# 	f"kafka/bin/kafka-server-start.sh kafka/config/server{bNode}.properties &"
+		# )
+		cmd = (
+			f"JMX_PORT={jmx_port} "
+			f"kafka/bin/kafka-server-start.sh kafka/config/server{bNode}.properties &"
+		)
+		print(f"Executing command: {cmd}")  # Debug output
+		popens[startingHost] = startingHost.popen(cmd, shell=True)
 		time.sleep(1)
 
 	brokerWait = True
@@ -95,6 +112,7 @@ def runKafka(net, brokerPlace, brokerWaitTime=200):
 				"nc -z -v 10.0.0." + str(bNode) + " 9092")
 			stopTime = time.time()
 			totalTime = stopTime - startTime
+			print("Output: " + str(out))
 			if(exitCode == 0):
 				brokerWait = False
 				brokerCount += 1

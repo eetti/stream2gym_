@@ -15,7 +15,7 @@ def readYAMLConfig(configPath):
 	try:
 		with open(configPath, 'r') as f:
 			data = list(yaml.load_all(f, Loader=SafeLoader))
-			print(data)
+			# print(data)
 	except yaml.YAMLError:
 		print("Error in configuration file")
 
@@ -43,7 +43,7 @@ def readBrokerConfig(brokerConfigPath, nodeID):
 
 	brokerDetails = {"nodeId": nodeID, "replicaMaxWait": replicaMaxWait, 'replicaMinBytes': replicaMinBytes}
 	print("Broker details at node "+str(nodeID)+":")
-	print(brokerDetails)
+	# print(brokerDetails)
 
 	return brokerDetails 
 
@@ -242,7 +242,7 @@ def readConfigParams(net, args):
 		sys.exit(1)
 
 	print("zookeepers:")
-	print(*zkPlace)
+	# print(*zkPlace)
 	# print("brokers: \n")
 	# print(*brokerPlace)
 
