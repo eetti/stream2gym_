@@ -1,10 +1,10 @@
 #!/bin/bash
 
-# Clean up previous Mininet state
-# sudo mn -c
 
-# Start main.py in the background
-echo "B00937817" | sudo -S python3 /users/grad/etti/pinet/stream2gym/main.py /users/grad/etti/pinet/stream2gym/use-cases/disconnection/military-coordination/input.graphml --time 100
+# echo "B00937817" | sudo -S python3 /users/grad/etti/pinet/stream2gym/main.py /users/grad/etti/pinet/stream2gym/use-cases/disconnection/military-coordination/input.graphml --time 100 &
+# main_pid=$!
+
+echo "aSau1lteD???" | sudo -S python3 run_experiments.py
 
 # Wait briefly for processes to start
 # sleep 1
@@ -14,3 +14,21 @@ echo "B00937817" | sudo -S python3 /users/grad/etti/pinet/stream2gym/main.py /us
 # sudo python3 monitor_metrics.py --duration 100 --interval 1 --log-dir logs/output
 
 # echo "monitor_metrics.py ended"
+# sleep 3
+# for i in $(seq 1 $(($1 + 1)))
+# do
+#     echo "Iteration $i"
+#     sudo ip netns exec mn-h$i bash -c "python3 /users/grad/etti/pinet/stream2gym/metrics_script.py --host h$i" &
+#     pids[$i]=$!
+# done
+
+# # Wait for the processes to complete or add your logic here
+# for pid in ${pids[@]}; do
+#     wait $pid
+# done
+
+# # Kill the background processes after completion
+# for pid in ${pids[@]}; do
+#     sudo kill $pid
+# done
+# done

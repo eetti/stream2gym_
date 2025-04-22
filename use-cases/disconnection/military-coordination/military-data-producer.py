@@ -12,6 +12,7 @@ import logging
 import re
 import random
 import os
+import traceback
 
 def processProdMsg(q):
 	while True:
@@ -31,7 +32,7 @@ def readXmlFileMessage(file):
 	readFile = ' '
 	for line in lines:
 		readFile += line
-	logging.info("Read xml file is : %s", readFile)
+	# logging.info("Read xml file is : %s", readFile)
 	return readFile
 
 def processXmlMessage(message):
@@ -56,7 +57,6 @@ def readMessageFromFile(filePath):
 	#	message = processSvgFile(file)
 	else:
 		message = processFileMessage(file)
-
 	return message
 
 def generateMessage(mSizeParams):
@@ -78,6 +78,7 @@ def generateMessage(mSizeParams):
 	return message
 
 try:
+	print("System args ",sys.argv)
 	node = sys.argv[1]
 	prodInstanceID = sys.argv[2]
 	nodeID = node[1:]
@@ -88,15 +89,31 @@ try:
 	nTopics = 2
 
 	acks = 1
-	compression = 'gzip'   #'None'
-	batchSize = 16384
-	linger = 5000    #0
-	requestTimeout = 100000  #30000
+	compression = sys.argv[7]
+	batchSize = int(sys.argv[8])
+	linger = int(sys.argv[9])    #0
+	requestTimeout = int(sys.argv[10])  #30000
+	bufferMemory = int(sys.argv[11])
 	brokers = 10
 	messageFilePath = 'use-cases/disconnection/military-coordination/Cars103.xml'
 	nSwitches = 10
 
 	logDir = "logs/output"
+	print(f"in military-data-producer.py: {logDir}")
+	# Apache Kafka producer parameters
+	# logging.info(acks)
+	# logging.info(compression)
+	# logging.info(batchSize)
+	# logging.info(linger)
+	# logging.info(requestTimeout)
+	# logging.info(bufferMemory)
+	# logDir = "logs/output"
+	# os.makedirs(os.path.join(logDir, "prod"), exist_ok=True)  # Create directory if missing
+	# log_file = os.path.join(logDir, "prod", f"prod-node{nodeID}-instance{prodInstanceID}.log")
+	# print(f"Logging to: {log_file}")
+	# logging.basicConfig(filename=log_file, format='%(asctime)s %(levelname)s:%(message)s', level=logging.INFO, force=True)
+	# logging.getLogger().handlers[0].flush()  # Ensure immediate write
+	# logging.info("Logging initialized")
 
 	logging.basicConfig(filename=logDir+"/prod/"+"prod-node"+nodeID+\
 								"-instance"+str(prodInstanceID)+".log",
@@ -111,6 +128,7 @@ try:
 	msgID = 0
          
 	logging.info("node: "+nodeID)
+	print("node: "+nodeID)
     
 	bootstrapServers="10.0.0."+nodeID+":9092"
 
@@ -139,7 +157,7 @@ try:
 
 	# Read the message once and save in cache
 	if(messageFilePath != 'None'):
-		readMessage = readMessageFromFile(messageFilePath)	
+		readMessage = readMessageFromFile(messageFilePath)
 		logging.info("Messages generated from file")
 	else:
 		logging.info("Messages generated")
@@ -151,7 +169,8 @@ try:
 
 	while True:
 		if(messageFilePath != 'None'):
-			message = processXmlMessage(readMessage)			
+			message = processXmlMessage(readMessage)
+			# print("Message from file: ", message)
 		else:
 			message = generateMessage(mSizeParams)			
 		newMsgID = str(msgID).zfill(6)
@@ -172,8 +191,11 @@ try:
 
 # 		logging.info('Topic: %s; Message ID: %s;', topicName, str(msgID).zfill(3))        
 		msgID += 1
+		# logging.info(f"mRate type: {type(mRate)}, value: {mRate}")
 		time.sleep(1.0/(mRate*tClass))
 
 except Exception as e:
+	# traceback.print_exc()
+	# print("Error in military-data-producer.py: ", e)
 	logging.error(e)
 	sys.exit(1)

@@ -60,7 +60,7 @@ def traceWireshark(hostsToCapture, f, logDir):
 def spawnProducers(net, nTopics, args, prodDetailsList, topicPlace):
 	# tClasses = tClassString.split(',')
 	#print("Traffic classes: " + str(tClasses))
-
+	# print("Emmanuel")
 	# nodeClassification = {}
 	netNodes = {}    
 	
@@ -101,8 +101,21 @@ def spawnProducers(net, nTopics, args, prodDetailsList, topicPlace):
 			prodInstance = 1
 
 			while prodInstance <= int(nProducerInstances):
+				print("Producer type: "+producerType)
 				if producerType == 'CUSTOM':
-					node.popen("python3 "+ producerPath +" " +nodeID+" "+str(prodInstance)+" &", shell=True)
+					brokerId = 0
+					topicName = "None"
+					try:
+						cmd = ("python3 "+ producerPath +" " +nodeID+" "+str(prodInstance)+" "+prodNumberOfFiles+" "+str(mRate)\
+							+" "+str(nTopics)+" "+str(acks)+" "+str(compression)+" "+str(batchSize)+" "+str(linger)\
+							+" "+str(requestTimeout)+" "+str(bufferMemory)+" "+str(brokerId)+" "+messageFilePath\
+							+" "+topicName+" "+producerType+" &")
+						print(f"Executing command: {cmd}") 
+      					# > /tmp/producer_output_"+nodeID+"_"+str(prodInstance)+".log 2>&1 
+						node.popen(cmd, shell=True)
+						# node.popen("python3 "+ producerPath +" " +nodeID+" "+str(prodInstance)+" "+prodNumberOfFiles+" "+str(mRate)\
+					except Exception as e:
+						print('Custom Producer Error: '+str(e))
 					
 				else:		
 					try:
@@ -155,7 +168,7 @@ def spawnConsumers(net, consDetailsList, topicPlace):
 
 			while consInstance <= int(nConsumerInstances):
 				if consumerType == 'CUSTOM':
-					node.popen("python3 "+consumerPath+" "+str(node.name)+" "+str(consInstance)+" &", shell=True)
+					node.popen("python3 "+consumerPath+" "+str(node.name)+" "+str(consInstance)+" "+str(fetchMaxWait)+" &", shell=True)
 				else:
 					topicName = [x for x in topicPlace if x['topicName'] == topicName][0]["topicName"]
 					brokerId = [x for x in topicPlace if x['topicName'] == topicName][0]["topicBroker"] 

@@ -1,0 +1,10 @@
+knob,default,min,max,unit_str,options,data_type
+producer->batch_size,4096,1,262145,B,,int
+producer->linger_ms,0,0,100,ms,,int
+producer->buffer_memory,33554432,1,33554432,B,,int
+producer->compression_type,1,1,4,#,none/gzip/snappy/lz4,str
+producer->topics,1,1,10,#,,int
+broker->num.network.threads,3,1,20,#,,int
+broker->num.io.threads,8,1,24,#,,int
+broker->queued.max.requests,500,1,500,#,,int
+consumer->fetch_wait_max_ms,500,0,500,ms,,int

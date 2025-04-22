@@ -61,6 +61,13 @@ def configureKafkaCluster(brokerPlace, zkPlace):
 
 	propertyFile.close()
 
+def create_status_file(broker_count, total_time):
+    """Create a status file indicating successful Kafka broker startup"""
+    status_content = f"Successfully Created {broker_count} Kafka Brokers in {total_time} seconds\n"
+    with open("./status", "w") as status_file:
+        status_file.write(status_content)
+    print("Status file created at ./status")
+
 def runKafka(net, brokerPlace, brokerWaitTime=200):
 
 	netNodes = {}
@@ -79,20 +86,10 @@ def runKafka(net, brokerPlace, brokerWaitTime=200):
 		print("Creating Kafka broker at node "+str(bNode)+" on host "+str(startingHost))
 
 		# Calculate unique JMX port for this broker
-		jmx_port = 9999 + int(bNode)  # e.g., 9999 for h1, 10000 for h2
 		jmx_port = 9999  # e.g., 9999 for h1, 10000 for h2
 		ip = startingHost.IP()  # e.g., 10.0.0.1
 		print(f"IP address of broker {bNode}: {ip}")
-		# Use JAVA_OPTS to pass JMX properties
-		# cmd = (
-		# 	f"JAVA_OPTS=\"-Dcom.sun.management.jmxremote "
-		# 	f"-Dcom.sun.management.jmxremote.port={jmx_port} "
-		# 	f"-Dcom.sun.management.jmxremote.rmi.port={jmx_port} "
-		# 	f"-Dcom.sun.management.jmxremote.authenticate=false "
-		# 	f"-Dcom.sun.management.jmxremote.ssl=false "
-		# 	f"-Djava.rmi.server.hostname={ip}\" "
-		# 	f"kafka/bin/kafka-server-start.sh kafka/config/server{bNode}.properties &"
-		# )
+		
 		cmd = (
 			f"JMX_PORT={jmx_port} "
 			f"kafka/bin/kafka-server-start.sh kafka/config/server{bNode}.properties &"
@@ -123,6 +120,8 @@ def runKafka(net, brokerPlace, brokerWaitTime=200):
 				print("Waiting for Broker " + str(bNode) + " to Start...")
 				time.sleep(10)
 		brokerWait = True
+	# create status file here
+	create_status_file(brokerCount, totalTime)
 	print("Successfully Created "+str(brokerCount)+" Kafka Brokers in " + str(totalTime) + " seconds")
 
 def cleanKafkaState(brokerPlace):

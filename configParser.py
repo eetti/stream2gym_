@@ -15,7 +15,7 @@ def readYAMLConfig(configPath):
 	try:
 		with open(configPath, 'r') as f:
 			data = list(yaml.load_all(f, Loader=SafeLoader))
-			# print(data)
+			print(data)
 	except yaml.YAMLError:
 		print("Error in configuration file")
 
@@ -48,35 +48,36 @@ def readBrokerConfig(brokerConfigPath, nodeID):
 	return brokerDetails 
 
 # reading from producer YAML specification
-def readProdConfig(prodConfigPath, producerType, nodeID):
+def readProdConfig(prodConfigPath, producerType, nodeID, override_props=None):
 	prodConfig = readYAMLConfig(prodConfigPath)
+	if override_props:
+		for key, value in override_props.items():
+			prodConfig[0][key] = value
+	prodFile = prodConfig[0].get("filePath", "None")
+	prodTopic = prodConfig[0].get("topicName", "None")
+	prodNumberOfFiles = str(prodConfig[0].get("totalMessages", "0"))
+	nProducerInstances = str(prodConfig[0].get("producerInstances", "1"))
+	producerPath = prodConfig[0].get("producerPath", "producer.py")
+	acks = prodConfig[0].get("acks", 1)
+	compression = str(prodConfig[0].get("compression", "None"))
+	batchSize = prodConfig[0].get("batchSize", 16384)
+	linger = prodConfig[0].get("linger", 0)
+	requestTimeout = prodConfig[0].get("requestTimeout", 30000)
+	bufferMemory = prodConfig[0].get("bufferMemory", 33554432)
+	mRate = str(prodConfig[0].get("messageRate", "None"))
 
-	prodFile = "None" if prodConfig[0].get("filePath", "None") is None else prodConfig[0].get("filePath", "None")
-	prodTopic = "None" if prodConfig[0].get("topicName", "None") is None else prodConfig[0].get("topicName", "None")
-	prodNumberOfFiles = "0" if str(prodConfig[0].get("totalMessages", "0")) is None else str(prodConfig[0].get("totalMessages", "0"))
-	nProducerInstances = "1" if str(prodConfig[0].get("producerInstances", "1")) is None else str(prodConfig[0].get("producerInstances", "1"))
-	producerPath = "producer.py" if prodConfig[0].get("producerPath", "producer.py") is None else prodConfig[0].get("producerPath", "producer.py")
-
-	# Apache Kafka parameters
-	acks = 1 if prodConfig[0].get("acks", 1) is None else prodConfig[0].get("acks", 1)
-	compression = "None" if str(prodConfig[0].get("compression", "None")) is None else str(prodConfig[0].get("compression", "None"))
-	batchSize = 16384 if prodConfig[0].get("batchSize", 16384) is None else prodConfig[0].get("batchSize", 16384)
-	linger = 0 if prodConfig[0].get("linger", 0) is None else prodConfig[0].get("linger", 0)
-	requestTimeout = 30000 if prodConfig[0].get("requestTimeout", 30000) is None else prodConfig[0].get("requestTimeout", 30000)
-	bufferMemory = 33554432 if prodConfig[0].get("bufferMemory", 33554432) is None else prodConfig[0].get("bufferMemory", 33554432)
-
-	# S2G producer parameters
-	mRate = "None" if str(prodConfig[0].get("messageRate", "None")) is None else str(prodConfig[0].get("messageRate", "None"))
-
+	print("Producer details at node "+str(nodeID)+":")
+	print(prodConfig)
 	validateProducerParameters(prodConfig, nodeID, producerType, acks, compression, mRate)
 
-	prodDetails = {"nodeId": nodeID, "producerType": producerType,\
-					"produceFromFile":prodFile, "produceInTopic": prodTopic,\
-					"prodNumberOfFiles": prodNumberOfFiles, "nProducerInstances": nProducerInstances, \
-					"producerPath": producerPath,\
-					"acks":acks, "compression":compression, "batchSize": batchSize, \
-					"linger": linger, "requestTimeout": requestTimeout, "bufferMemory": bufferMemory, \
-					"mRate": mRate}
+	prodDetails = {
+		"nodeId": nodeID, "producerType": producerType,
+		"produceFromFile": prodFile, "produceInTopic": prodTopic,
+		"prodNumberOfFiles": prodNumberOfFiles, "nProducerInstances": nProducerInstances,
+		"producerPath": producerPath, "acks": acks, "compression": compression,
+		"batchSize": batchSize, "linger": linger, "requestTimeout": requestTimeout,
+		"bufferMemory": bufferMemory, "mRate": mRate
+	}
 	
 	# print("Producer details at node "+str(nodeID)+":")
 	# print(prodDetails)
@@ -84,33 +85,29 @@ def readProdConfig(prodConfigPath, producerType, nodeID):
 	return prodDetails 
 
 # reading from consumer YAML specification
-def readConsConfig(consConfigPath, consumerType, nodeID):
+def readConsConfig(consConfigPath, consumerType, nodeID, override_props=None):
 	consConfig = readYAMLConfig(consConfigPath)
-	consTopic = "" if consConfig[0].get("topicName", "") is None else consConfig[0].get("topicName", "")
-	nConsumerInstances = "1" if str(consConfig[0].get("consumerInstances", "1")) is None else str(consConfig[0].get("consumerInstances", "1"))
-	consumerPath = "consumer.py" if consConfig[0].get("consumerPath", "consumer.py") is None else consConfig[0].get("consumerPath", "consumer.py")
-	fetchMinBytes = 1 if int(consConfig[0].get("fetchMinBytes", 1)) is None else int(consConfig[0].get("fetchMinBytes", 1))
-	fetchMaxWait = 500 if int(consConfig[0].get("fetchMaxWait", 500)) is None else int(consConfig[0].get("fetchMaxWait", 500))
-	sessionTimeout = 10000 if int(consConfig[0].get("sessionTimeout", 10000)) is None else int(consConfig[0].get("sessionTimeout", 10000))
+	if override_props:
+		for key, value in override_props.items():
+			consConfig[0][key] = value
+	consTopic = consConfig[0].get("topicName", "")
+	nConsumerInstances = str(consConfig[0].get("consumerInstances", "1"))
+	consumerPath = consConfig[0].get("consumerPath", "consumer.py")
+	fetchMinBytes = int(consConfig[0].get("fetchMinBytes", 1))
+	fetchMaxWait = int(consConfig[0].get("fetchMaxWait", 500))
+	sessionTimeout = int(consConfig[0].get("sessionTimeout", 10000))
 
-	# Note that the value must be in the allowable range as configured in the broker configuration by group.min.session.timeout.ms and group.max.session.timeout.ms
 	if sessionTimeout < GROUP_MIN_SESSION_TIMEOUT_MS or sessionTimeout > GROUP_MAX_SESSION_TIMEOUT_MS:
-		print("ERROR: Session timeout must be in the allowable range as configured in the broker configuration by group.min.session.timeout.ms value of " + str(GROUP_MIN_SESSION_TIMEOUT_MS) + " and group.max.session.timeout.ms value of " + str(GROUP_MAX_SESSION_TIMEOUT_MS))
+		print(f"ERROR: Session timeout must be between {GROUP_MIN_SESSION_TIMEOUT_MS} and {GROUP_MAX_SESSION_TIMEOUT_MS}")
 		sys.exit(1)
 
-	if consumerType == 'CUSTOM' and consumerPath == "consumer.py":
-		print("ERROR: for CUSTOM consumer, consumer file path is required")
-		sys.exit(1)
-	elif consumerType == 'STANDARD' and consTopic == "" :
-		print("ERROR: for STANDARD consumer, topic name is required")	
-		sys.exit(1)
-	
-	consDetails = {"nodeId": nodeID, "consumerType": consumerType,\
-					"consumeFromTopic": consTopic, "nConsumerInstances": nConsumerInstances, \
-					"consumerPath": consumerPath, "fetchMinBytes": fetchMinBytes, \
-					"fetchMaxWait": fetchMaxWait, "sessionTimeout": sessionTimeout}
-
-	return consDetails 
+	consDetails = {
+		"nodeId": nodeID, "consumerType": consumerType,
+		"consumeFromTopic": consTopic, "nConsumerInstances": nConsumerInstances,
+		"consumerPath": consumerPath, "fetchMinBytes": fetchMinBytes,
+		"fetchMaxWait": fetchMaxWait, "sessionTimeout": sessionTimeout
+	}
+	return consDetails
 
 def readFaultConfig(faultConfigPath):
 	faultyLinks  = []
@@ -126,7 +123,7 @@ def readFaultConfig(faultConfigPath):
 
 
 def validateProducerParameters(prodConfig, nodeID, producerType, acks, compression, mRate):
-	if producerType == 'CUSTOM' and len(prodConfig[0]) != 2:
+	if producerType == 'CUSTOM' and len(prodConfig[0]) < 2:
 		print("ERROR: required parameters for CUSTOM producer at producer on node "+str(nodeID)+": producer file path and number of producer instance")
 		sys.exit(1)
 	if producerType == 'STANDARD' and len(prodConfig[0]) < 2:
@@ -157,7 +154,7 @@ def readStreamProcConfig(streamProcConfigPath, nodeID):
 	
 	return speApp
 
-def readConfigParams(net, args):
+def readConfigParams(net, args, override_props=None):
 	inputTopoFile = args.topo
 	onlySpark =  args.onlySpark
 
@@ -218,13 +215,13 @@ def readConfigParams(net, args):
 				if 'brokerConfig' in data: 
 					brokerDetails = readBrokerConfig(data["brokerConfig"], nodeID)
 					brokerPlace.append(brokerDetails)
-				if 'producerType' in data: 
+				if 'producerType' in data:
 					producerType = data["producerType"]
-					prodDetails = readProdConfig(data["producerConfig"], producerType, nodeID)
+					prodDetails = readProdConfig(data["producerConfig"], producerType, nodeID, override_props.get("producer", {}) if override_props else None)
 					prodDetailsList.append(prodDetails)
 				if 'consumerType' in data:
 					consumerType = data["consumerType"]
-					consDetails = readConsConfig(data["consumerConfig"], consumerType, nodeID)
+					consDetails = readConsConfig(data["consumerConfig"], consumerType, nodeID, override_props.get("consumer", {}) if override_props else None)
 					consDetailsList.append(consDetails)
 				if 'streamProcConfig' in data: 
 					streamProcType = ""
@@ -242,15 +239,15 @@ def readConfigParams(net, args):
 		sys.exit(1)
 
 	print("zookeepers:")
-	# print(*zkPlace)
+	print(*zkPlace)
 	# print("brokers: \n")
 	# print(*brokerPlace)
 
-	# print("producer details: ")
-	# print(*prodDetailsList)
+	print("producer details: \n")
+	print(*prodDetailsList)
 
-	# print("consumer details: ")
-	# print(*consDetailsList)
+	print("consumer details: \n")
+	print(*consDetailsList)
 
 	return brokerPlace, zkPlace, topicPlace, prodDetailsList, consDetailsList, \
 		isDisconnect, dcDuration, dcLinks, switchPlace, hostPlace, streamProcDetailsList

@@ -18,7 +18,7 @@ try:
 	nTopics = 2      
 	cRate = 0.5
 	fetchMinBytes = 1
-	fetchMaxWait = 500
+	fetchMaxWait = int(sys.argv[2])
 	sessionTimeout = 10000 
 	topicCheckInterval = 0.1
 
