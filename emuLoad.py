@@ -101,7 +101,7 @@ def spawnProducers(net, nTopics, args, prodDetailsList, topicPlace):
 			prodInstance = 1
 
 			while prodInstance <= int(nProducerInstances):
-				print("Producer type: "+producerType)
+				# print("Producer type: "+producerType)
 				if producerType == 'CUSTOM':
 					brokerId = 0
 					topicName = "None"
@@ -110,7 +110,7 @@ def spawnProducers(net, nTopics, args, prodDetailsList, topicPlace):
 							+" "+str(nTopics)+" "+str(acks)+" "+str(compression)+" "+str(batchSize)+" "+str(linger)\
 							+" "+str(requestTimeout)+" "+str(bufferMemory)+" "+str(brokerId)+" "+messageFilePath\
 							+" "+topicName+" "+producerType+" &")
-						print(f"Executing command: {cmd}") 
+						# print(f"Executing command: {cmd}") 
       					# > /tmp/producer_output_"+nodeID+"_"+str(prodInstance)+".log 2>&1 
 						node.popen(cmd, shell=True)
 						# node.popen("python3 "+ producerPath +" " +nodeID+" "+str(prodInstance)+" "+prodNumberOfFiles+" "+str(mRate)\
@@ -160,7 +160,7 @@ def spawnConsumers(net, consDetailsList, topicPlace):
 		# print("Number of consumers for this topic: "+str(nConsumerInstances))
 
 		try:
-			print("Consumer type: "+consumerType)
+			# print("Consumer type: "+consumerType)
 			if consumerType != 'CUSTOM':
 				topicName = [x for x in topicPlace if x['topicName'] == topicName][0]["topicName"]
 				brokerId = [x for x in topicPlace if x['topicName'] == topicName][0]["topicBroker"] 

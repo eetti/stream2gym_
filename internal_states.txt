@@ -1,0 +1,9 @@
+cpu_usage
+memory_consumed
+disk_io
+producer_messages_per_sec
+producer_request_total_time
+produce.request.temporary_bytes
+replication_factor
+fetch_rate
+message_size

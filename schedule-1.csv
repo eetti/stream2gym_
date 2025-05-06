@@ -1,0 +1,3 @@
+index,producer->batch_size,producer->linger_ms,producer->compression_type,producer->topics,consumer->fetch_wait_max_ms
+0,218756,93,None,5,99
+1,75421,73,gzip,6,39

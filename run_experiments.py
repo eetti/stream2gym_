@@ -62,7 +62,7 @@ for _, row in df_to_run.iterrows():
 
     # Clean up previous Mininet state
     subprocess.run(["sudo", "mn", "-c"])
-
+    print("Mininet cleaned up. Starting new simulation...")
     # Start main.py with override properties
     main_cmd = [
         "python3", "/users/grad/etti/pinet/stream2gym/main.py",
@@ -77,8 +77,13 @@ for _, row in df_to_run.iterrows():
     # Start metrics_script.py for each host with the run_index
     metric_pids = []
     for host in HOSTS:
+        namespace = f"mn-{host}"
+        # Check if the namespace exists
+        while not os.path.exists(f"/var/run/netns/{namespace}"):
+            print(f"Waiting for namespace {namespace} to be created...")
+            time.sleep(1)
         metric_cmd = [
-            "sudo", "ip", "netns", "exec", f"mn-{host}", "bash", "-c",
+            "sudo", "ip", "netns", "exec", namespace, "bash", "-c",
             f"python3 /users/grad/etti/pinet/stream2gym/metrics_script.py --host {host} --index {run_index}"
         ]
         metric_pid = subprocess.Popen(metric_cmd)
@@ -105,6 +110,6 @@ for _, row in df_to_run.iterrows():
         print("Terminating after 10 runs for cleanup.")
         break
     # Brief pause for cleanup
-    time.sleep(90)
+    time.sleep(60)
 
 print("All simulation runs completed.")
