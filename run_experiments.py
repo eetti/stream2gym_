@@ -69,7 +69,7 @@ for _, row in df_to_run.iterrows():
         proc = subprocess.Popen(main_cmd)
         thread_results['main_proc'] = proc
         try:
-            proc.wait(timeout=200)
+            proc.wait(timeout=SIM_TIME + NAMESPACE_SETUP_DELAY+100)
             thread_results['main_returncode'] = proc.returncode
         except subprocess.TimeoutExpired:
             print("main.py timed out, terminating...")
