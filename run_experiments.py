@@ -67,8 +67,14 @@ for _, row in df_to_run.iterrows():
             TOPO_FILE, "--time", str(SIM_TIME), "--override", override_json, "--index", str(run_index)
         ]
         proc = subprocess.Popen(main_cmd)
-        proc.wait()
-        thread_results['main_returncode'] = proc.returncode
+        thread_results['main_proc'] = proc
+        try:
+            proc.wait(timeout=200)
+            thread_results['main_returncode'] = proc.returncode
+        except subprocess.TimeoutExpired:
+            print("main.py timed out, terminating...")
+            proc.kill()
+            thread_results['main_returncode'] = -1
 
     # Thread target: run metrics scripts
     def run_metrics():
