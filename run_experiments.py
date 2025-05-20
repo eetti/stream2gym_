@@ -6,11 +6,11 @@ import os
 import threading
 
 # Configuration
-TOPO_FILE = "/users/grad/etti/pinet/stream2gym/use-cases/disconnection/military-coordination/input.graphml"
-SIM_TIME = 100
+TOPO_FILE = "/home/etti/pinet/stream2gym/use-cases/disconnection/military-coordination/input.graphml"
+SIM_TIME = 50
 HOSTS = [f"h{i}" for i in range(1, 11)]
-NAMESPACE_SETUP_DELAY = 20
-PROGRESS_FILE = "progress.txt"
+NAMESPACE_SETUP_DELAY = 10
+PROGRESS_FILE = "progress_missing.txt"
 
 def get_last_completed_index():
     if os.path.exists(PROGRESS_FILE):
@@ -23,7 +23,7 @@ def update_progress(run_index):
         f.write(str(run_index))
 
 # Load and filter schedule
-df = pd.read_csv("schedule.csv")
+df = pd.read_csv("missing_in_df2.csv")
 last_completed_index = get_last_completed_index()
 df_to_run = df[df["index"] > last_completed_index]
 
@@ -40,6 +40,8 @@ for _, row in df_to_run.iterrows():
     os.system("sudo rm ./status")
     
     # Prepare override properties
+    if row["producer->compression_type"] == 'none':
+        row["producer->compression_type"] = 'None'
     producer_props = {
         "batchSize": row["producer->batch_size"],
         "linger": row["producer->linger_ms"],
@@ -56,6 +58,7 @@ for _, row in df_to_run.iterrows():
     override_json = json.dumps(override_props)
 
     # Clean up Mininet
+    subprocess.run(["sudo","rm", "-rf" ,"/var/run/netns/*"])
     subprocess.run(["sudo", "mn", "-c"])
     print("Mininet cleaned up.")
 
@@ -63,12 +66,19 @@ for _, row in df_to_run.iterrows():
     def run_main():
         print("Starting main.py...")
         main_cmd = [
-            "python3", "/users/grad/etti/pinet/stream2gym/main.py",
+            "python3", "/home/etti/pinet/stream2gym/main.py",
             TOPO_FILE, "--time", str(SIM_TIME), "--override", override_json, "--index", str(run_index)
         ]
         proc = subprocess.Popen(main_cmd)
-        proc.wait()
-        thread_results['main_returncode'] = proc.returncode
+        thread_results['main_proc'] = proc
+        try:
+            
+            proc.wait(timeout=200)
+            thread_results['main_returncode'] = proc.returncode
+        except subprocess.TimeoutExpired:
+            print('main.py terminating....')
+            proc.kill()
+            thread_results['main_returncode'] = -1
 
     # Thread target: run metrics scripts
     def run_metrics():
@@ -79,7 +89,7 @@ for _, row in df_to_run.iterrows():
         for host in HOSTS:
             metric_cmd = [
                 "sudo", "ip", "netns", "exec", f"mn-{host}", "bash", "-c",
-                f"python3 /users/grad/etti/pinet/stream2gym/metrics_script.py --host {host} --index {run_index}"
+                f"python3 /home/etti/pinet/stream2gym/metrics_script.py --host {host} --index {run_index}"
             ]
             pid = subprocess.Popen(metric_cmd)
             metric_pids.append(pid)
@@ -111,10 +121,10 @@ for _, row in df_to_run.iterrows():
         print(f"Run {run_index} failed with return code {thread_results.get('main_returncode')}")
 
     counter += 1
-    if counter >= 10:
-        print("Terminating after 10 runs for cleanup.")
+    if counter > 1:
+        print("Terminating after 1 run for cleanup.")
         break
 
-    time.sleep(60)
+    #time.sleep(15)
 
 print("All simulation runs completed.")
