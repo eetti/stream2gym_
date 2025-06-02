@@ -1,10 +1,10 @@
 #!/bin/bash
 
 
-# echo "B00937817" | sudo -S python3 /users/grad/etti/pinet/stream2gym/main.py /users/grad/etti/pinet/stream2gym/use-cases/disconnection/military-coordination/input.graphml --time 100 &
+# echo "pass" | sudo -S python3 /users/grad/etti/pinet/stream2gym/main.py /users/grad/etti/pinet/stream2gym/use-cases/disconnection/military-coordination/input.graphml --time 100 &
 # main_pid=$!
 
-echo "aSau1lteD???" | sudo -S python3 run_experiments.py
+echo "password" | sudo -S python3 run_experiments.py
 
 # Wait briefly for processes to start
 # sleep 1

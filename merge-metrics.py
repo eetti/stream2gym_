@@ -5,7 +5,7 @@ import numpy as np
 all_dfs = []
 
 # Generate file names (states-h1.csv through states-h10.csv)
-file_paths = [f'metrics/states-h{i}.csv' for i in range(1, 11)]
+file_paths = [f'metrics/states-h{i}-c.csv' for i in range(1, 11)]
 
 # Process each file
 for file_path in file_paths:
@@ -53,7 +53,7 @@ else:
     
     # Print results
     print("Mean values across all files by run_index:")
-    print(mean_df.to_string(index=False))
+    # print(mean_df.to_string(index=False))
     print("\nNumber of unique run_index values:", len(mean_df))
     print("Number of files processed:", len(all_dfs))
     
@@ -66,7 +66,7 @@ except FileNotFoundError:
     exit(1)
 
 # Read the new performance metrics file
-new_file_path = 'data.csv'  # Change this to your actual file name
+new_file_path = 'data_sort.csv'  # Change this to your actual file name
 try:
     new_df = pd.read_csv(new_file_path)
 except FileNotFoundError:
@@ -99,5 +99,5 @@ merged_df.to_csv('states.csv', index=False)
 
 # Print results
 print("Merged means with Throughput and Latency:")
-print(merged_df.to_string(index=False))
+# print(merged_df.to_string(index=False))
 print("\nNumber of rows in merged file:", len(merged_df))
