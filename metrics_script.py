@@ -57,7 +57,7 @@ def get_jmx_metrics(host, port, run_index):
                             elif mtr_type == 'counter':
                                 observations[mtr_name] = mtr_val
             except Exception as e:
-                print(f"Error querying JMX for {host}: {e}")
+                # print(f"Error querying JMX for {host}: {e}")
                 failures += 1
                 if failures >= 5:
                     stop = True

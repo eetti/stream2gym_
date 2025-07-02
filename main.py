@@ -33,6 +33,8 @@ import jmxquery as jmx
 import pprint
 import traceback
 
+import latency_throughput_logs
+
 # console_log_level = 100
 
 # logging.basicConfig(level=logging.INFO,
@@ -171,7 +173,7 @@ def overheadCheckPlot(portFlag, msgSize):
 	for i in range(countX):
 		valWithLeader = 0
 #         valWithoutLeader = 0
-		for j in range(1):
+		for j in range(10):
 			valWithLeader = valWithLeader+allBandwidth[j][i]
 #             if (j+1) not in leaderReplicaList:         #to skip the leader replica curves
 #                 valWithoutLeader = valWithoutLeader+allBandwidth[j][i]
@@ -307,7 +309,7 @@ if __name__ == '__main__':
 		# 		writer.writeheader()
 
 		#Clean up mininet state
-		cleanProcess = subprocess.Popen("sudo mn -c", shell=True)
+		# cleanProcess = subprocess.Popen("sudo mn -c", shell=True)
 		emuLogs.cleanLogs()
 		time.sleep(2)
 	
@@ -328,7 +330,11 @@ if __name__ == '__main__':
 
 		# Persist namespaces for all hosts
 		net.topo = emulatedTopo
-		net.build()
+		try:
+			net.build()
+		except Exception as e:
+			print(f"Error building network: {e}")
+			sys.exit(1)
 		print("Network built")
 		# Start SSH daemon on each host
 		for host in net.hosts:
@@ -376,7 +382,7 @@ if __name__ == '__main__':
 			
 		killSubprocs(brokerPlace, zkPlace, prodDetailsList, streamProcDetailsList, consDetailsList)
 		
-		emuLogs.cleanLogs()
+		# emuLogs.cleanLogs()
 		emuDataStore.cleanDataStoreState()
 		emuKafka.cleanKafkaState(brokerPlace)
 		emuZk.cleanZkState(zkPlace)
@@ -463,39 +469,77 @@ if __name__ == '__main__':
 		emuStreamProc.cleanStreamProcDependency()
 
 		# collect data
-		Thr = plotAggregatedBandwidth()
-		Thr_avg = sum(Thr) / len(Thr)
-		print(f"Throughput: , {Thr_avg} Mbps")
+		# Thr = plotAggregatedBandwidth()
+		# Thr_avg = sum(Thr) / len(Thr)
+		# print(f"Throughput: , {Thr_avg} Mbps")
 	
-		prodDetails = [{'prodNodeID':1, 'prodInstID':1},{'prodNodeID':2, 'prodInstID':1},{'prodNodeID':2, 'prodInstID':1},{'prodNodeID':2, 'prodInstID':1},
-					{'prodNodeID':3, 'prodInstID':1},{'prodNodeID':4, 'prodInstID':1},{'prodNodeID':5, 'prodInstID':1},{'prodNodeID':6, 'prodInstID':1},
-					{'prodNodeID':7, 'prodInstID':1},{'prodNodeID':8, 'prodInstID':1},{'prodNodeID':9, 'prodInstID':1},{'prodNodeID':10, 'prodInstID':1}]
+		# prodDetails = [{'prodNodeID':1, 'prodInstID':1},{'prodNodeID':2, 'prodInstID':1},{'prodNodeID':2, 'prodInstID':1},{'prodNodeID':2, 'prodInstID':1},
+		# 			{'prodNodeID':3, 'prodInstID':1},{'prodNodeID':4, 'prodInstID':1},{'prodNodeID':5, 'prodInstID':1},{'prodNodeID':6, 'prodInstID':1},
+		# 			{'prodNodeID':7, 'prodInstID':1},{'prodNodeID':8, 'prodInstID':1},{'prodNodeID':9, 'prodInstID':1},{'prodNodeID':10, 'prodInstID':1}]
+		# consDetails = [{'consNodeID':1, 'consInstID':1}, {'consNodeID':2, 'consInstID':1},{'consNodeID':3, 'consInstID':1},{'consNodeID':4, 'consInstID':1},
+		# 		{'consNodeID':5, 'consInstID':1},{'consNodeID':6, 'consInstID':1},{'consNodeID':7, 'consInstID':1},{'consNodeID':8, 'consInstID':1}
+		# 		,{'consNodeID':9, 'consInstID':1},{'consNodeID':10, 'consInstID':1}]
+	
+		# switches = 10
+
+		# os.system("sudo rm "+logDir+"/latency-log.txt"+"; sudo touch "+logDir+"/latency-log.txt")
+		# os.makedirs(logDir+"/cons-latency-logs", exist_ok=True)
+
+		# print(datetime.now())
+
+		# nProducer = len(prodDetailsList)
+		# nConsumer = len(consDetailsList)
+
+		# initConsStruct(switches)
+		# readConsumerData(prodDetailsList, consDetailsList, nProducer, nConsumer, logDir)
+
+		# # for prodId in range(switches):
+		# for producer in prodDetailsList:
+		# 	getProdDetails(producer, consDetailsList, logDir)
+
+
+		# Late = plotLatencyScatter()
+		# # print(Late)
+		# late_avg = sum(Late)/len(Late)
+		# print(f"Latency: , {late_avg} ms")
+
+		# data['Throughput'] = Thr_avg
+		# data['Latency'] = late_avg
+  
+		Thr = latency_throughput_logs.plotAggregatedBandwidth()
+		Thr_avg = sum(Thr) / len(Thr)
+
+		prodDetails = [{'prodNodeID':1, 'prodInstID':1},{'prodNodeID':2, 'prodInstID':1},
+				{'prodNodeID':3, 'prodInstID':1},{'prodNodeID':4, 'prodInstID':1},{'prodNodeID':5, 'prodInstID':1},{'prodNodeID':6, 'prodInstID':1},
+				{'prodNodeID':7, 'prodInstID':1},{'prodNodeID':8, 'prodInstID':1},{'prodNodeID':9, 'prodInstID':1},{'prodNodeID':10, 'prodInstID':1}]
 		consDetails = [{'consNodeID':1, 'consInstID':1}, {'consNodeID':2, 'consInstID':1},{'consNodeID':3, 'consInstID':1},{'consNodeID':4, 'consInstID':1},
 				{'consNodeID':5, 'consInstID':1},{'consNodeID':6, 'consInstID':1},{'consNodeID':7, 'consInstID':1},{'consNodeID':8, 'consInstID':1}
 				,{'consNodeID':9, 'consInstID':1},{'consNodeID':10, 'consInstID':1}]
-	
-		switches = 10
+		nProducer = len(prodDetails)
+		nConsumer = len(consDetails)
+		logDir = 'logs/output/'
+		nTopic = 1
+		print(nProducer)
+		switches = 10 #args.switches
+			# logDir = args.logDir
 
-		os.system("sudo rm "+logDir+"/latency-log.txt"+"; sudo touch "+logDir+"/latency-log.txt")
-		os.makedirs(logDir+"/cons-latency-logs", exist_ok=True)
+		os.system("sudo rm "+logDir+"latency-log.txt"+"; sudo touch "+logDir+"latency-log.txt")  
+		os.makedirs(logDir+"cons-latency-logs", exist_ok=True)
 
-		print(datetime.now())
+		
 
-		nProducer = len(prodDetailsList)
-		nConsumer = len(consDetailsList)
+		latency_throughput_logs.initConsStruct(switches)
+		latency_throughput_logs.readConsumerData(prodDetails, consDetails, nProducer, nConsumer, logDir)
 
-		initConsStruct(switches)
-		readConsumerData(prodDetailsList, consDetailsList, nProducer, nConsumer, logDir)
-
-		# for prodId in range(switches):
-		for producer in prodDetailsList:
-			getProdDetails(producer, consDetailsList, logDir)
+			# for prodId in range(switches):
+		for producer in prodDetails:
+			latency_throughput_logs.getProdDetails(producer, logDir, nConsumer, consDetails)
 
 
-		Late = plotLatencyScatter()
-		# print(Late)
+		Late = latency_throughput_logs.plotLatencyScatter(logDir)
 		late_avg = sum(Late)/len(Late)
-		print(f"Latency: , {late_avg} ms")
+  
+		print(f"Latency: , {late_avg} secs")
 
 		data['Throughput'] = Thr_avg
 		data['Latency'] = late_avg
@@ -524,7 +568,7 @@ if __name__ == '__main__':
 			writer.writerow(data)
 			# writer.close()
 		print(data["index"],'-------------------------------------------------------------------------------------------')
-		emuLogs.cleanLogs()
+		# emuLogs.cleanLogs()
 	except Exception as e:
 		print(f"An error occurred: {e}")
 		print(traceback.format_exc())
