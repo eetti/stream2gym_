@@ -7,7 +7,7 @@ import threading
 
 # Configuration
 TOPO_FILE = "/users/grad/etti/pinet/stream2gym/use-cases/disconnection/military-coordination/input.graphml"
-SIM_TIME = 50
+SIM_TIME = 300
 HOSTS = [f"h{i}" for i in range(1, 11)]
 NAMESPACE_SETUP_DELAY = 20
 PROGRESS_FILE = "progress_missing_1.txt"

@@ -1,3 +1,7 @@
-index,producer->batch_size,producer->linger_ms,producer->compression_type,producer->topics,consumer->fetch_wait_max_ms
-0,218756,93,None,5,99
-1,75421,73,gzip,6,39
+index,producer->batch_size,producer->linger_ms,producer->buffer_memory,producer->compression_type,producer->topics,broker->num.network.threads,broker->num.io.threads,broker->queued.max.requests,consumer->fetch_wait_max_ms
+0,16384,5000,33554432,gzip,2,3,2,159,500
+1,16384,5000,33554432,gzip,2,3,2,159,500
+2,16384,5000,33554432,gzip,2,3,2,159,500
+3,16384,5000,33554432,gzip,2,3,2,159,500
+4,16384,5000,33554432,gzip,2,3,2,159,500
+5,16384,5000,33554432,gzip,2,3,2,159,500
