@@ -60,12 +60,13 @@ def traceWireshark(hostsToCapture, f, logDir):
 def spawnProducers(net, nTopics, args, prodDetailsList, topicPlace):
 	# tClasses = tClassString.split(',')
 	#print("Traffic classes: " + str(tClasses))
-	# print("Emmanuel")
 	# nodeClassification = {}
 	netNodes = {}    
 	
 	#Distribute nodes among classes
 	for node in net.hosts:
+		print("Node name: "+node.name)
+		print("Node IP: "+node.IP())
 		netNodes[node.name] = node
 	
 	for prod in prodDetailsList:
@@ -138,6 +139,8 @@ def spawnConsumers(net, consDetailsList, topicPlace):
 	netNodes = {}
 
 	for node in net.hosts:
+		print("Node name: "+node.name)
+		print("Node IP: "+node.IP())
 		netNodes[node.name] = node
         
 	for cons in consDetailsList:

@@ -86,7 +86,7 @@ try:
 	tClass = 1.0
 	mSizeString = 'fixed,10'
 	mRate = 30   #1.0
-	nTopics = 2
+	nTopics = 1
 
 	acks = 1
 	compression = sys.argv[7]
@@ -94,9 +94,9 @@ try:
 	linger = int(sys.argv[9])    #0
 	requestTimeout = int(sys.argv[10])  #30000
 	bufferMemory = int(sys.argv[11])
-	brokers = 10
+	brokers = 1
 	messageFilePath = 'use-cases/disconnection/military-coordination/Cars103.xml'
-	nSwitches = 10
+	nSwitches = 1
 
 	logDir = "logs/output"
 	print(f"in military-data-producer.py: {logDir}")
@@ -130,7 +130,7 @@ try:
 	logging.info("node: "+nodeID)
 	print("node: "+nodeID)
     
-	bootstrapServers="10.0.0."+nodeID+":9092"
+	bootstrapServers="10.0.0."+1+":9092"
 
 	# Convert acks=2 to 'all'
 	if(acks == 2):

@@ -33,6 +33,7 @@ import jmxquery as jmx
 import pprint
 import traceback
 
+import numpy as np
 import latency_throughput_logs
 
 # console_log_level = 100
@@ -537,27 +538,29 @@ if __name__ == '__main__':
 
 
 		Late = latency_throughput_logs.plotLatencyScatter(logDir)
+		# print(Late)
 		late_avg = sum(Late)/len(Late)
   
 		print(f"Latency: , {late_avg} secs")
+		late_avg_80 = np.percentile(Late, 80)
+		print(f"Latency: 80%, {late_avg_80} secs")
+		late_avg_90 = np.percentile(Late, 90)
+		print(f"Latency: 90%, {late_avg_90} secs")
+		thr_80 = np.percentile(Thr, 80)
+		print(f"Throughput: 80%, {thr_80} Mbps")
+		thr_90 = np.percentile(Thr, 90)
+		print(f"Throughput: 90%, {thr_90} Mbps")
 
 		data['Throughput'] = Thr_avg
 		data['Latency'] = late_avg
+  
+		data['latency_80'] = late_avg_80
+		data['throughput_80'] = thr_80
+
+		data['latency_90'] = late_avg_90
+		data['throughput_90'] = thr_90
 	
-		# Calculate average CPU and memory from metrics
-		# cpu_values, mem_values = [], []
-		# with open(f"{logDir}/metrics.txt", "r") as f:
-		# 	for line in f:
-		# 		parts = line.split(", ")
-		# 		cpu = float(parts[1].split(": ")[1].strip("%"))
-		# 		mem = float(parts[2].split(": ")[1].split(" MB")[0])
-		# 		cpu_values.append(cpu)
-		# 		mem_values.append(mem)
-		# avg_cpu = sum(cpu_values) / len(cpu_values) if cpu_values else 0
-		# avg_mem = sum(mem_values) / len(mem_values) if mem_values else 0
-		# data['avg_cpu'] = avg_cpu
-		# data['avg_mem'] = avg_mem
-		field_names = ['index','compression', 'batchSize', 'linger','n_topics','fetch_time','Throughput', 'Latency']
+		field_names = ['index','compression', 'batchSize', 'linger','n_topics','fetch_time','Throughput', 'Latency', 'latency_80','throughput_80','latency_90','throughput_90']
 		data['index'] = args.index
 		filename = 'data.csv'
 		with open(filename, 'a', newline='') as file:
