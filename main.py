@@ -513,15 +513,16 @@ if __name__ == '__main__':
 		prodDetails = [{'prodNodeID':1, 'prodInstID':1},{'prodNodeID':2, 'prodInstID':1},
 				{'prodNodeID':3, 'prodInstID':1},{'prodNodeID':4, 'prodInstID':1},{'prodNodeID':5, 'prodInstID':1},{'prodNodeID':6, 'prodInstID':1},
 				{'prodNodeID':7, 'prodInstID':1},{'prodNodeID':8, 'prodInstID':1},{'prodNodeID':9, 'prodInstID':1},{'prodNodeID':10, 'prodInstID':1}]
-		consDetails = [{'consNodeID':1, 'consInstID':1}, {'consNodeID':2, 'consInstID':1},{'consNodeID':3, 'consInstID':1},{'consNodeID':4, 'consInstID':1},
-				{'consNodeID':5, 'consInstID':1},{'consNodeID':6, 'consInstID':1},{'consNodeID':7, 'consInstID':1},{'consNodeID':8, 'consInstID':1}
-				,{'consNodeID':9, 'consInstID':1},{'consNodeID':10, 'consInstID':1}]
+		# consDetails = [{'consNodeID':1, 'consInstID':1}, {'consNodeID':2, 'consInstID':1},{'consNodeID':3, 'consInstID':1},{'consNodeID':4, 'consInstID':1},
+		# 		{'consNodeID':5, 'consInstID':1},{'consNodeID':6, 'consInstID':1},{'consNodeID':7, 'consInstID':1},{'consNodeID':8, 'consInstID':1}
+		# 		,{'consNodeID':9, 'consInstID':1},{'consNodeID':10, 'consInstID':1}]
+		consDetails = [{'consNodeID':12, 'consInstID':1}]
 		nProducer = len(prodDetails)
 		nConsumer = len(consDetails)
 		logDir = 'logs/output/'
 		nTopic = 1
 		print(nProducer)
-		switches = 10 #args.switches
+		switches = 1 #args.switches
 			# logDir = args.logDir
 
 		os.system("sudo rm "+logDir+"latency-log.txt"+"; sudo touch "+logDir+"latency-log.txt")  

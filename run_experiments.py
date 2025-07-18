@@ -6,11 +6,11 @@ import os
 import threading
 
 # Configuration
-TOPO_FILE = "/users/grad/etti/pinet/stream2gym/use-cases/disconnection/military-coordination/input.graphml"
-SIM_TIME = 300
-HOSTS = [f"h{i}" for i in range(1, 11)]
+TOPO_FILE = "/users/grad/etti/pinet/stream2gym/use-cases/disconnection/military-coordination/input-2.graphml"
+SIM_TIME = 90
+HOSTS = [f"h{i}" for i in range(11, 12)]
 NAMESPACE_SETUP_DELAY = 20
-PROGRESS_FILE = "progress_missing_1.txt"
+PROGRESS_FILE = "progress.txt"
 
 def get_last_completed_index():
     if os.path.exists(PROGRESS_FILE):
@@ -23,7 +23,7 @@ def update_progress(run_index):
         f.write(str(run_index))
 
 # Load and filter schedule
-df = pd.read_csv("schedule-1.csv")
+df = pd.read_csv("schedule-0.csv")
 last_completed_index = get_last_completed_index()
 df_to_run = df[df["index"] > last_completed_index]
 

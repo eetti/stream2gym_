@@ -92,6 +92,9 @@ def spawnProducers(net, nTopics, args, prodDetailsList, topicPlace):
 		mRate = prod['mRate']
 
 		node = netNodes[nodeID]
+		ip = node.IP()
+		print("Producer node: "+nodeID)
+		print("Producer IP: "+ip)
 
 		try:
 			if producerType != 'CUSTOM':
@@ -249,6 +252,7 @@ def runLoad(net, args, topicPlace, prodDetailsList, consDetailsList, streamProcD
 	startTime = time.time()
 
 	for topic in topicPlace:
+		print("Creating topic: "+str(topic))
 		topicName = topic["topicName"]
 		issuingID = int(topic["topicBroker"])
 		topicPartition = topic["topicPartition"]

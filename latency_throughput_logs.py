@@ -64,9 +64,12 @@ def overheadCheckPlot(portFlag, msgSize):
     allBandwidth = []
     countX = 0
     
+    # portParams = [(1,1),(2,1),(3,1),(4,1),(5,1),(6,1),(7,1),(8,1),(9,1),(10,1),
+    #               (1,2),(2,2),(1,3),(3,3),(1,4),(4,4),(1,5),(5,5),(1,6),(6,6),
+    #               (1,7),(7,7),(1,8),(8,8),(1,9),(9,9),(1,10),(10,10)]
     portParams = [(1,1),(2,1),(3,1),(4,1),(5,1),(6,1),(7,1),(8,1),(9,1),(10,1),
-                  (1,2),(2,2),(1,3),(3,3),(1,4),(4,4),(1,5),(5,5),(1,6),(6,6),
-                  (1,7),(7,7),(1,8),(8,8),(1,9),(9,9),(1,10),(10,10)]
+                  (11,1),(12,1)]
+    
     for ports in portParams:
         portId, switchId = ports
     
@@ -113,15 +116,17 @@ def initConsStruct(switches):
         consLogs.append(newDict)
         
 def readConsumerData(prodDetails, consDetails, nProducer, nConsumer, logDir):
+    print("Start reading consumer data")
     consId = 1
     #print("Start reading cons data: " + str(datetime.now()))
     for cons in consDetails:
+        print("Reading consumer data for: " + str(cons))
         #print(logDir+'cons/cons-'+str(consId)+'.log')
         f = open(logDir+'cons/'+'cons-node'+str(cons['consNodeID'])\
 				+'-instance'+str(cons['consInstID'])+'.log')
         
         for lineNum, line in enumerate(f,1):         #to get the line number
-            #print(line)
+            print(line)
 
             if "Prod ID: " in line:
                 lineParts = line.split(" ")
@@ -137,6 +142,8 @@ def readConsumerData(prodDetails, consDetails, nProducer, nConsumer, logDir):
                 #print(topic)
 
                 #print(prodID+"-"+msgID+"-"+topic)
+                # consLogs[cons['consNodeID']][prodID+"-"+msgID+"-"+topic] = lineParts[0] + " " + lineParts[1]
+                # print("Adding to consLogs: " + str(consId-1) + " Key: " + prodID+"-"+msgID+"-"+topic)
                 consLogs[consId-1][prodID+"-"+msgID+"-"+topic] = lineParts[0] + " " + lineParts[1]
 
         f.close()
@@ -150,6 +157,8 @@ def getProdDetails(prod, logDir, nConsumer, consDetails):
     
     prodLog = logDir+'/prod/prod-node'+str(prod['prodNodeID'])+'-instance'+str(prod['prodInstID'])+'.log'
     prodId = prod['prodNodeID']
+    
+    # print("consLogs: "+str(consLogs))
     
     with open(prodLog) as f:
         for line in f:
@@ -168,8 +177,11 @@ def getProdDetails(prod, logDir, nConsumer, consDetails):
                     formattedProdId = "0"+str(prodId)
                 else:
                     formattedProdId = str(prodId)
-
+                # print(str(nConsumer))
                 for consId in range(nConsumer):
+                    # print("Key: "+str(key)+" Value: "+str(val))
+                    # consId = val['consNodeID']
+                    # consInstId = val['consInstID']
                     #print(formattedProdId+"-"+msgId+"-topic-"+topicId)
                     if formattedProdId+"-"+msgId+"-topic-"+topicId in consLogs[consId].keys():
                         msgConsTime = consLogs[consId][formattedProdId+"-"+msgId+"-topic-"+topicId]
@@ -179,12 +191,15 @@ def getProdDetails(prod, logDir, nConsumer, consDetails):
                         latencyMessage = consTime - prodTime
 
                         #print(latencyMessage)
+                        # print("Producer ID: "+str(prodId)+" Message ID: "+msgId+" Topic ID: "+topicId+" Consumer ID: "+str(consId+1)+" Production time: "+msgProdTime+" Consumtion time: "+str(msgConsTime)+" Latency of this message: "+str(latencyMessage))
                         latencyLog.write("Producer ID: "+str(prodId)+" Message ID: "+msgId+" Topic ID: "+topicId+" Consumer ID: "+str(consId+1)+" Production time: "+msgProdTime+" Consumtion time: "+str(msgConsTime)+" Latency of this message: "+str(latencyMessage))
                         latencyLog.write("\n")    #latencyLog.write("\r\n")
 
                         # Write to the consumer latency log
                         consLatencyLog = open(logDir+"/cons-latency-logs/latency-log-cons-"+\
                             str(consDetails[consId]['consNodeID'])+'-instance'+str(consDetails[consId]['consInstID']) + ".txt", "a")
+                        
+                            # str(consId)+'-instance'+str(consInstId) + ".txt", "a")
                         # consLatencyLog = logDir+'prod-node'+str(prod['prodNodeID'])+'-instance'+str(prod['prodInstID'])+'.log'
                         consLatencyLog.write("Producer ID: "+str(prodId)+" Message ID: "+msgId+" Topic ID: "+topicId+" Consumer ID: "+str(consId)+" Production time: "+msgProdTime+" Consumtion time: "+str(msgConsTime)+" Latency of this message: "+str(latencyMessage))
                         consLatencyLog.write("\n")    #latencyLog.write("\r\n")
@@ -192,6 +207,6 @@ def getProdDetails(prod, logDir, nConsumer, consDetails):
 
                         #getConsDetails(consId+1, prodId, msgProdTime, topicId, msgId)
 
-        print("Prod " + str(prodId) + ": " + str(datetime.now()))
+        # print("Prod " + str(prodId) + ": " + str(datetime.now()))
 
     latencyLog.close()
