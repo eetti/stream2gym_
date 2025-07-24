@@ -32,7 +32,7 @@ try:
 
 	consumers = []
 	timeout = int((1.0/cRate) * 1000)
-	bootstrapServers="10.0.0."+str("11")+":9092"  
+	bootstrapServers="10.0.0."+str("2")+":9092"  
 
 	# One consumer for all topics
 	topicName = 'topic-*'

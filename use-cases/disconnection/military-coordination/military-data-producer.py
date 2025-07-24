@@ -130,7 +130,7 @@ try:
 	logging.info("node: "+nodeID)
 	print("node: "+nodeID)
     
-	bootstrapServers="10.0.0."+str(11)+":9092"
+	bootstrapServers="10.0.0."+str(2)+":9092"
 
 	# Convert acks=2 to 'all'
 	if(acks == 2):

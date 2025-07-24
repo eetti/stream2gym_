@@ -6,9 +6,9 @@ import os
 import threading
 
 # Configuration
-TOPO_FILE = "/users/grad/etti/pinet/stream2gym/use-cases/disconnection/military-coordination/input-2.graphml"
+TOPO_FILE = "/users/grad/etti/pinet/stream2gym/use-cases/disconnection/military-coordination/input-3.graphml"
 SIM_TIME = 90
-HOSTS = [f"h{i}" for i in range(11, 12)]
+HOSTS = [f"h{i}" for i in range(2, 3)]
 NAMESPACE_SETUP_DELAY = 20
 PROGRESS_FILE = "progress.txt"
 
@@ -86,6 +86,7 @@ for _, row in df_to_run.iterrows():
         print("Starting metrics scripts...")
         metric_pids = []
         for host in HOSTS:
+            print(f"Starting metrics script for {host}...")
             metric_cmd = [
                 "sudo", "ip", "netns", "exec", f"mn-{host}", "bash", "-c",
                 f"python3 /users/grad/etti/pinet/stream2gym/metrics_script.py --host {host} --index {run_index}"

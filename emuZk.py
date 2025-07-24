@@ -78,6 +78,8 @@ def runZk(net, zkPlace, logDir, zkWaitTime=100):
 		zID = "h"+str(zNode)
 
 		startingHost = netNodes[zID]
+		print("Starting Zookeeper at node h" + str(zNode) + "...")
+		print("Starting Host: " + str(startingHost))
 		
 		print("Creating Zookeeper instance at node "+str(zNode))
 

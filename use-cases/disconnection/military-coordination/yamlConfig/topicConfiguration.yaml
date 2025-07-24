@@ -1,7 +1,7 @@
 # topic configuration file
 ---
   topicName: topic-0
-  topicBroker: 11
+  topicBroker: 2
   topicPartition: 1
   topicReplica: 1
 ...

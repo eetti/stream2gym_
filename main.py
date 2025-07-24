@@ -339,15 +339,16 @@ if __name__ == '__main__':
 		print("Network built")
 		# Start SSH daemon on each host
 		for host in net.hosts:
-			print("Starting SSH daemon on host: "+host.name)
-			pid = host.pid  # Get the PID of the host process
-			ns_name = f"mn-{host.name}"  # Namespace name (e.g., mn-h1)
-			print(ns_name+"\n")
-			# Register the namespace in /var/run/netns/
-			subprocess.run(f"sudo mkdir -p /var/run/netns/", shell=True)
-			subprocess.run(f"sudo ln -sf /proc/{pid}/ns/net /var/run/netns/{ns_name}", shell=True)
-			# Start SSH daemon on each host
-			host.cmd("/usr/sbin/sshd -D &")
+			if host.name.startswith("2h"):
+				print("Starting SSH daemon on host: "+host.name)
+				pid = host.pid  # Get the PID of the host process
+				ns_name = f"mn-{host.name}"  # Namespace name (e.g., mn-h1)
+				print(ns_name+"\n")
+				# Register the namespace in /var/run/netns/
+				subprocess.run(f"sudo mkdir -p /var/run/netns/", shell=True)
+				subprocess.run(f"sudo ln -sf /proc/{pid}/ns/net /var/run/netns/{ns_name}", shell=True)
+				# Start SSH daemon on each host
+				host.cmd("/usr/sbin/sshd -D &")
 
 			# os.system(f"sudo ip netns exec {ns_name} -c \"python3 /users/grad/etti/pinet/stream2gym/metrics_script.py\" --host {host.name}&")
 
@@ -387,6 +388,7 @@ if __name__ == '__main__':
 		emuDataStore.cleanDataStoreState()
 		emuKafka.cleanKafkaState(brokerPlace)
 		emuZk.cleanZkState(zkPlace)
+
 			
 		if storePath != "":
 			print("Data store path: "+storePath)
@@ -444,7 +446,7 @@ if __name__ == '__main__':
 				break
 		
 		for j in consDetailsList:
-			if j['nodeId'] == '1':
+			if j['nodeId'] == '3':
 				data['fetch_time'] = j['fetchMaxWait']
 				break
 		# to kill all the running subprocesses
@@ -455,8 +457,9 @@ if __name__ == '__main__':
 	
 		# Clean up namespaces after stopping
 		for host in net.hosts:
-			ns_name = f"mn-{host.name}"
-			subprocess.run(f"sudo rm -f /var/run/netns/{ns_name}", shell=True)
+			if host.name.startswith("h2"):
+				ns_name = f"mn-{host.name}"
+				subprocess.run(f"sudo rm -f /var/run/netns/{ns_name}", shell=True)
 
 		# Clean kafka-MySQL connection state before new simulation
 		if storePath != "":
@@ -470,53 +473,14 @@ if __name__ == '__main__':
 		emuStreamProc.cleanStreamProcDependency()
 
 		# collect data
-		# Thr = plotAggregatedBandwidth()
-		# Thr_avg = sum(Thr) / len(Thr)
-		# print(f"Throughput: , {Thr_avg} Mbps")
-	
-		# prodDetails = [{'prodNodeID':1, 'prodInstID':1},{'prodNodeID':2, 'prodInstID':1},{'prodNodeID':2, 'prodInstID':1},{'prodNodeID':2, 'prodInstID':1},
-		# 			{'prodNodeID':3, 'prodInstID':1},{'prodNodeID':4, 'prodInstID':1},{'prodNodeID':5, 'prodInstID':1},{'prodNodeID':6, 'prodInstID':1},
-		# 			{'prodNodeID':7, 'prodInstID':1},{'prodNodeID':8, 'prodInstID':1},{'prodNodeID':9, 'prodInstID':1},{'prodNodeID':10, 'prodInstID':1}]
-		# consDetails = [{'consNodeID':1, 'consInstID':1}, {'consNodeID':2, 'consInstID':1},{'consNodeID':3, 'consInstID':1},{'consNodeID':4, 'consInstID':1},
-		# 		{'consNodeID':5, 'consInstID':1},{'consNodeID':6, 'consInstID':1},{'consNodeID':7, 'consInstID':1},{'consNodeID':8, 'consInstID':1}
-		# 		,{'consNodeID':9, 'consInstID':1},{'consNodeID':10, 'consInstID':1}]
-	
-		# switches = 10
-
-		# os.system("sudo rm "+logDir+"/latency-log.txt"+"; sudo touch "+logDir+"/latency-log.txt")
-		# os.makedirs(logDir+"/cons-latency-logs", exist_ok=True)
-
-		# print(datetime.now())
-
-		# nProducer = len(prodDetailsList)
-		# nConsumer = len(consDetailsList)
-
-		# initConsStruct(switches)
-		# readConsumerData(prodDetailsList, consDetailsList, nProducer, nConsumer, logDir)
-
-		# # for prodId in range(switches):
-		# for producer in prodDetailsList:
-		# 	getProdDetails(producer, consDetailsList, logDir)
-
-
-		# Late = plotLatencyScatter()
-		# # print(Late)
-		# late_avg = sum(Late)/len(Late)
-		# print(f"Latency: , {late_avg} ms")
-
-		# data['Throughput'] = Thr_avg
-		# data['Latency'] = late_avg
   
 		Thr = latency_throughput_logs.plotAggregatedBandwidth()
 		Thr_avg = sum(Thr) / len(Thr)
 
-		prodDetails = [{'prodNodeID':1, 'prodInstID':1},{'prodNodeID':2, 'prodInstID':1},
-				{'prodNodeID':3, 'prodInstID':1},{'prodNodeID':4, 'prodInstID':1},{'prodNodeID':5, 'prodInstID':1},{'prodNodeID':6, 'prodInstID':1},
-				{'prodNodeID':7, 'prodInstID':1},{'prodNodeID':8, 'prodInstID':1},{'prodNodeID':9, 'prodInstID':1},{'prodNodeID':10, 'prodInstID':1}]
-		# consDetails = [{'consNodeID':1, 'consInstID':1}, {'consNodeID':2, 'consInstID':1},{'consNodeID':3, 'consInstID':1},{'consNodeID':4, 'consInstID':1},
-		# 		{'consNodeID':5, 'consInstID':1},{'consNodeID':6, 'consInstID':1},{'consNodeID':7, 'consInstID':1},{'consNodeID':8, 'consInstID':1}
-		# 		,{'consNodeID':9, 'consInstID':1},{'consNodeID':10, 'consInstID':1}]
-		consDetails = [{'consNodeID':12, 'consInstID':1}]
+		prodDetails = [{'prodNodeID':1, 'prodInstID':1},{'prodNodeID':1, 'prodInstID':2},
+				{'prodNodeID':1, 'prodInstID':3},{'prodNodeID':1, 'prodInstID':4},{'prodNodeID':1, 'prodInstID':5},{'prodNodeID':1, 'prodInstID':6},
+				{'prodNodeID':1, 'prodInstID':7},{'prodNodeID':1, 'prodInstID':8},{'prodNodeID':1, 'prodInstID':9},{'prodNodeID':1, 'prodInstID':10}]
+		consDetails = [{'consNodeID':3, 'consInstID':1}]
 		nProducer = len(prodDetails)
 		nConsumer = len(consDetails)
 		logDir = 'logs/output/'
