@@ -444,7 +444,7 @@ if __name__ == '__main__':
 				break
 		
 		for j in consDetailsList:
-			if j['nodeId'] == '1':
+			if j['nodeId'] == '12':
 				data['fetch_time'] = j['fetchMaxWait']
 				break
 		# to kill all the running subprocesses
@@ -457,6 +457,7 @@ if __name__ == '__main__':
 		for host in net.hosts:
 			ns_name = f"mn-{host.name}"
 			subprocess.run(f"sudo rm -f /var/run/netns/{ns_name}", shell=True)
+			print("Deleted namespace: " + ns_name)
 
 		# Clean kafka-MySQL connection state before new simulation
 		if storePath != "":
@@ -541,7 +542,8 @@ if __name__ == '__main__':
 		Late = latency_throughput_logs.plotLatencyScatter(logDir)
 		# print(Late)
 		late_avg = sum(Late)/len(Late)
-  
+
+		print(f"Throughput: , {Thr_avg} mbps")
 		print(f"Latency: , {late_avg} secs")
 		late_avg_80 = np.percentile(Late, 80)
 		print(f"Latency: 80%, {late_avg_80} secs")

@@ -89,7 +89,7 @@ def overheadCheckPlot(portFlag, msgSize):
     for i in range(countX):
         valWithLeader = 0
 #         valWithoutLeader = 0
-        for j in range(10):
+        for j in range(1):
             valWithLeader = valWithLeader+allBandwidth[j][i]
 #             if (j+1) not in leaderReplicaList:         #to skip the leader replica curves
 #                 valWithoutLeader = valWithoutLeader+allBandwidth[j][i]
@@ -126,7 +126,7 @@ def readConsumerData(prodDetails, consDetails, nProducer, nConsumer, logDir):
 				+'-instance'+str(cons['consInstID'])+'.log')
         
         for lineNum, line in enumerate(f,1):         #to get the line number
-            print(line)
+            # print(line)
 
             if "Prod ID: " in line:
                 lineParts = line.split(" ")

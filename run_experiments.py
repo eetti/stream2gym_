@@ -8,7 +8,8 @@ import threading
 # Configuration
 TOPO_FILE = "/users/grad/etti/pinet/stream2gym/use-cases/disconnection/military-coordination/input-2.graphml"
 SIM_TIME = 90
-HOSTS = [f"h{i}" for i in range(11, 12)]
+# HOSTS = [f"h{i}" for i in range(11, 12)]
+HOSTS = ["h11"]
 NAMESPACE_SETUP_DELAY = 20
 PROGRESS_FILE = "progress.txt"
 
@@ -23,7 +24,7 @@ def update_progress(run_index):
         f.write(str(run_index))
 
 # Load and filter schedule
-df = pd.read_csv("schedule-0.csv")
+df = pd.read_csv("schedule_first_1000.csv")
 last_completed_index = get_last_completed_index()
 df_to_run = df[df["index"] > last_completed_index]
 
@@ -120,9 +121,9 @@ for _, row in df_to_run.iterrows():
         print(f"Run {run_index} failed with return code {thread_results.get('main_returncode')}")
 
     counter += 1
-    if counter > 10:
-        print("Terminating after 10 runs for cleanup.")
-        break
+    # if counter > 10:
+    #     print("Terminating after 10 runs for cleanup.")
+    #     break
 
     #time.sleep(15)
 

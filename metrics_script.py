@@ -16,6 +16,7 @@ INTERVAL = 5
 def get_jmx_metrics(host, port, run_index):
     host_id = int(host[1:])
     jmx_url = f"service:jmx:rmi:///jndi/rmi://10.0.0.{host_id}:{port}/jmxrmi"
+    print(f"Connecting to JMX at {jmx_url} for host {host} (run index {run_index})")
     try:
         jmx = JMXConnection(jmx_url)
         
@@ -96,7 +97,7 @@ if __name__ == "__main__":
     args = parser.parse_args()
     # Check for required files in a loop until they exist
     while not check_required_files():
-        # print("Waiting for required files to become available...")
+        print("Waiting for required files to become available...")
         time.sleep(5)  # Wait 5 seconds before checking again
     
     # Once files exist, proceed with metrics collection
