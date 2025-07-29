@@ -99,21 +99,6 @@ try:
 	nSwitches = 1
 
 	logDir = "logs/output"
-	print(f"in military-data-producer.py: {logDir}")
-	# Apache Kafka producer parameters
-	# logging.info(acks)
-	# logging.info(compression)
-	# logging.info(batchSize)
-	# logging.info(linger)
-	# logging.info(requestTimeout)
-	# logging.info(bufferMemory)
-	# logDir = "logs/output"
-	# os.makedirs(os.path.join(logDir, "prod"), exist_ok=True)  # Create directory if missing
-	# log_file = os.path.join(logDir, "prod", f"prod-node{nodeID}-instance{prodInstanceID}.log")
-	# print(f"Logging to: {log_file}")
-	# logging.basicConfig(filename=log_file, format='%(asctime)s %(levelname)s:%(message)s', level=logging.INFO, force=True)
-	# logging.getLogger().handlers[0].flush()  # Ensure immediate write
-	# logging.info("Logging initialized")
 
 	logging.basicConfig(filename=logDir+"/prod/"+"prod-node"+nodeID+\
 								"-instance"+str(prodInstanceID)+".log",
@@ -177,13 +162,15 @@ try:
 		bMsgID = bytes(newMsgID, 'utf-8')
 		newNodeID = nodeID.zfill(2)
 		bNodeID = bytes(newNodeID, 'utf-8')
-		bMsg = bNodeID + bMsgID + bytearray(message)
+		newProdInstanceID = str(prodInstanceID).zfill(2)
+		bProdInstanceID = bytes(newProdInstanceID, 'utf-8')
+		bMsg = bNodeID + bProdInstanceID + bMsgID + bytearray(message)
 		topicID = randint(0, nTopics-1)
 		topicName = 'topic-'+str(topicID)
 
 		prodStatus = producer.send(topicName, bMsg)
-		logging.info('Topic-name: %s; Message ID: %s; Message: %s',\
-					topicName, newMsgID, message)
+		logging.info('ProdInstance: %s;Topic-name: %s; Message ID: %s; Message: %s',\
+					prodInstanceID, topicName, newMsgID, message)
 
 		msgInfo = {}
 		msgInfo[newMsgID] = prodStatus

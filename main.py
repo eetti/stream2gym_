@@ -384,7 +384,7 @@ if __name__ == '__main__':
 			
 		killSubprocs(brokerPlace, zkPlace, prodDetailsList, streamProcDetailsList, consDetailsList)
 		
-		# emuLogs.cleanLogs()
+		emuLogs.cleanLogs()
 		emuDataStore.cleanDataStoreState()
 		emuKafka.cleanKafkaState(brokerPlace)
 		emuZk.cleanZkState(zkPlace)

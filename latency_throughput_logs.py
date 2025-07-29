@@ -1,6 +1,8 @@
 import numpy as np
 from datetime import datetime, timedelta
 
+from pyparsing import line
+
 interval = 5
 consLogs = []
 prodCount = 0
@@ -129,22 +131,25 @@ def readConsumerData(prodDetails, consDetails, nProducer, nConsumer, logDir):
 
             if "Prod ID: " in line:
                 lineParts = line.split(" ")
-                #print(lineParts)
+                # print(lineParts)
 
                 prodID = lineParts[4][0:-1]
-                #print(prodID)
+                # print(prodID)
+                
+                prodInstance = lineParts[6][0:-1]
+                # print(prodInstance)
 
-                msgID = lineParts[7][0:-1]
-                #print(msgID)
+                msgID = lineParts[9][0:-1]
+                # print(msgID)
 
-                topic = lineParts[11][0:-1]
-                #print(topic)
+                topic = lineParts[13][0:-1]
+                # print(topic)
 
                 #print(prodID+"-"+msgID+"-"+topic)
                 # consLogs[cons['consNodeID']][prodID+"-"+msgID+"-"+topic] = lineParts[0] + " " + lineParts[1]
                 # print("Adding to consLogs: " + str(consId-1) + " Key: " + prodID+"-"+msgID+"-"+topic)
-                consLogs[consId-1][prodID+"-"+msgID+"-"+topic] = lineParts[0] + " " + lineParts[1]
-
+                consLogs[consId-1][prodID+"-"+prodInstance+"-"+msgID+"-"+topic] = lineParts[0] + " " + lineParts[1]
+                # print("consLogs: " + str(consLogs[consId-1]))
         f.close()
         consId += 1
 
@@ -152,22 +157,29 @@ def getProdDetails(prod, logDir, nConsumer, consDetails):
     global prodCount
     global consLogs
 
-    latencyLog = open(logDir+"/latency-log.txt", "a")
-    
+    try:
+        latencyLog = open(logDir+"/latency-log.txt", "a")
+    except IOError:
+        print("Error opening latency log file")
+        return
     prodLog = logDir+'/prod/prod-node'+str(prod['prodNodeID'])+'-instance'+str(prod['prodInstID'])+'.log'
     prodId = prod['prodNodeID']
     
-    # print("consLogs: "+str(consLogs))
+    # print("consLogs gpd: "+str(consLogs[0]['1-1-1-topic-1']))
     
     with open(prodLog) as f:
         for line in f:
             if "Topic-name: topic-" in line:
 #                 msgProdTime = line.split(",")[0]
-                msgProdTime = line.split(" INFO:Topic-name:")[0]
+                # print(line)
+                prodInstance = line.split(" INFO:ProdInstance: ")[1].split(";")[0]
+                msgProdTime = " ".join(line.split(" ")[:2])
                 topicSplit = line.split("topic-")
                 topicId = topicSplit[1].split(";")[0]
                 msgIdSplit = line.split("Message ID: ")
                 msgId = msgIdSplit[1].split(";")[0]
+                
+                # print("Producer ID: "+str(prodId)+" Instance ID: "+prodInstance+" Message ID: "+msgId+" Topic ID: "+topicId+" Production time: "+msgProdTime)   
                 
                 #print("producer: "+str(prodId)+" time: "+msgProdTime+" topic: "+topicId+" message ID: "+msgId)
                 prodCount+=1
@@ -176,14 +188,22 @@ def getProdDetails(prod, logDir, nConsumer, consDetails):
                     formattedProdId = "0"+str(prodId)
                 else:
                     formattedProdId = str(prodId)
+                
+                if int(prodInstance) < 10:
+                    formattedProdInstance = "0"+str(prodInstance).strip()
+                else:
+                    formattedProdInstance = str(prodInstance)
+                # print("Formatted Prod Instance: "+formattedProdInstance+" Prod Instance: "+prodInstance)
                 # print(str(nConsumer))
                 for consId in range(nConsumer):
                     # print("Key: "+str(key)+" Value: "+str(val))
                     # consId = val['consNodeID']
                     # consInstId = val['consInstID']
                     #print(formattedProdId+"-"+msgId+"-topic-"+topicId)
-                    if formattedProdId+"-"+msgId+"-topic-"+topicId in consLogs[consId].keys():
-                        msgConsTime = consLogs[consId][formattedProdId+"-"+msgId+"-topic-"+topicId]
+                    # print(consLogs[consId].keys())
+                    if formattedProdId+"-"+formattedProdInstance+"-"+msgId+"-topic-"+topicId in consLogs[consId].keys():
+                        msgConsTime = consLogs[consId][formattedProdId+"-"+formattedProdInstance+"-"+msgId+"-topic-"+topicId]
+                        # print("Msg Cons Time: "+msgConsTime)
                         
                         prodTime = datetime.strptime(msgProdTime, "%Y-%m-%d %H:%M:%S,%f")
                         consTime = datetime.strptime(msgConsTime, "%Y-%m-%d %H:%M:%S,%f")
@@ -191,7 +211,7 @@ def getProdDetails(prod, logDir, nConsumer, consDetails):
 
                         #print(latencyMessage)
                         # print("Producer ID: "+str(prodId)+" Message ID: "+msgId+" Topic ID: "+topicId+" Consumer ID: "+str(consId+1)+" Production time: "+msgProdTime+" Consumtion time: "+str(msgConsTime)+" Latency of this message: "+str(latencyMessage))
-                        latencyLog.write("Producer ID: "+str(prodId)+" Message ID: "+msgId+" Topic ID: "+topicId+" Consumer ID: "+str(consId+1)+" Production time: "+msgProdTime+" Consumtion time: "+str(msgConsTime)+" Latency of this message: "+str(latencyMessage))
+                        latencyLog.write("Producer ID: "+str(prodId)+" Instance ID: "+prodInstance+" Message ID: "+msgId+" Topic ID: "+topicId+" Consumer ID: "+str(consId+1)+" Production time: "+msgProdTime+" Consumtion time: "+str(msgConsTime)+" Latency of this message: "+str(latencyMessage))
                         latencyLog.write("\n")    #latencyLog.write("\r\n")
 
                         # Write to the consumer latency log
@@ -200,7 +220,7 @@ def getProdDetails(prod, logDir, nConsumer, consDetails):
                         
                             # str(consId)+'-instance'+str(consInstId) + ".txt", "a")
                         # consLatencyLog = logDir+'prod-node'+str(prod['prodNodeID'])+'-instance'+str(prod['prodInstID'])+'.log'
-                        consLatencyLog.write("Producer ID: "+str(prodId)+" Message ID: "+msgId+" Topic ID: "+topicId+" Consumer ID: "+str(consId)+" Production time: "+msgProdTime+" Consumtion time: "+str(msgConsTime)+" Latency of this message: "+str(latencyMessage))
+                        consLatencyLog.write("Producer ID: "+str(prodId)+" Instance ID: "+prodInstance+" Message ID: "+msgId+" Topic ID: "+topicId+" Consumer ID: "+str(consId)+" Production time: "+msgProdTime+" Consumtion time: "+str(msgConsTime)+" Latency of this message: "+str(latencyMessage))
                         consLatencyLog.write("\n")    #latencyLog.write("\r\n")
                         consLatencyLog.close()
 

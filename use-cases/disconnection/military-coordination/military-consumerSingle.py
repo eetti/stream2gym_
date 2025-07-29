@@ -62,17 +62,19 @@ try:
 		for msg in consumer:
 			try:
 				msgContent = str(msg.value, 'utf-8')
+				# print('Message received: %s', msgContent)
 				prodID = msgContent[:2]
-				msgID = msgContent[2:8]
+				prodInstanceID = msgContent[2:4]
+				msgID = msgContent[4:10]
 				topic = msg.topic
 				offset = str(msg.offset)    
 
-				key = prodID+"-"+msgID+"-"+topic
+				key = prodID+"-"+prodInstanceID+"-"+msgID+"-"+topic
 				if key in messages:
-					logging.warn('ProdID %s MSG %s Topic %s already read. Not logging.', prodID, msgID, topic)				         
+					logging.warn('ProdID %s ProdInstanceID %s MSG %s Topic %s already read. Not logging.', prodID, prodInstanceID, msgID, topic)				         
 				else:
 					messages[key] = offset
-					logging.info('Prod ID: %s; Message ID: %s; Latest: %s; Topic: %s; Offset: %s; Size: %s', prodID, msgID, str(consumptionLag), topic, offset, str(len(msgContent)))           			
+					logging.info('Prod ID: %s; ProdInstanceID: %s; Message ID: %s; Latest: %s; Topic: %s; Offset: %s; Size: %s', prodID, prodInstanceID, msgID, str(consumptionLag), topic, offset, str(len(msgContent)))           			
 			except Exception as e:
 				logging.error(e + " from messageID %s", msgID)				
 		stopTime = time.time()
